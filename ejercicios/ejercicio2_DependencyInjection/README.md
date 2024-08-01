@@ -8,6 +8,8 @@
 
 ### Documentacion
 
+Primeramente se aclara que este codigo NO es funcional y NO se hicieron corridas de comprobacion del funcionamiento. 
+
 En el siguiente ejercicio se ve la aplicacion del patron arquitectonico de Dependency injection. Se hace una respuesta directa al problema de la plataforma "Ellivhsan" que queria tener ciertas funcionalidades especiales segun cada dispositivo. 
 
 Esto se logro mediante el patron previamente mencionado. Se tiene tres archivos principales y un folder. 

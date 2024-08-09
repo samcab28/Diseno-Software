@@ -1,9 +1,9 @@
 // BromeliaPictInventory.ts
 import { Photo, PhotoAPIAdapter } from './PhotoAPIAdapter';
 import { RankingStrategy } from './RankingStrategy';
-import { PixabayAdapter } from './PixabayAdapter';
-import { UnsplashAdapter } from './UnsplashAdapter';
-import { SimpleRankingStrategy } from './SimpleRankingStrategy';
+import { PixabayAdapter } from './apiCalls/PixabayAdapter';
+import { UnsplashAdapter } from './apiCalls/UnsplashAdapter';
+import { SimpleRankingStrategy } from './ranks/SimpleRankingStrategy';
 
 /*  
     BRIDGE: La clase BromeliaPictInventory utiliza un RankingStrategy para clasificar las 

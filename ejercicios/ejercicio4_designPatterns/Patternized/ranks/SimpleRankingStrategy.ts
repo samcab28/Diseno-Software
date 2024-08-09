@@ -1,6 +1,6 @@
 // SimpleRankingStrategy.ts
-import { RankingStrategy } from './RankingStrategy';
-import { Photo } from './PhotoAPIAdapter';
+import { RankingStrategy } from '../RankingStrategy';
+import { Photo } from '../PhotoAPIAdapter';
 
 /*  Las implementaciones concretas de RankingStrategy representan diferentes formas
     de implementación de la abstracción de ranking. Por ejemplo, SimpleRankingStrategy 

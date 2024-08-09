@@ -1,6 +1,3 @@
-// Importamos las dependencias necesarias
-import axios from 'axios';
-
 // Definimos las interfaces para manejar las respuestas de las APIs
 interface Photo {
   id: string;
@@ -22,15 +19,12 @@ export class BromeliaPictInventory {
 
   // Método para buscar fotos en Pixabay
   private async searchPixabayPhotos(query: string): Promise<Photo[]> {
-    const response = await axios.get('https://pixabay.com/api/', {
-      params: {
-        key: this.pixabayApiKey,
-        q: query,
-        per_page: 50, // Recupera hasta 50 fotos
-      },
-    });
+    const response = await fetch(`https://pixabay.com/api/?key=${this.pixabayApiKey}&q=${query}&per_page=50`);
 
-    return response.data.hits.map((hit: any) => ({
+    const data = await response.json();
+
+    // Mapeamos los resultados de la API a nuestra interfaz 'Photo'
+    return data.hits.map((hit: any) => ({
       id: hit.id,
       url: hit.largeImageURL,
       likes: hit.likes,
@@ -41,15 +35,12 @@ export class BromeliaPictInventory {
 
   // Método para buscar fotos en Unsplash
   private async searchUnsplashPhotos(query: string): Promise<Photo[]> {
-    const response = await axios.get('https://api.unsplash.com/search/photos', {
-      params: {
-        query,
-        per_page: 50, // Recupera hasta 50 fotos
-        client_id: this.unsplashAccessKey,
-      },
-    });
+    const response = await fetch(`https://api.unsplash.com/search/photos?query=${query}&per_page=50&client_id=${this.unsplashAccessKey}`);
 
-    return response.data.results.map((result: any) => ({
+    const data = await response.json();
+
+    // Mapeamos los resultados de la API a nuestra interfaz 'Photo'
+    return data.results.map((result: any) => ({
       id: result.id,
       url: result.urls.full,
       likes: result.likes,
@@ -60,9 +51,11 @@ export class BromeliaPictInventory {
 
   // Método para rankear y combinar fotos de Pixabay y Unsplash
   public async getTopPhotos(query: string): Promise<Photo[]> {
+    // Llamamos a ambos métodos de búsqueda de fotos de manera concurrente
     const pixabayPhotos = await this.searchPixabayPhotos(query);
     const unsplashPhotos = await this.searchUnsplashPhotos(query);
 
+    // Combinamos y rankeamos las fotos
     return this.rankPhotosResult(unsplashPhotos, pixabayPhotos);
   }
 
@@ -85,7 +78,12 @@ export class BromeliaPictInventory {
 
 // Ejemplo de uso
 (async () => {
+  // Sustituye 'PIXABAY_API_KEY' y 'UNSPLASH_ACCESS_KEY' por tus propias claves de API
   const bromeliaPictInventory = new BromeliaPictInventory('PIXABAY_API_KEY', 'UNSPLASH_ACCESS_KEY');
+  
+  // Obtenemos las mejores fotos de la búsqueda 'nature'
   const topPhotos = await bromeliaPictInventory.getTopPhotos('nature');
+  
+  // Mostramos las fotos en la consola
   console.log(topPhotos);
 })();

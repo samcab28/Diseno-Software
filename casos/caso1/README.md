@@ -30,5 +30,35 @@
 
 documentacion: https://developer.okta.com/docs/reference/rest/
 
+tutorial sincronizacion otka - postman: https://www.youtube.com/watch?v=u1Fqh4KneXI 
+
+### creacion de usuarios
+
+1. crear grupos de usuarios con grupes collection
+2. crear usuarios con user collection, ademas hacer enfasis en la asignacion de grupo mediante solicitud especial que contenga ID grupo, hacer pruebas de que se hayan agregado ok. 
+
+todos los passwords son: Samir1234Hola
+
+- marketing: michael ramirez
+
+- sales: pedro gonzalez y juan mora
+
+- c-level: isaack brock 
+
+para la creacion de usuarios se uso: 
+
+- create user with group: https://web.postman.co/workspace/1315bfff-6894-47a5-9774-9f9bb6b36fbe/request/31493491-1b54cbfe-6dd6-48fd-b233-9962b65004da?action=share&source=copy-link&creator=31493491&active-environment=3a19c96e-63d6-45f0-814e-88e7189c11d9
+- set password: https://web.postman.co/workspace/1315bfff-6894-47a5-9774-9f9bb6b36fbe/request/31493491-1a40808f-4f80-469a-8aea-98ca23235c2b?action=share&source=copy-link&creator=31493491&active-environment=3a19c96e-63d6-45f0-814e-88e7189c11d9
 
 
+### enable MFA
+
+documentacion de referencia: https://developer.okta.com/docs/guides/mfa/ga/main/ 
+
+usuario prueba = sam2 / samircabreratab@gmail.com 
+
+id usuario prueba: 00uj2dv72qFwJ5ts45d7
+
+id respuesta: uftj2dvr9juLm3UI75d7
+
+id respuesta autenticacion confirmada: uftj2dvr9juLm3UI75d7 

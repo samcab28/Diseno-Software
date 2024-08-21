@@ -22,7 +22,7 @@
 
 3. Verificar la configuración desde Postman.
 
-## Links
+## Autenticacion
 
 - Documentación de Okta: [Okta API Reference](https://developer.okta.com/docs/reference/rest/)
 - Tutorial sobre sincronización Okta y Postman: [Ver en YouTube](https://www.youtube.com/watch?v=u1Fqh4KneXI)
@@ -57,22 +57,22 @@
    Todos los contraseñas de los usuarios son: `Samir1234Hola`
 
 
-    - **Isaac Brock**  
+    - **Isaac Brock, C-Level**  
     ID: `00uj2dchp27O8TV765d7`  
     [Perfil en Okta](https://dev-32963311.okta.com/api/v1/users/00uj2dchp27O8TV765d7)  
     Query de confirmación en Okta Dashboard para tuplas: is user:00uj2dchp27O8TV765d7 related to group:00gj2d9menFkvEuUx5d7 as members?
 
-    - **Pedro Gonzalez**  
+    - **Pedro Gonzalez, Sales**  
     ID: `00uj2dfakvH6aRA1G5d7`  
     [Perfil en Okta](https://dev-32963311.okta.com/api/v1/users/00uj2dfakvH6aRA1G5d7)  
     Query de confirmación en Okta Dashboard para tuplas: is user:00uj2dfakvH6aRA1G5d7 related to group:00gj2d9aszhPgXjxn5d7 as members?
 
-    - **Michael Ramirez**  
+    - **Michael Ramirez, marketing**  
     ID: `00uj2dfhhseBFzi515d7`  
     [Perfil en Okta](https://dev-32963311.okta.com/api/v1/users/00uj2dfhhseBFzi515d7)  
     Query de confirmación en Okta Dashboard para tuplas: is user:00uj2dfhhseBFzi515d7 related to group:00gj2d8nwakXjQ4YJ5d7 as members?
 
-    - **Juan Mora**  
+    - **Juan Mora, Sales**  
     ID: `00uj2dh5l1xQZ9xjQ5d7`  
     [Perfil en Okta](https://dev-32963311.okta.com/api/v1/users/00uj2dh5l1xQZ9xjQ5d7)  
     Query de confirmación en Okta Dashboard para tuplas: is user:00uj2dh5l1xQZ9xjQ5d7 related to group:00gj2d9aszhPgXjxn5d7 as members?
@@ -92,25 +92,88 @@
 - ID de respuesta de autenticación confirmada: `uftj2dvr9juLm3UI75d7`
 - Enlace para confirmar autenticación: [Confirmar Autenticación](https://web.postman.co/workspace/Diseno_Caso1~1315bfff-6894-47a5-9774-9f9bb6b36fbe/request/31493491-1817a32a-c220-4f38-a620-f4e25913b3db?action=share&source=copy-link&creator=31493491&active-environment=3a19c96e-63d6-45f0-814e-88e7189c11d9). Se debe ingresar el número de Google Authenticator.
 
+## Modelado 
+
+### Imagen del modelado 
+
+### Pruebas internas de modelado
+
+### Conexión de Modelado
+
+Una vez finalizado el modelado, es necesario crear la conexión con Postman. Primero, se debe crear un usuario en "Settings" bajo "Authorized Clients". Aquí se debe crear un cliente, asignarle un nombre de referencia, y otorgarle permisos de acceso a datos para la API. Al completar este proceso, se obtendrán los siguientes datos:
+
+- **Client ID**:
+- **Store ID**: 
+- **Secret ID**:
+
+### Integración con Postman 
+
+Para la integración con Postman, primero se debe obtener el token de acceso (Bearer). Esto se logra enviando una solicitud POST a la siguiente dirección:
+
+**https://fga.us.auth0.com/oauth/token**
+
+En la sección de **Headers** del request, se debe incluir:
+
+Content-Type :  application/json
 
 
+Y en la sección de **Body**, se debe enviar un JSON en formato raw con el siguiente contenido:
+
+```json
+{
+  "client_id": "YOUR CLIENT ID",
+  "client_secret": "YOUR SECRET",
+  "audience": "https://api.us1.fga.dev/",
+  "grant_type": "client_credentials"
+} 
+```
+
+La respuesta esperada será:
+
+```json
+{
+    "access_token": "YOUR ACCESS TOKEN",
+    "scope": "check:tuples expand:tuples list:objects list:users read:assertions read:authorization_models read:tuples",
+    "expires_in": 86400,
+    "token_type": "Bearer"
+}
+```
 
 
+### Testing con Postman 
 
-### permiso 1, metodos de pago
+Para realizar pruebas en Postman, se puede verificar una tupla utilizando el método POST en la siguiente URL:
 
-se agrego un atributo desde schemas para que este pueda ser definido como metodo de pago: 
-
-### permiso 2
-
-opcion 1: mediante roles
-
-- https://developer.okta.com/docs/reference/api/roles/
-- https://developer.okta.com/docs/reference/api/roles/#permission-types
-
-opcion 2: mediante put de rule basic condition
+**https://api.us1.fga.dev/stores/YOUR STORE ID/check**
 
 
-### permiso 3
+En la sección de Headers, se debe incluir:
 
-### permiso 4
+Authorization: Bearer ACEESS TOKEN
+
+Y en la sección de **Body**, se debe enviar un JSON en formato raw con el siguiente contenido:
+
+```json
+{
+  "tuple_key": {
+    "user": "user:00uj2ee4n5KKQisu85d7", //ejemplo de uso
+    "relation": "can_modify_info",  // Asegúrate de usar "members" según tu modelo
+    "object": "permission:02" //ejemplo de uso 
+  }
+}
+```
+
+Esta consulta verifica si una tupla existente tiene el valor especificado. Si la tupla es válida, la respuesta esperada es:
+
+```json
+{
+    "allowed": true,
+    "resolution": ""
+}
+```
+
+Esto confirma no solo la existencia de la tupla en el sistema, sino también que la conexión es exitosa.
+
+### Resultados de conexion con postman
+
+

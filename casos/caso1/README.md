@@ -92,6 +92,11 @@
 - ID de respuesta de autenticación confirmada: `uftj2dvr9juLm3UI75d7`
 - Enlace para confirmar autenticación: [Confirmar Autenticación](https://web.postman.co/workspace/Diseno_Caso1~1315bfff-6894-47a5-9774-9f9bb6b36fbe/request/31493491-1817a32a-c220-4f38-a620-f4e25913b3db?action=share&source=copy-link&creator=31493491&active-environment=3a19c96e-63d6-45f0-814e-88e7189c11d9). Se debe ingresar el número de Google Authenticator.
 
+### Autenticacion
+
+- Primeramente se debe de verificar el usuario y contrasena normal en revision. seguidamente al obtener el status: "SUCCESS" se procede a hacer el login via MFA.
+- Para la realizacion del login via MFA se debe poner el codigo que es dado por la plataforma de google authenticator y esperar el status: "SUCCESS".
+
 ## Modelado 
 
 ### Imagen del modelado 
@@ -157,7 +162,7 @@ Y en la sección de **Body**, se debe enviar un JSON en formato raw con el sigui
 {
   "tuple_key": {
     "user": "user:00uj2ee4n5KKQisu85d7", //ejemplo de uso
-    "relation": "can_modify_info",  // Asegúrate de usar "members" según tu modelo
+    "relation": "can_modify_info",  // ejemplo de uso
     "object": "permission:02" //ejemplo de uso 
   }
 }
@@ -174,6 +179,30 @@ Esta consulta verifica si una tupla existente tiene el valor especificado. Si la
 
 Esto confirma no solo la existencia de la tupla en el sistema, sino también que la conexión es exitosa.
 
+### pruebas: 
+
+### Pruebas
+
+- **Store ID**: `01J5RJ4RGT0Z3VXTGGJH2JW079`
+- **Client ID**: `g5gHjnXYfE1olnBHXXfMQhECdoDfOquD`
+- **Secret**: `jEfNNyRYhMmMHfAXkhRl_PJjZzUAyedPkQqIqKR0IkGet537f7p-rVdCZ0SSPB9T`
+- **Access Token**: 
+  ```plaintext
+  eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Ino4TzF1WEpUMkZ5UHRqZ3RmZDZoMiJ9.eyJodHRwczovL2ZnYS5kZXYvY2xhaW1zL2N1c3RvbWVyX2lkIjoiMDFKNUtGUVBCWUVSNlBaNktDTVBUUkNER1ciLCJodHRwczovL2ZnYS5kZXYvY2xhaW1zL3N0b3JlX2lkIjoiMDFKNVJKNFJHVDBaM1ZYVEdHSkgySlcwNzkiLCJodHRwczovL2ZnYS5kZXYvY2xhaW1zL3N0b3JlX3RpZXIiOiJmcmVlIiwiaXNzIjoiaHR0cHM6Ly9mZ2EudXMuYXV0aDAuY29tLyIsInN1YiI6Imc1Z0hqblhZZkUxb2xuQkhYWGZNUWhFQ2RvRGZPcXVEQGNsaWVudHMiLCJhdWQiOiJodHRwczovL2FwaS51czEuZmdhLmRldi8iLCJpYXQiOjE3MjQyNzc1NDcsImV4cCI6MTcyNDM2Mzk0Nywic2NvcGUiOiJjaGVjazp0dXBsZXMgZXhwYW5kOnR1cGxlcyBsaXN0Om9iamVjdHMgbGlzdDp1c2VycyByZWFkOmFzc2VydGlvbnMgcmVhZDphdXRob3JpemF0aW9uX21vZGVscyByZWFkOnR1cGxlcyIsImd0eSI6ImNsaWVudC1jcmVkZW50aWFscyIsImF6cCI6Imc1Z0hqblhZZkUxb2xuQkhYWGZNUWhFQ2RvRGZPcXVEIn0.Xcbn3WSm0sOV-5b3d-g7yc9IxSQjdoKFaLNHpJJ9gYubrZVELo3sILBlb5MLzILaXzyfWCILP6_jsJIOilo6kmmhImLra2lF7JAhvErR4O98wixCsvB27k8bLLpK7doy6aqcaGVN0dH2iJA3IHm7AxP7o958yJ7dxeTzVX49jbGfgwU7B3hj5vIa2CRyGhk1OxssVE2nM_S0eFnnCTdrUnSrYtkSd8g6wgH7psfuiUc_kGvbi_jEiuqF3bapiZ88cUCSxTR_GhGJr-PWoPH5rQ1p18t4Lu3484Y3k_LXygH7bIzdL-PXv0VO3gVYpQqZLskusWwk-_wMq0-nALYJ_A
+
+
 ### Resultados de conexion con postman
+
+1. **¿Está el grupo `Sales` relacionado con la aplicación `AccessCRM` como `CRM`?**
+
+1.2 **¿Está el grupo `Marketing` relacionado con la aplicación `AccessPayment` como `Payment`?**
+
+2. **¿Está el usuario `Suhy` relacionado con la aplicación `AccessPayment` como `Payment`?**
+
+2.2 **¿Está el usuario `Ileana` relacionado con la aplicación `AccessPayment` como `Payment`?**
+
+3. **¿Está el usuario `Ileana` relacionado con el permiso `SeeColumns` como `can_see_columns`?**
+
+3.2 **¿Está el usuario `Suhy` relacionado con el permiso `SeeColumns` como `can_see_columns`?**
 
 

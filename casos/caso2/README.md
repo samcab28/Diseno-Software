@@ -155,4 +155,5 @@ Para mejorar este prototipo, se deben realizar las siguientes acciones:
 
 ## Conclusiones
 
-Al realizar este proyecto, nos dimos cuenta del impacto de la IA en nuestras vidas, ya que, al permitirnos personalizar nuestro hogar de una manera tan intuitiva como lo hace el generador de lámparas de Light House, simplifica enormemente nuestros días y nos ahorra tiempo y dinero, facilitando una buena inversión.
+Al realizar este proyecto, nos dimos cuenta del impacto de la IA en nuestras vidas y tambien la ayuda que genera para un negocio, en este caso Light House obtiene un servicio de vital importancia, esta herramienta les ayudara a poder generar imagenes de referencia que haran que sus ventas se multipliquen. A su vez para los clientes este servicio nos ayudara a darnos una idea real de como se veria las lamparas en caso de comprarlas, ayudando a tomar la desicion. 
+Por ambos lados vemos un benificio gracias a las tecnologias, a demas si se tiene en cuenta que tiene un diseno con un buen recibimiento de parte del publico usuario, esto ayudara aun mas al servicio y a la tienda.

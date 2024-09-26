@@ -2,13 +2,35 @@ postgresql:
   enabled: true
   metrics: 
     enabled: true
+  service:
+    type: NodePort
+    nodePorts:
+      postgresql: 30100
+  primary:
+    persistence:
+      enabled: true
+      size: 8Gi
+  readReplicas:
+    replicaCount: 1
+    persistence:
+      enabled: true
+      size: 8Gi
 
 redis:
   enabled: true
   metrics:
     enabled: true
-
-
-
-
-
+  service:
+    type: NodePort
+    nodePorts:
+      redis: 30102
+  architecture: replication
+  master:
+    persistence:
+      enabled: true
+      size: 8Gi
+  replica:
+    replicaCount: 1
+    persistence:
+      enabled: true
+      size: 8Gi

@@ -11,11 +11,11 @@ type PostgresDB struct {
 }
 
 func NewPostgresConnection() (*PostgresDB, error) {
-    db, err := sql.Open("postgres", "postgres://username:password@localhost/dbname?sslmode=disable")
-    if err != nil {
-        return nil, err
-    }
-    return &PostgresDB{db}, nil
+	db, err := sql.Open("postgres", "postgres://username:password@localhost:30100/dbname?sslmode=disable")
+	if err != nil {
+		return nil, err
+	}
+	return &PostgresDB{db}, nil
 }
 
 // Implementar métodos para queries...

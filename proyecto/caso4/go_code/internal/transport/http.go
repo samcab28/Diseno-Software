@@ -5,10 +5,11 @@ import (
     "context"
     "encoding/json"
     "net/http"
+    "Caso4/internal/endpoint"
 )
 
 func DecodeGetDataRequest(_ context.Context, r *http.Request) (interface{}, error) {
-    var request GetDataRequest
+    var request endpoint.GetDataRequest
     if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
         return nil, err
     }

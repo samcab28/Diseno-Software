@@ -10,10 +10,10 @@ type RedisCache struct {
 }
 
 func NewRedisClient() (*RedisCache, error) {
-    client := redis.NewClient(&redis.Options{
-        Addr: "localhost:6379",
-    })
-    return &RedisCache{client}, nil
+	client := redis.NewClient(&redis.Options{
+		Addr: "localhost:30102",
+	})
+	return &RedisCache{client}, nil
 }
 
 // Implementar métodos para cache...

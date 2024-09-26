@@ -3,8 +3,8 @@ package service
 
 import (
     "context"
-    "yourproject/pkg/db"
-    "yourproject/pkg/cache"
+    "Caso4/pkg/db"
+    "Caso4/pkg/cache"
 )
 
 type Service interface {
@@ -23,8 +23,16 @@ func NewService(db *db.PostgresDB, cache *cache.RedisCache) Service {
 }
 
 func (s *basicService) GetData(ctx context.Context, query string) ([]interface{}, error) {
-    // Implementar lógica para obtener datos
+    // Implement logic to get data
     return nil, nil
 }
 
-// Implementar GetDataPool y GetDataCache...
+func (s *basicService) GetDataPool(ctx context.Context, query string) ([]interface{}, error) {
+    // Implement logic to get data using connection pool
+    return nil, nil
+}
+
+func (s *basicService) GetDataCache(ctx context.Context, query string) ([]interface{}, error) {
+    // Implement cache retrieval logic here
+    return nil, nil
+}

@@ -65,5 +65,9 @@ Minchapp es una plataforma innovadora diseñada para conectar a dueños de masco
 - Categorizar tipos de cuidos
 
 ## Diagrama de Arquitectura
-![Diagrama de Arquitectura de Minchapp](./DiagramaMinchapp.jpeg)
+![Diagrama de Arquitectura de Minchapp](./Imagenes/DiagramaMinchapp.jpeg)
+
+
+## Problem Statement
+- Revisión / Proceso de aceptación del perfil del cuidador
 

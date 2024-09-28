@@ -9,12 +9,12 @@ postgresql:
   primary:
     persistence:
       enabled: true
-      size: 8Gi
+      size: 4Gi
   readReplicas:
     replicaCount: 1
     persistence:
       enabled: true
-      size: 8Gi
+      size: 4Gi
 
 redis:
   enabled: true
@@ -28,9 +28,9 @@ redis:
   master:
     persistence:
       enabled: true
-      size: 8Gi
+      size: 4Gi
   replica:
     replicaCount: 1
     persistence:
       enabled: true
-      size: 8Gi
+      size: 4Gi

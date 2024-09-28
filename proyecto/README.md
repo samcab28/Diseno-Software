@@ -71,3 +71,8 @@ Minchapp es una plataforma innovadora diseñada para conectar a dueños de masco
 ## Problem Statement
 - Revisión / Proceso de aceptación del perfil del cuidador
 
+## Storyboard
+
+A continuación se presenta el storyboard de la aplicación, el cual muestra la interacción entre los usuarios y la plataforma. En donde se puede apreciar la comunicación entre el host y el cuidador.
+
+![Storyboard de Minchapp](./Imagenes/Storyboard.png)

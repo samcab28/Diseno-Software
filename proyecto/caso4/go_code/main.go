@@ -13,7 +13,7 @@ import (
 )
 
 func main() {
-	// Initialize DB and cache connections
+	// Inicializa las conexiones de la base de datos y caché
 	dbConn, err := db.NewPostgresConnection()
 	if err != nil {
 		log.Fatal(err)
@@ -23,24 +23,29 @@ func main() {
 		log.Fatal(err)
 	}
 
-	// Create service instance
+	// Crea la instancia del servicio
 	svc := service.NewService(dbConn, redisClient)
 
-	// Define endpoints
+	// Define los endpoints
 	endpoints := customendpoint.Endpoints{
-		GetDataEndpoint:      customendpoint.MakeGetDataEndpoint(svc),
-		GetDataPoolEndpoint:  customendpoint.MakeGetDataPoolEndpoint(svc),
-		GetDataCacheEndpoint: customendpoint.MakeGetDataCacheEndpoint(svc),
+		Get35PercentRecordsEndpoint: customendpoint.MakeGet35PercentRecordsEndpoint(svc), // Agrega este endpoint
 	}
 
-	// Configure HTTP handlers
+	// Configura los handlers HTTP
 	http.Handle("/getData", httptransport.NewServer(
 		endpoints.GetDataEndpoint,
 		transport.DecodeGetDataRequest,
 		transport.EncodeResponse,
 	))
-	// Configure other handlers...
 
+	// Configura el handler para obtener el 35% de los registros
+	http.Handle("/get35PercentRecords", httptransport.NewServer(
+		endpoints.Get35PercentRecordsEndpoint,
+		httptransport.NopRequestDecoder, // Usa un decodificador apropiado si necesitas parámetros
+		transport.EncodeResponse,
+	))
+
+	// Configura otros handlers...
 	http.HandleFunc("/", transport.HomeHandler)
 
 	log.Println("Server starting on :8080")

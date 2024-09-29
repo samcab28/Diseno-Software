@@ -193,7 +193,7 @@ Para cada uno de los contenedores de Michapp, se registraron las siguientes mét
 ![endp22](./Imagenes/docu/endp22.png)
 ![endp23](./Imagenes/docu/endp23.png)
 
-- Endpoint 3:
+- Endpoint 3: Acá el consumo de CPU es múchísimo menor a las dos anteriores, porque tiene un consumo de 0,3%, y no hay un consumo de memoria muy elevado
 
 ![endp3](./Imagenes/docu/endp3.png)
 ![endp32](./Imagenes/docu/endp32.png)

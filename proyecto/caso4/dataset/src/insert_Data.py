@@ -9,7 +9,7 @@ logging.basicConfig(filename='insert_games_log.txt', level=logging.INFO,
                     format='%(asctime)s - %(levelname)s - %(message)s')
 
 # Configuración de la conexión a la base de datos
-conn_string = "host='localhost' port='30100' dbname='games' user='postgres' password='CLtj6P4W3a'"
+conn_string = "host='localhost' port='30100' dbname='games' user='postgres' password='ukltH6iwIK'"
 
 # Función para convertir la fecha de string a formato de fecha de PostgreSQL
 def parse_date(date_string):

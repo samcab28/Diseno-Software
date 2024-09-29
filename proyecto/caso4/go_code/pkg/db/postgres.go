@@ -3,7 +3,6 @@ package db
 import (
 	"context"
 	"database/sql"
-
 	"github.com/jackc/pgx/v4/pgxpool"
 	_ "github.com/lib/pq"
 )
@@ -24,13 +23,13 @@ type PostgresDB struct {
 
 // Nueva conexión a PostgreSQL
 func NewPostgresConnection() (*PostgresDB, error) {
-	db, err := sql.Open("postgres", "postgres://postgres:cFwm5AxPS0@localhost:30100/games?sslmode=disable")
+	db, err := sql.Open("postgres", "postgres://postgres:ukltH6iwIK@localhost:30100/games?sslmode=disable")
 	if err != nil {
 		return nil, err
 	}
 
 	// Crear el pool de conexiones
-	pool, err := pgxpool.Connect(context.Background(), "postgres://postgres:cFwm5AxPS0@localhost:30100/games?sslmode=disable")
+	pool, err := pgxpool.Connect(context.Background(), "postgres://postgres:ukltH6iwIK@localhost:30100/games?sslmode=disable")
 	if err != nil {
 		return nil, err
 	}

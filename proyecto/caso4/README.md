@@ -180,4 +180,22 @@ Para cada uno de los contenedores de Michapp, se registraron las siguientes mét
 | PostgreSQL           | 0.58% - 16.86%| 11.2 - 92.64 / 192           | 10 - 41 |
 
 
+## Gráficas de Grafana
+- Endpoint 1: En las gráficas de este endpoint se puede apreciar cómo el consumo del CPU es bastante elevado. Para la parte de uso de memoria se mantiene bastante moderado
+
+![endp1](./Imagenes/docu/endp1.png)
+![endp12](./Imagenes/docu/endp12.png)
+![endp13](./Imagenes/docu/endp13.png)
+
+- Endpoint 2: Ya en este endpoint podemos ver cómo el consumo de CPU es menor al apartado anterior, indicando que se tiene un man
+
+![endp2](./Imagenes/docu/endp2.png)
+![endp22](./Imagenes/docu/endp22.png)
+![endp23](./Imagenes/docu/endp23.png)
+
+- Endpoint 3:
+
+![endp3](./Imagenes/docu/endp3.png)
+![endp32](./Imagenes/docu/endp32.png)
+
 

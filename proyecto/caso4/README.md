@@ -187,7 +187,7 @@ Para cada uno de los contenedores de Michapp, se registraron las siguientes mét
 ![endp12](./Imagenes/docu/endp12.png)
 ![endp13](./Imagenes/docu/endp13.png)
 
-- Endpoint 2: Ya en este endpoint podemos ver cómo el consumo de CPU es menor al apartado anterior, indicando que se tiene un man
+- Endpoint 2: Ya en este endpoint podemos ver cómo el consumo de CPU es menor al apartado anterior, también el uso de memoria disminuye brevemente
 
 ![endp2](./Imagenes/docu/endp2.png)
 ![endp22](./Imagenes/docu/endp22.png)

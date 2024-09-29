@@ -24,13 +24,13 @@ type PostgresDB struct {
 
 // Nueva conexión a PostgreSQL
 func NewPostgresConnection() (*PostgresDB, error) {
-	db, err := sql.Open("postgres", "postgres://postgres:Z7MwEuXbO2@localhost:30100/games?sslmode=disable")
+	db, err := sql.Open("postgres", "postgres://postgres:tHjhARSwJL@localhost:30100/games?sslmode=disable")
 	if err != nil {
 		return nil, err
 	}
 
 	// Crear el pool de conexiones
-	pool, err := pgxpool.Connect(context.Background(), "postgres://postgres:Z7MwEuXbO2@localhost:30100/games?sslmode=disable")
+	pool, err := pgxpool.Connect(context.Background(), "postgres://postgres:tHjhARSwJL@localhost:30100/games?sslmode=disable")
 	if err != nil {
 		return nil, err
 	}

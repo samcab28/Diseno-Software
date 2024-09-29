@@ -15,7 +15,7 @@ type RedisCache struct {
 func NewRedisClient() (*RedisCache, error) {
 	client := redis.NewClient(&redis.Options{
 		Addr:     "localhost:30102", // Dirección de Redis
-		Password: "tG8YPO0hBW",
+		Password: "A2hrWqlxO1",
 		DB:       0, // Usar la base de datos 0
 	})
 

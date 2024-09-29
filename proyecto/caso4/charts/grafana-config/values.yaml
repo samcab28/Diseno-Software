@@ -1,0 +1,11 @@
+prometheus: 
+  namespace: monitoring
+dashboards:
+  redis:
+    name: redis
+    file: redis.json
+    enable: true
+  postgres:
+    name: postgres
+    file: postgres.json
+    enable: true

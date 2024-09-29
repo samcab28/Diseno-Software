@@ -24,13 +24,13 @@ type PostgresDB struct {
 
 // Nueva conexión a PostgreSQL
 func NewPostgresConnection() (*PostgresDB, error) {
-	db, err := sql.Open("postgres", "postgres://postgres:cFwm5AxPS0@localhost:30100/games?sslmode=disable")
+	db, err := sql.Open("postgres", "postgres://postgres:Z7MwEuXbO2@localhost:30100/games?sslmode=disable")
 	if err != nil {
 		return nil, err
 	}
 
 	// Crear el pool de conexiones
-	pool, err := pgxpool.Connect(context.Background(), "postgres://postgres:cFwm5AxPS0@localhost:30100/games?sslmode=disable")
+	pool, err := pgxpool.Connect(context.Background(), "postgres://postgres:Z7MwEuXbO2@localhost:30100/games?sslmode=disable")
 	if err != nil {
 		return nil, err
 	}
@@ -45,11 +45,12 @@ func (pgDB *PostgresDB) GetPool() *pgxpool.Pool {
 
 // get35PercentRecords ejecuta la consulta para obtener aproximadamente el 35% de los registros
 func (pgDB *PostgresDB) Get35PercentRecords() ([]Registro, error) {
-	query := `SELECT id, name, release_date, required_age, price FROM (
-        SELECT *, ROW_NUMBER() OVER () AS rn
-        FROM games_info
-    ) sub
-    WHERE rn <= (SELECT COUNT(*) * 0.35 FROM games_info);`
+	query := `SELECT id, name, release_date, required_age, price
+FROM (
+    SELECT *, ROW_NUMBER() OVER (ORDER BY RANDOM()) AS rn
+    FROM games_info
+) sub
+WHERE rn <= (SELECT COUNT(*) * (0.35 + (RANDOM() * 0.1 - 0.05)) FROM games_info);`
 
 	rows, err := pgDB.Query(query)
 	if err != nil {

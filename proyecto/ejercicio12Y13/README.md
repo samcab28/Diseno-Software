@@ -1,4 +1,10 @@
-# Expanded Answers for MINCHAPP Project
+# Excerises 12 and 13 Software Design - Minchapp Project
+
+Integrants: 
+
+- Cabrera Samir 
+- Morataya Pamela
+- Urbina Luis
 
 ## Performance
 

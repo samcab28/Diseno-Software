@@ -1,4 +1,10 @@
-# Expanded Answers for MINCHAPP Project
+# Exercise 12 and 13 - Software Design - Minchapp Project
+
+Group Members: 
+
+- Cabrera Samir
+- Morataya Pamela
+- Urbina Luis
 
 ## Performance
 

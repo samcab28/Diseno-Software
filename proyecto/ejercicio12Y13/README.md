@@ -288,29 +288,6 @@ Data consumption from databases and system availability are critical areas for e
 - The auto-scaling capabilities of Amazon EKS and other AWS services ensure that the system can handle increased load as it grows.
 - The modular architecture allows for easy addition of new features or integration with new third-party services (like the various services shown at the bottom of the diagram).
 
-## Extensibility
-
-### 24. Accommodating future enhancements
-
-The system uses design patterns and a modular architecture to facilitate future enhancements.
-
-**Expanded explanation:**
-- Microservices architecture (implied by Kubernetes usage) allows for easy addition of new services.
-- The Bridge pattern for payment methods enables easy integration of new payment providers.
-- Amazon API Gateway facilitates the addition of new API endpoints or versions.
-- React and React Native frontend suggests a component-based architecture for easy UI extensions.
-- Use of Helm charts allows for versioned and modular deployments.
-
-### 25. Critical areas for extensibility
-
-Data consumption from databases and system availability are critical areas for extensibility.
-
-**Additional insights:**
-- The polyglot persistence approach (PostgreSQL and MongoDB) allows for easy addition of new data stores.
-- Auto-scaling capabilities of Amazon EKS and other AWS services ensure the system can handle increased load.
-- The modular architecture facilitates easy integration with new third-party services.
-- Consider implementing a plugin architecture for certain features to allow for easier extensions.
-
 ## Localization
 
 ### 26. Requirements for supporting multiple languages and regions

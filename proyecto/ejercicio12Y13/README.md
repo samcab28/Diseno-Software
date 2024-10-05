@@ -1,8 +1,8 @@
-# Exercise 12 and 13 - Software Design - Minchapp Project
+# Excerises 12 and 13 Software Design - Minchapp Project
 
-Group Members: 
+Integrants: 
 
-- Cabrera Samir
+- Cabrera Samir 
 - Morataya Pamela
 - Urbina Luis
 
@@ -77,6 +77,43 @@ The system uses automated backups, with frequency increasing as user population 
 - Amazon EKS allows for easy rollbacks of deployments if issues are detected.
 - The use of Helm charts (as shown in the diagram) can facilitate versioned deployments, making it easier to roll back to a previous known-good state if needed.
 
+
+## Availability
+
+### 9. Uptime requirements for the system
+
+The system is expected to be available at all times, with particular emphasis on specific high-demand periods.
+
+**Expanded explanation:**
+- Given the use of AWS services and Kubernetes, the system is designed for high availability.
+- The architecture supports this requirement through several components:
+  - Amazon EKS (Elastic Kubernetes Service) provides managed Kubernetes clusters with built-in high availability features.
+  - Use of multiple databases (PostgreSQL and MongoDB) suggests a strategy for data redundancy and potentially high availability setups for data storage.
+  - Amazon API Gateway is designed to be highly available by default, distributed across multiple Availability Zones.
+  - Amazon S3, used for storage, offers 99.99% availability SLA, supporting the overall system uptime.
+
+**Additional considerations:**
+- Implement health checks and liveness probes in Kubernetes to ensure rapid detection and replacement of failed components.
+- Use of AWS Auto Scaling groups can help maintain availability by automatically replacing failed EC2 instances.
+- Consider implementing a multi-region strategy for disaster recovery and even higher availability, although this isn't explicitly shown in the current architecture diagram.
+
+### 10. Specific times when the system must be available without fail
+
+The system must be reliably available from 2 PM to 10 PM, especially near holiday dates.
+
+**Detailed insights:**
+- This requirement suggests a need for dynamic scaling capabilities to handle increased load during peak hours.
+- The architecture supports this through:
+  - Kubernetes Horizontal Pod Autoscaler, which can automatically scale the number of pods based on observed metrics.
+  - Amazon API Gateway, which can handle traffic spikes without manual intervention.
+  - Amazon CloudWatch can be used to set up alarms and automated actions to ensure resources are scaled up in anticipation of these critical time windows.
+
+**Additional strategies to ensure availability during critical times:**
+1. **Scheduled scaling:** Use Kubernetes CronJobs or AWS scheduled actions to proactively scale up resources before the 2 PM peak time.
+2. **Load testing:** Regularly perform load tests simulating peak holiday traffic to ensure the system can handle the load.
+3. **Traffic management:** Utilize Amazon API Gateway's throttling and caching features to manage traffic spikes and reduce load on backend services.
+4. **Database optimization:** Implement read replicas or sharding strategies in PostgreSQL and MongoDB t
+
 ## Security
 
 ### 11. Security requirements for data storage and transmission
@@ -106,6 +143,46 @@ The system must comply with data protection laws in each country where it operat
 - The use of AWS services can help with compliance, as many AWS services are designed to meet various regulatory standards.
 - Encryption of data at rest and in transit (using S3 encryption and HTTPS) is crucial for compliance with most data protection regulations.
 - The system's ability to handle user consent and data access requests should be built into the application logic.
+
+## Usability
+
+### 14. Usability standards for the user interface
+
+The system aims for an accessible, simple, and intuitive design similar to Airbnb's user interface.
+
+**Expanded explanation:**
+- The architecture uses React and React Native for frontend development, supporting a consistent user-friendly interface across web and mobile platforms.
+- Implement clear navigation structures, responsive design, and fast load times.
+- Utilize Amazon S3 for efficient asset delivery and API Gateway for managing complex queries.
+- Consider implementing a design system or component library to ensure UI consistency.
+- Use code splitting and lazy loading in React for improved performance.
+
+### 15. Accommodating users with disabilities
+
+The system plans to have good contrast levels, necessary text, and future voice control assistance.
+
+**Additional considerations:**
+- Ensure screen reader compatibility by using semantic HTML and ARIA attributes.
+- Implement full keyboard navigation and interaction.
+- Maintain WCAG 2.1 compliant color contrast ratios.
+- Provide text alternatives for non-text content, including alt text for images served from Amazon S3.
+- Allow users to resize text without breaking the layout.
+- Consider integrating Amazon Lex for future voice control features.
+- Implement customizable UI settings, storing preferences in Amazon Cognito or the database.
+
+### 16. Specific requirements for user training and documentation
+
+Users are expected to have basic literacy skills and access to identification documents like passports, resumes, and background checks.
+
+**Expanded approach:**
+- Develop in-app guidance using tooltips and contextual help.
+- Create a comprehensive, searchable knowledge base or FAQ section.
+- Provide video tutorials for key features, potentially hosted on Amazon S3.
+- Implement an interactive onboarding process for new users.
+- Offer downloadable user guides in multiple formats (PDF, HTML).
+- Consider integrating a chatbot using Amazon Lex for instant user support.
+- Ensure all documentation is version-controlled and easily updatable.
+- Provide localized documentation to support multiple languages.
 
 ## Maintainability
 
@@ -158,6 +235,38 @@ The system adheres to HTTPS protocol and REST API standards.
 - Kubernetes API standards
 - AWS-specific APIs and standards for various services used
 
+## Compliance
+
+### 22. Legal and regulatory requirements
+
+The system must comply with data protection laws in each country where it operates, starting with Costa Rica.
+
+**Expanded explanation:**
+- Emphasis on personal data protection due to the large amount of personal information handled.
+- The architecture supports compliance through:
+  - Amazon Cognito for secure user authentication and authorization.
+  - Encrypted databases (implied, not explicitly shown in the diagram).
+  - HTTPS protocol for secure data transmission via Amazon API Gateway.
+- Consider implementing:
+  - Data retention and deletion policies in line with local regulations.
+  - User consent management system, possibly integrated with the frontend React application.
+  - Data access request handling procedures, potentially automated through the API.
+
+### 23. Industry-specific standards
+
+The system plans to use data encryption and a robust authorization scheme for database access.
+
+**Additional considerations:**
+- Implement encryption at rest for data stored in PostgreSQL, MongoDB, and Amazon S3.
+- Use AWS Key Management Service (KMS) for managing encryption keys (not shown in diagram, but recommended).
+- Follow OWASP (Open Web Application Security Project) guidelines for web application security.
+- Consider compliance with standards such as:
+  - PCI DSS if handling payment card information (relevant for integration with payment services shown in the diagram).
+  - GDPR for handling European users' data (if applicable).
+  - ISO 27001 for information security management.
+- Regularly conduct security audits and penetration testing.
+- Implement logging and monitoring using Amazon CloudWatch for audit trails and compliance reporting.
+
 ## Extensibility
 
 ### 24. Accommodating future enhancements
@@ -178,6 +287,55 @@ Data consumption from databases and system availability are critical areas for e
 - The use of both PostgreSQL and MongoDB suggests a polyglot persistence approach, allowing for easy addition of new data stores as needed.
 - The auto-scaling capabilities of Amazon EKS and other AWS services ensure that the system can handle increased load as it grows.
 - The modular architecture allows for easy addition of new features or integration with new third-party services (like the various services shown at the bottom of the diagram).
+
+## Extensibility
+
+### 24. Accommodating future enhancements
+
+The system uses design patterns and a modular architecture to facilitate future enhancements.
+
+**Expanded explanation:**
+- Microservices architecture (implied by Kubernetes usage) allows for easy addition of new services.
+- The Bridge pattern for payment methods enables easy integration of new payment providers.
+- Amazon API Gateway facilitates the addition of new API endpoints or versions.
+- React and React Native frontend suggests a component-based architecture for easy UI extensions.
+- Use of Helm charts allows for versioned and modular deployments.
+
+### 25. Critical areas for extensibility
+
+Data consumption from databases and system availability are critical areas for extensibility.
+
+**Additional insights:**
+- The polyglot persistence approach (PostgreSQL and MongoDB) allows for easy addition of new data stores.
+- Auto-scaling capabilities of Amazon EKS and other AWS services ensure the system can handle increased load.
+- The modular architecture facilitates easy integration with new third-party services.
+- Consider implementing a plugin architecture for certain features to allow for easier extensions.
+
+## Localization
+
+### 26. Requirements for supporting multiple languages and regions
+
+The system will initially support English and Spanish, with USD and Costa Rican Colón as currencies.
+
+**Expanded approach:**
+- Implement internationalization (i18n) in the React frontend.
+- Store localized content in the database (PostgreSQL or MongoDB).
+- Use Amazon CloudFront for efficient delivery of localized static content.
+- Implement a content management system for easy management of localized content.
+- Consider using Amazon Translate for automatic translation of user-generated content.
+
+### 27. Handling different date, time, and currency formats
+
+The system will obtain user location data and use a fixed time zone. A currency conversion service is recommended.
+
+**Additional considerations:**
+- Use libraries like Moment.js or date-fns in the frontend for consistent date and time handling.
+- Store all dates in UTC in the database and convert to local time in the frontend.
+- Implement server-side date and time handling in the Go backend for consistency.
+- Use a reliable currency conversion API or service for real-time exchange rates.
+- Consider caching exchange rates in Amazon ElastiCache for improved performance.
+- Implement locale-aware input parsing and formatting for dates, times, and currencies.
+- Use ISO standards for storing language (ISO 639) and country (ISO 3166) codes.
 
 ## Documentation
 

@@ -87,21 +87,21 @@ Maneja la conexión a Redis.
 ### 1. get35PercentRecordsEndpoint (Primer Endpoint)
 
 #### Tiempos de Respuesta
-- Rango: 1608 ms - 21278 ms (20 muestras)
-- Tiempo Promedio: 12539 ms
-- Desviación Estándar: 5506 ms
+- Rango: 8329 ms - 29503 ms (20 muestras)
+- Tiempo Promedio: 24627 ms
+- Desviación Estándar: 6085 ms
 
 ![firstEndpoint](./Imagenes/PrimerEndpoint.png)
 
 #### Observación
-Existe una variación significativa en los tiempos de respuesta, lo cual indica que el rendimiento del endpoint sin optimizacion puede ser inconsistente bajo carga.
+Este endpoint muestra tiempos de respuesta muy altos y una gran variabilidad, lo que indica un rendimiento inconsistente y poco optimizado.
 
 ### 2. get-35-percent-with-pool (Segundo Endpoint)
 
 #### Tiempos de Respuesta
-- Rango: 5787 ms - 16920 ms (20 muestras)
-- Tiempo Promedio: 11832 ms
-- Desviación Estándar: 2861 ms
+- Rango: 1363 ms - 9065 ms (20 muestras)
+- Tiempo Promedio: 5849 ms
+- Desviación Estándar: 2601 ms
 
 ![secondEndpoint](./Imagenes/SegundoEndpoint.png)
 #### Observación
@@ -110,9 +110,9 @@ Se observa una mejora en el tiempo de respuesta promedio respecto al primer endp
 ### 3. get-data-cache (Tercer Endpoint)
 
 #### Tiempos de Respuesta
-- Rango: 915 ms - 17173 ms (20 muestras)
-- Tiempo Promedio: 7799 ms
-- Desviación Estándar: 7156 ms
+- Rango: 3463 ms - 18983 ms (20 muestras)
+- Tiempo Promedio: 16963 ms
+- Desviación Estándar: 4290 ms
 
 ![thirdEndpoint](./Imagenes/TercerEndpoint.png)
 
@@ -121,23 +121,25 @@ Este endpoint tiene el menor tiempo de respuesta promedio, lo cual muestra una m
 
 #### Análisis de los Resultados
 
-
 | Endpoint | Tiempo Promedio (ms) | Desviación Estándar (ms) |
 |----------|----------------------|--------------------------|
-| Primero  | 12539                | 5506                     |
-| Segundo  | 11832                | 2861                     |
-| Tercero  | 7799                 | 7156                     |
+| Primero  | 24627                | 6085                     |
+| Segundo  | 5849                 | 2601                     |
+| Tercero  | 16963                | 4290                     |
 
 ## Conclusiones Cuantitativas
 
 ### 1. Impacto del Connection Pool
-El segundo endpoint con el uso de connection pool muestra una mejora en el tiempo promedio de respuesta, pasando de 12539 ms a 11832 ms. La desviación también se reduce, señalando una mejor gestion de las conexiones. 
+El segundo endpoint con el uso de connection pool muestra una mejora en el tiempo promedio de respuesta, pasando de 24627 ms a 5849 ms. La desviación estándar también se reduce, de 6085 ms a 2601 ms, lo que indica una mejor gestión de las conexiones y un rendimiento más consistente.
 
 ### 2. Impacto del Uso de Cache (Redis)
-El tercer endpoint que incorpora Redis para la cache muestra un tiempo promedio 7799 ms, lo cual indica una mejora en el rendimiento. Esto es especialmente evidente para las solicitudes que pudieron ser atendidas con un cache hit, evitando la consulta completa a la base de datos.
+El tercer endpoint que incorpora Redis para la cache muestra un tiempo promedio de 16963 ms, lo cual indica una mejora comparado con el primer endpoint, pero no supera al segundo. Esto sugiere que el uso de cache puede ser beneficioso en ciertos escenarios, pero no siempre garantiza el mejor rendimiento.
 
 ### 3. Variabilidad en la Desviación Estándar
-Aunque el tiempo promedio mejora al usar Redis, la desviación estándar del tercer endpoint sigue siendo relativamente alta (7156 ms). Esto indica que, aunque la cache ayuda a mejorar el rendimiento en general, existen ciertos casos en los que el acceso a la cache no es óptimo. 
+Aunque el tiempo promedio mejora al usar Redis comparado con el primer endpoint, la desviación estándar del tercer endpoint (4290 ms) sigue siendo alta, aunque menor que la del primer endpoint (6085 ms). Esto significa que usar cache mejora la velocidad, pero los tiempos de respuesta aún varían mucho. Esto puede ser porque algunos datos se encuentran más rápido en la cache que otros.
+
+### 4. Comparación General
+El segundo endpoint (con connection pool) muestra el mejor rendimiento general, con el tiempo de respuesta más bajo y la menor desviación estándar. Esto sugiere que la optimización de las conexiones a la base de datos tiene un impacto más significativo que el uso de cache en este caso particular.
 
 
 ## Metricas Recopiladas
@@ -151,33 +153,24 @@ Para cada uno de los contenedores de Michapp, se registraron las siguientes mét
 
 ## Métricas por Componente
 
-### 1. Conexiones a la Base de Datos (PostgreSQL)
-**Contenedor**: minchapp-databases-postgresql-0
-- **CPU**: Fluctuación de uso desde 0.58% a 16.86%.
-- **Memoria**: Uso de memoria desde 11.2 MiB hasta 92.64 MiB (de un total de 192 MiB asignados).
-- **PIDs**: Hasta 41 procesos simultáneos en ejecución.
+### 1. Base de Datos PostgreSQL
+- **CPU (%)**: Fluctuación de uso desde 0.58% a 16.86%.
+- **Memoria Utilizada (MiB)**: Uso de memoria desde 11.2 MiB hasta 92.64 MiB.
+- **Conexiones**: Máximo de 2 sesiones activas, promedio de 1.3.
+- **PIDs**: 10 - 41 procesos simultáneos en ejecución.
 
-### 2. Conexiones a Redis (Caché)
-**Contenedores**: minchapp-databases-redis-replicas-0 y minchapp-databases-redis-master-0.
-- **CPU (Redis Replicas)**: Variación de 0.00% a 8.15% de uso.
-- **Memoria (Redis Replicas)**: Uso desde 10.02 MiB hasta 42.79 MiB.
-- **CPU (Redis Master)**: Uso de CPU entre 0.00% y 12.54%.
-- **Memoria (Redis Master)**: Uso entre 14.61 MiB y 60.22 MiB.
-- **PIDs**: Hasta 17 procesos en ejecución.
-
-
-## Análisis de Resultados
-- **CPU**: Los contenedores del backend y la base de datos experimentaron picos de uso de CPU.
-- **Memoria**: La utilización de memoria fue generalmente estable, con picos identificados en momentos de pruebas de carga intensiva.
-- **PIDs**: Se noto un número elevado de procesos en PostgreSQL, lo cual es consistente con el aumento en el número de conexiones durante las pruebas de estrés.
+### 2. Redis (Caché)
+- **CPU (%)**: Uso de CPU entre 0.00% y 12.54%.
+- **Memoria Utilizada (MiB)**: Uso entre 14.61 MiB y 60.22 MiB.
+- **Conexiones**: 1 cliente conectado.
+- **PIDs**: 7 - 11 procesos en ejecución.
 
 ## Tabulación de Resultados
 
-| Componente           | CPU (%)       | Memoria Usada / Límite (MiB) | PIDs    |
-|----------------------|---------------|------------------------------|---------|
-| Redis Replicas       | 0.00% - 8.15% | 10.02 - 42.79 / 192          | 7 - 17  |
-| Redis Master         | 0.00% - 12.54%| 14.61 - 60.22 / 192          | 7 - 11  |
-| PostgreSQL           | 0.58% - 16.86%| 11.2 - 92.64 / 192           | 10 - 41 |
+| Componente | CPU (%)       | Memoria Usada / Límite (MiB) | PIDs    |
+|------------|---------------|------------------------------|---------|
+| Redis      | 0.00% - 12.54%| 14.61 - 60.22 / 192          | 7 - 11  |
+| PostgreSQL | 0.58% - 16.86%| 11.2 - 92.64 / 192           | 10 - 41 |
 
 
 ## Gráficas de Grafana

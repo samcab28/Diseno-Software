@@ -135,10 +135,18 @@ A continuación, se muestra el cuerpo base de cada tabla:
 | `idUsuario`         | `INTEGER`        |
 | `idCuidador`        | `INTEGER`        |
 
---------------------------------------------------------------
-### MongoDB
 
-### 16. Info Casa
+### 16. Bitácora Contacto Host
+| Campo               | Tipo de Dato     |
+|---------------------|------------------|
+| `idHost`            | `INTEGER`        |
+| `idCuidador`        | `INTEGER`        |
+| `fechaInicioContacto` | `TIMESTAMP`    |
+
+--------------------------------------------------------------
+## MongoDB
+
+### 17. Info Casa
 | Campo               | Tipo de Dato     |
 |---------------------|------------------|
 | `id`                | `INTEGER`        |
@@ -152,7 +160,7 @@ A continuación, se muestra el cuerpo base de cada tabla:
 | `jardin`            | `BOOLEAN`        |
 | `mascotas`          | `BOOLEAN`        |
 
-### 17. Post
+### 18. Post
 | Campo               | Tipo de Dato     |
 |---------------------|------------------|
 | `id`                | `INTEGER`        |
@@ -178,14 +186,6 @@ A continuación, se muestra el cuerpo base de cada tabla:
     }
   ]
 }
-```
-
-### 18. Bitácora Contacto Host
-| Campo               | Tipo de Dato     |
-|---------------------|------------------|
-| `idHost`            | `INTEGER`        |
-| `idCuidador`        | `INTEGER`        |
-| `fechaInicioContacto` | `TIMESTAMP`    |
 
 # Modelo de base de datos
 Seguidamente se presenta el diagrama que corresponde a las tablas mencionadas anteriormente.

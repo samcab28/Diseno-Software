@@ -9,8 +9,10 @@ import PerfilCuidador from './FE/components/cuidadores/PerfilCuidador';
 import ComparacionCuidadores from './FE/components/cuidadores/ComparacionCuidadores';
 import FormularioContacto from './FE/components/host/FormularioContacto';
 import { PublishCareNeed } from './FE/components/host/PublishCareNeed';
-import { UserProfile } from './FE/components/profile/UserProfile';
+import UserProfile from './FE/components/profile/UserProfile';
 import ListaCasasCuidado from './FE/components/cuidadores/ListaCasasCuidado'; 
+import { UsuarioRegistrado } from './FE/types';
+import HostHomePage from './FE/pages/HostHomePage';
 
 const Home = () => (
   <Container className="mt-4">
@@ -49,17 +51,43 @@ const PublicarNecesidadCuidado = () => (
   </Container>
 );
 
-const PerfilUsuario = () => (
-  <Container className="mt-4">
-    <h2>Mi Perfil</h2>
-    <UserProfile name="Samir Puki" email="SamirPuki@gmail.com" phone="8456-7890" address="Calle de mi casa 123" />
-  </Container>
-);
+const PerfilUsuario = () => {
+  const usuarioRegistrado: UsuarioRegistrado = {
+    id: 1,
+    nombre: "Samir",
+    apellido: "Puki",
+    fechaNacimiento: new Date("1990-01-01"),
+    ciudadResidencia: "Alajuela, Costa Rica",
+    urlImagenPerfil: "https://www.minchapp.com/images/default-profile.png",
+    telefono: "8456-7890",
+    email: "SamirPuki@gmail.com",
+    contrasena: "Password123",
+    cedula: "402630815",
+    hojaDelincuencia: true,
+    tarjetaCredito: "1234-5678-9012-3456",
+    ratingReviews: 4.5,
+    tipoUsuario: "Host"
+  };
+
+  return (
+    <Container className="mt-4">
+      <h2>Mi Perfil</h2>
+      <UserProfile user={usuarioRegistrado} />
+    </Container>
+  );
+};
 
 const CasasParaCuidar = () => (
   <Container className="mt-4">
     <h2>Casas Disponibles para Cuidar</h2>
     <ListaCasasCuidado />
+  </Container>
+);
+
+const HostHome = () => (
+  <Container className="mt-4">
+    <h2>Host Home Page</h2>
+    <HostHomePage />
   </Container>
 );
 
@@ -79,6 +107,7 @@ function App() {
                 <Nav.Link as={Link} to="/casas-para-cuidar">Casas para Cuidar</Nav.Link>
                 <Nav.Link as={Link} to="/comparar">Comparar Cuidadores</Nav.Link>
                 <Nav.Link as={Link} to="/perfil">Mi Perfil</Nav.Link>
+                <Nav.Link as={Link} to="/host-home">Host Home</Nav.Link>
               </Nav>
             </Navbar.Collapse>
           </Container>
@@ -92,6 +121,7 @@ function App() {
           <Route path="/publicar-cuidado" element={<PublicarNecesidadCuidado />} />
           <Route path="/perfil" element={<PerfilUsuario />} />
           <Route path="/casas-para-cuidar" element={<CasasParaCuidar />} />
+          <Route path="/host-home" element={<HostHome />} />
         </Routes>
 
         <Footer />

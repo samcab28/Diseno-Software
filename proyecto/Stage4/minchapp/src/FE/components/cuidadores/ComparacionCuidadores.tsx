@@ -1,39 +1,31 @@
 import React from 'react';
 import { Container, Table, Image, Button } from 'react-bootstrap';
 import { StarFill } from 'react-bootstrap-icons';
-
-interface Cuidador {
-  id: string;
-  nombre: string;
-  foto: string;
-  calificacion: number;
-  especialidad: string;
-  experiencia: string;
-  tarifa: number;
-  disponibilidad: string;
-}
+import { Cuidador } from '../../types';
 
 const ComparacionCuidadores: React.FC = () => {
   const cuidadores: Cuidador[] = [
     {
-      id: '1',
-      nombre: 'Pamela Morataya',
-      foto: '/img/pamela.jpg',
-      calificacion: 4.8,
+      id: 1,
+      nombre: 'Pamela',
+      apellido: 'Morataya',
+      fechaNacimiento: new Date('1990-01-01'),
+      ciudadResidencia: 'San José',
+      urlImagenPerfil: '/img/pamela.jpg',
+      telefono: '12345678',
+      email: 'pamela@example.com',
+      contrasena: 'hashedpassword',
+      cedula: '123456789',
+      hojaDelincuencia: true,
+      tarjetaCredito: '1234-5678-9012-3456',
+      ratingReviews: 4.8,
+      tipoUsuario: 'cuidador',
       especialidad: 'Perros',
       experiencia: '5 años',
       tarifa: 20,
       disponibilidad: 'Lun-Vie',
-    },
-    {
-      id: '2',
-      nombre: 'Luis Urbina',
-      foto: '/img/luis.jpg',
-      calificacion: 4.5,
-      especialidad: 'Gatos',
-      experiencia: '3 años',
-      tarifa: 18,
-      disponibilidad: 'Lun-Dom',
+      descripcion: 'Amante de los animales con experiencia en cuidado de perros.',
+      credenciales: ['Certificado en primeros auxilios para mascotas']
     },
     // Ejemplo de cuidadores
   ];
@@ -57,11 +49,11 @@ const ComparacionCuidadores: React.FC = () => {
           {cuidadores.map(cuidador => (
             <tr key={cuidador.id}>
               <td>
-                <Image src={cuidador.foto} roundedCircle width="50" height="50" className="me-2" />
-                {cuidador.nombre}
+                <Image src={cuidador.urlImagenPerfil} roundedCircle width="50" height="50" className="me-2" />
+                {`${cuidador.nombre} ${cuidador.apellido}`}
               </td>
               <td>
-                {cuidador.calificacion} <StarFill className="text-warning" />
+                {cuidador.ratingReviews} <StarFill className="text-warning" />
               </td>
               <td>{cuidador.especialidad}</td>
               <td>{cuidador.experiencia}</td>

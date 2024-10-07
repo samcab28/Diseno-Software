@@ -1,66 +1,108 @@
 import React, { useState } from 'react';
-import { Card, Button, Row, Col, Form } from 'react-bootstrap';
-
-interface Casa {
-  id: string;
-  titulo: string;
-  descripcion: string;
-  fechaInicio: string;
-  fechaFin: string;
-  ubicacion: string;
-}
+import { Card, Button, Row, Col, Form, Container } from 'react-bootstrap';
+import { CasaCuidado } from '../../types';
 
 const ListaCasasCuidado: React.FC = () => {
-  const [casas, setCasas] = useState<Casa[]>([
+  const [casas, setCasas] = useState<CasaCuidado[]>([
     {
-      id: '1',
-      titulo: 'Casa con jardín en San Jose ',
-      descripcion: 'Hermosa casa con amplio jardín, con 3 gatos .',
-      fechaInicio: '2023-07-01',
-      fechaFin: '2023-07-15',
-      ubicacion: 'San José, Costa Rica',
+      id: 1,
+      idUsuario: 1,
+      idDireccion: 1,
+      titulo: 'Casa con jardín en San Jose',
+      descripcionBase: 'Hermosa casa con amplio jardín, con 3 gatos.',
+      numHabitaciones: 3,
+      numBanos: 2,
+      descripcionCuidados: 'Cuidado de 3 gatos, regar plantas',
+      piscina: false,
+      jardin: true,
+      mascotas: true,
+      fechaInicio: new Date('2023-07-01'),
+      fechaFin: new Date('2023-07-15')
     },
     {
-      id: '2',
+      id: 2,
+      idUsuario: 2,
+      idDireccion: 2,
       titulo: 'Apartamento céntrico en Escazú',
-      descripcion: 'Cómodo apartamento cerca de la universidad.',
-      fechaInicio: '2023-08-05',
-      fechaFin: '2023-08-20',
-      ubicacion: 'Escazú, Costa Rica',
+      descripcionBase: 'Cómodo apartamento cerca de la universidad.',
+      numHabitaciones: 2,
+      numBanos: 1,
+      descripcionCuidados: 'Cuidado de plantas y recibir correo',
+      piscina: false,
+      jardin: false,
+      mascotas: false,
+      fechaInicio: new Date('2023-08-05'),
+      fechaFin: new Date('2023-08-20')
     },
-    // Ejemplos de casas
   ]);
 
+  const [filtroUbicacion, setFiltroUbicacion] = useState('');
+  const [filtroFechaInicio, setFiltroFechaInicio] = useState('');
+  const [filtroFechaFin, setFiltroFechaFin] = useState('');
+
+  const filtrarCasas = () => {
+    return casas.filter(casa => 
+      (!filtroUbicacion || casa.titulo.toLowerCase().includes(filtroUbicacion.toLowerCase())) &&
+      (!filtroFechaInicio || new Date(casa.fechaInicio) >= new Date(filtroFechaInicio)) &&
+      (!filtroFechaFin || new Date(casa.fechaFin) <= new Date(filtroFechaFin))
+    );
+  };
+
+  const casasFiltradas = filtrarCasas();
+
   return (
-    <div>
+    <Container>
+      <h2 className="my-4">Casas disponibles para cuidar</h2>
       <Form className="mb-4">
         <Row>
-          <Col md={6}>
-            <Form.Control type="text" placeholder="Buscar por ubicación..." />
+          <Col md={4}>
+            <Form.Control 
+              type="text" 
+              placeholder="Buscar por ubicación..." 
+              value={filtroUbicacion}
+              onChange={(e) => setFiltroUbicacion(e.target.value)}
+            />
           </Col>
-          <Col md={3}>
-            <Form.Control type="date" placeholder="Fecha de inicio" />
+          <Col md={4}>
+            <Form.Control 
+              type="date" 
+              placeholder="Fecha de inicio" 
+              value={filtroFechaInicio}
+              onChange={(e) => setFiltroFechaInicio(e.target.value)}
+            />
           </Col>
-          <Col md={3}>
-            <Form.Control type="date" placeholder="Fecha de fin" />
+          <Col md={4}>
+            <Form.Control 
+              type="date" 
+              placeholder="Fecha de fin" 
+              value={filtroFechaFin}
+              onChange={(e) => setFiltroFechaFin(e.target.value)}
+            />
           </Col>
         </Row>
       </Form>
 
       <Row>
-        {casas.map((casa) => (
+        {casasFiltradas.map((casa) => (
           <Col key={casa.id} md={4} className="mb-4">
             <Card>
               <Card.Body>
                 <Card.Title>{casa.titulo}</Card.Title>
                 <Card.Text>
-                  {casa.descripcion}
+                  {casa.descripcionBase}
                   <br />
-                  <strong>Ubicación:</strong> {casa.ubicacion}
+                  <strong>Habitaciones:</strong> {casa.numHabitaciones}
                   <br />
-                  <strong>Desde:</strong> {casa.fechaInicio}
+                  <strong>Baños:</strong> {casa.numBanos}
                   <br />
-                  <strong>Hasta:</strong> {casa.fechaFin}
+                  <strong>Desde:</strong> {casa.fechaInicio.toLocaleDateString()}
+                  <br />
+                  <strong>Hasta:</strong> {casa.fechaFin.toLocaleDateString()}
+                  <br />
+                  <strong>Características:</strong>
+                  {casa.piscina && ' Piscina,'}
+                  {casa.jardin && ' Jardín,'}
+                  {casa.mascotas && ' Mascotas'}
                 </Card.Text>
                 <Button variant="primary">Ver detalles</Button>
               </Card.Body>
@@ -68,7 +110,7 @@ const ListaCasasCuidado: React.FC = () => {
           </Col>
         ))}
       </Row>
-    </div>
+    </Container>
   );
 };
 

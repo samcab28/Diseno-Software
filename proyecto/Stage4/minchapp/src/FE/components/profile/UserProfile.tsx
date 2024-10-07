@@ -1,36 +1,30 @@
 import React from 'react';
-import { Card, ListGroup } from 'react-bootstrap';
-import { CareRequestList } from '../cuidadores/CareRequestList';
-import { Header } from '../common/Header';
-import { PublishCareNeed } from '../host/PublishCareNeed';
+import { Card, ListGroup, Container } from 'react-bootstrap';
+import { UsuarioRegistrado } from '../../types/index';
 
 interface UserProfileProps {
-  name: string;
-  email: string;
-  phone: string;
-  address: string;
+  user: UsuarioRegistrado;
 }
 
-const UserProfile: React.FC<UserProfileProps> = ({ name, email, phone, address }) => {
+const UserProfile: React.FC<UserProfileProps> = ({ user }) => {
   return (
-    <Card>
-      <Card.Header as="h5">Perfil de Usuario</Card.Header>
-      <Card.Body>
-        <Card.Title>{name}</Card.Title>
-        <ListGroup variant="flush">
-          <ListGroup.Item>
-            <strong>Email:</strong> {email}
-          </ListGroup.Item>
-          <ListGroup.Item>
-            <strong>Teléfono:</strong> {phone}
-          </ListGroup.Item>
-          <ListGroup.Item>
-            <strong>Dirección:</strong> {address}
-          </ListGroup.Item>
-        </ListGroup>
-      </Card.Body>
-    </Card>
+    <Container className="my-4">
+      <Card>
+        <Card.Img variant="top" src={user.urlImagenPerfil} />
+        <Card.Body>
+          <Card.Title>{`${user.nombre} ${user.apellido}`}</Card.Title>
+          <ListGroup variant="flush">
+            <ListGroup.Item>Email: {user.email}</ListGroup.Item>
+            <ListGroup.Item>Teléfono: {user.telefono}</ListGroup.Item>
+            <ListGroup.Item>Ciudad: {user.ciudadResidencia}</ListGroup.Item>
+            <ListGroup.Item>Tipo de Usuario: {user.tipoUsuario}</ListGroup.Item>
+            <ListGroup.Item>Calificación: {user.ratingReviews}</ListGroup.Item>
+            <ListGroup.Item>Hoja de Delincuencia: {user.hojaDelincuencia ? 'Verificada' : 'No verificada'}</ListGroup.Item>
+          </ListGroup>
+        </Card.Body>
+      </Card>
+    </Container>
   );
 };
 
-export { Header, PublishCareNeed, CareRequestList, UserProfile };
+export default UserProfile;

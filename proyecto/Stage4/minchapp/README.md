@@ -141,3 +141,5 @@ npm install react-infinite-scroll-component
 | Paginación de resultados                               | X               |                |                      |                     |
 | Marcar cuidadores como favoritos                       | X               |                |                      |                     |
 | Enviar solicitud de contacto                           |                 |                |                      | X                   |
+
+

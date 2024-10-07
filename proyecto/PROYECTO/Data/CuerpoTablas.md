@@ -1,175 +1,182 @@
-## Tablas del Sistema
-
+# Tablas del Sistema
+## PostgreSQL
 ### 1. Usuario
-| Campo               | Descripción                                 |
-|---------------------|---------------------------------------------|
-| `id`                | Identificador único del usuario             |
-| `nombre`            | Nombre del usuario                          |
-| `apellido`          | Apellido del usuario                        |
-| `fechaNacimiento`   | Fecha de nacimiento                         |
-| `ciudadResidencia`  | Ciudad de residencia                        |
-| `urlImagenPerfil`   | URL de la imagen de perfil                  |
-| `telefono`          | Teléfono                                    |
-| `email`             | Correo electrónico                          |
-| `contrasena`        | Contraseña                                  |
+| Campo               | Tipo de Dato     |
+|---------------------|------------------|
+| `id`                | `INTEGER`        |
+| `nombre`            | `VARCHAR(256)`   |
+| `apellido`          | `VARCHAR(256)`   |
+| `fechaNacimiento`   | `DATE`           |
+| `ciudadResidencia`  | `VARCHAR(256)`   |
+| `urlImagenPerfil`   | `VARCHAR(512)`   |
+| `telefono`          | `VARCHAR(16)`    |
+| `email`             | `VARCHAR(256)`   |
+| `contrasena`        | `VARCHAR(256)`   |
 
 ### 2. Usuario Registrado
-| Campo               | Descripción                                 |
-|---------------------|---------------------------------------------|
-| `idUsuario`         | Identificador del usuario                   |
-| `cedula`            | Cédula                                      |
-| `hojaDelincuencia`  | Hoja de delincuencia                        |
-| `tarjetaCredito`    | Tarjeta de crédito                          |
-| `ratingReviews`     | Promedio de calificación en reseñas         |
-| `tipoUsuario`       | Tipo de usuario (cuidador, host, admin)      |
+| Campo               | Tipo de Dato     |
+|---------------------|------------------|
+| `idUsuario`         | `INTEGER`        |
+| `cedula`            | `VARCHAR(64)`    |
+| `hojaDelincuencia`  | `BOOLEAN`        |
+| `tarjetaCredito`    | `VARCHAR(16)`    |
+| `ratingReviews`     | `FLOAT`          |
+| `tipoUsuario`       | `VARCHAR(64)`    |
 
 ### 3. Reviews
-| Campo               | Descripción                                 |
-|---------------------|---------------------------------------------|
-| `id`                | Identificador de la reseña                  |
-| `idUsuario`         | Usuario que realizó la reseña               |
-| `idRecibeReview`    | Usuario que recibe la reseña                |
-| `calificacion`      | Calificación (1-5)                          |
-| `comentario`        | Comentario                                  |
-| `fechaCreado`       | Fecha de creación                           |
+| Campo               | Tipo de Dato     |
+|---------------------|------------------|
+| `id`                | `INTEGER`        |
+| `idUsuario`         | `INTEGER`        |
+| `idRecibeReview`    | `INTEGER`        |
+| `calificacion`      | `INTEGER`        |
+| `comentario`        | `TEXT`           |
+| `fechaCreado`       | `TIMESTAMP`      |
 
 ### 4. Red Social
-| Campo               | Descripción                                 |
-|---------------------|---------------------------------------------|
-| `id`                | Identificador de la red social              |
-| `idUsuario`         | Usuario asociado                            |
-| `nombrePlataforma`  | Nombre de la plataforma                     |
-| `urlPerfil`         | URL del perfil en la plataforma             |
+| Campo               | Tipo de Dato     |
+|---------------------|------------------|
+| `id`                | `INTEGER`        |
+| `idUsuario`         | `INTEGER`        |
+| `nombrePlataforma`  | `VARCHAR(128)`   |
+| `urlPerfil`         | `VARCHAR(512)`   |
 
 ### 5. Depósito de Garantía
-| Campo               | Descripción                                 |
-|---------------------|---------------------------------------------|
-| `id`                | Identificador del depósito                  |
-| `idUsuario`         | Usuario que realiza el depósito             |
-| `idRecibeDep`       | Usuario que recibe el depósito              |
-| `monto`             | Monto del depósito                          |
-| `motivo`            | Motivo del depósito                         |
+| Campo               | Tipo de Dato     |
+|---------------------|------------------|
+| `id`                | `INTEGER`        |
+| `idUsuario`         | `INTEGER`        |
+| `idRecibeDep`       | `INTEGER`        |
+| `monto`             | `DECIMAL(10,2)`  |
+| `motivo`            | `TEXT`           |
 
 ### 6. Bitácora Depósito
-| Campo               | Descripción                                 |
-|---------------------|---------------------------------------------|
-| `id`                | Identificador de la bitácora                |
-| `idDepGar`          | Identificador del depósito de garantía      |
-| `fechaCreada`       | Fecha de creación                           |
+| Campo               | Tipo de Dato     |
+|---------------------|------------------|
+| `id`                | `INTEGER`        |
+| `idDepGar`          | `INTEGER`        |
+| `fechaCreada`       | `TIMESTAMP`      |
 
 ### 7. Servicios Adicionales
-| Campo               | Descripción                                 |
-|---------------------|---------------------------------------------|
-| `id`                | Identificador del servicio                  |
-| `idUsuario`         | Usuario que ofrece el servicio              |
-| `descripcion`       | Descripción del servicio                    |
+| Campo               | Tipo de Dato     |
+|---------------------|------------------|
+| `id`                | `INTEGER`        |
+| `idUsuario`         | `INTEGER`        |
+| `descripcion`       | `TEXT`           |
 
 ### 8. Review Servicios
-| Campo               | Descripción                                 |
-|---------------------|---------------------------------------------|
-| `id`                | Identificador de la reseña                  |
-| `idServicio`        | Servicio que se está reseñando              |
-| `idUsuario`         | Usuario que realizó la reseña               |
-| `calificacion`      | Calificación (1-5)                          |
-| `comentario`        | Comentario                                  |
-| `fechaCreado`       | Fecha de creación                           |
+| Campo               | Tipo de Dato     |
+|---------------------|------------------|
+| `id`                | `INTEGER`        |
+| `idServicio`        | `INTEGER`        |
+| `idUsuario`         | `INTEGER`        |
+| `calificacion`      | `INTEGER`        |
+| `comentario`        | `TEXT`           |
+| `fechaCreado`       | `TIMESTAMP`      |
 
 ### 9. Dirección
-| Campo               | Descripción                                 |
-|---------------------|---------------------------------------------|
-| `id`                | Identificador de la dirección               |
-| `idUsuario`         | Usuario asociado                            |
-| `pais`              | País                                        |
-| `provincia`         | Provincia                                   |
-| `canton`            | Cantón                                      |
+| Campo               | Tipo de Dato     |
+|---------------------|------------------|
+| `id`                | `INTEGER`        |
+| `idUsuario`         | `INTEGER`        |
+| `pais`              | `VARCHAR(128)`   |
+| `provincia`         | `VARCHAR(128)`   |
+| `canton`            | `VARCHAR(128)`   |
 
 ### 10. Contacto de Emergencia
-| Campo               | Descripción                                 |
-|---------------------|---------------------------------------------|
-| `id`                | Identificador del contacto                  |
-| `idUsuario`         | Usuario asociado                            |
-| `nombreRelacion`    | Nombre y relación con el usuario            |
-| `numeroContacto`    | Número de contacto                          |
+| Campo               | Tipo de Dato     |
+|---------------------|------------------|
+| `id`                | `INTEGER`        |
+| `idUsuario`         | `INTEGER`        |
+| `nombreRelacion`    | `VARCHAR(256)`   |
+| `numeroContacto`    | `VARCHAR(16)`    |
 
 ### 11. Bitácora de Transacciones
-| Campo               | Descripción                                 |
-|---------------------|---------------------------------------------|
-| `id`                | Identificador de la bitácora                |
-| `idPost`            | Identificador del post relacionado          |
-| `monto`             | Monto de la transacción                     |
-| `motivo`            | Motivo de la transacción                    |
+| Campo               | Tipo de Dato     |
+|---------------------|------------------|
+| `id`                | `INTEGER`        |
+| `idPost`            | `INTEGER`        |
+| `monto`             | `DECIMAL(10,2)`  |
+| `motivo`            | `TEXT`           |
 
 ### 12. Bitácora de Cuidados
-| Campo               | Descripción                                 |
-|---------------------|---------------------------------------------|
-| `id`                | Identificador de la bitácora                |
-| `idPost`            | Identificador del post relacionado          |
-| `idCuidador`        | Identificador del cuidador                  |
-| `observaciones`     | Observaciones                               |
+| Campo               | Tipo de Dato     |
+|---------------------|------------------|
+| `id`                | `INTEGER`        |
+| `idPost`            | `INTEGER`        |
+| `idCuidador`        | `INTEGER`        |
+| `observaciones`     | `TEXT`           |
 
 ### 13. URL de Cuidados
-| Campo               | Descripción                                 |
-|---------------------|---------------------------------------------|
-| `id`                | Identificador de la URL                     |
-| `idBitacoraCuido`   | Identificador de la bitácora de cuidados    |
-| `link`              | Enlace a la imagen o video                  |
+| Campo               | Tipo de Dato     |
+|---------------------|------------------|
+| `id`                | `INTEGER`        |
+| `idBitacoraCuido`   | `INTEGER`        |
+| `link`              | `VARCHAR(512)`   |
 
 ### 14. Protocolos de Emergencia
-| Campo               | Descripción                                 |
-|---------------------|---------------------------------------------|
-| `id`                | Identificador del protocolo                 |
-| `idInfoCasa`        | Identificador de la información de la casa  |
-| `situacionEmergencia` | Descripción de la situación de emergencia  |
-| `solucion`          | Solución propuesta                          |
+| Campo               | Tipo de Dato     |
+|---------------------|------------------|
+| `id`                | `INTEGER`        |
+| `idInfoCasa`        | `INTEGER`        |
+| `situacionEmergencia` | `TEXT`         |
+| `solucion`          | `TEXT`           |
 
 ### 15. Favorito
-| Campo               | Descripción                                 |
-|---------------------|---------------------------------------------|
-| `id`                | Identificador del favorito                  |
-| `idUsuario`         | Usuario que agregó el favorito              |
-| `idCuidador`        | Identificador del cuidador favorito         |
+| Campo               | Tipo de Dato     |
+|---------------------|------------------|
+| `id`                | `INTEGER`        |
+| `idUsuario`         | `INTEGER`        |
+| `idCuidador`        | `INTEGER`        |
+
+--------------------------------------------------------------
+## MongoDB
 
 ### 16. Info Casa
-| Campo               | Descripción                                 |
-|---------------------|---------------------------------------------|
-| `id`                | Identificador de la información de la casa  |
-| `idUsuario`         | Usuario asociado                            |
-| `idDireccion`       | Dirección asociada                          |
-| `descripcionBase`   | Descripción básica de la casa               |
-| `numHabitaciones`   | Número de habitaciones                      |
-| `numBanos`          | Número de baños                             |
-| `descripcionCuidados` | Descripción de cuidados                   |
-| `piscina`           | Tiene piscina (bool)                        |
-| `jardin`            | Tiene jardín (bool)                         |
-| `mascotas`          | Tiene mascotas (bool)                       |
+| Campo               | Tipo de Dato     |
+|---------------------|------------------|
+| `id`                | `INTEGER`        |
+| `idUsuario`         | `INTEGER`        |
+| `idDireccion`       | `INTEGER`        |
+| `descripcionBase`   | `TEXT`           |
+| `numHabitaciones`   | `INTEGER`        |
+| `numBanos`          | `INTEGER`        |
+| `descripcionCuidados` | `TEXT`         |
+| `piscina`           | `BOOLEAN`        |
+| `jardin`            | `BOOLEAN`        |
+| `mascotas`          | `BOOLEAN`        |
 
 ### 17. Post
-| Campo               | Descripción                                 |
-|---------------------|---------------------------------------------|
-| `idUsuario`         | Usuario que crea el post                    |
-| `motivo`            | Motivo del post (casa/mascota)              |
-| `idInfoBasica`      | Información básica de la casa               |
-| `ofertaPago`        | Oferta de pago                              |
-| `fechaInicio`       | Fecha de inicio                             |
-| `fechaFin`          | Fecha de finalización                       |
+| Campo               | Tipo de Dato     |
+|---------------------|------------------|
+| `id`                | `INTEGER`        |
+| `idUsuario`         | `INTEGER`        |
+| `motivo`            | `TEXT`           |
+| `idInfoBasica`      | `INTEGER`        |
+| `ofertaPago`        | `DECIMAL(10,2)`  |
+| `fechaInicio`       | `TIMESTAMP`      |
+| `fechaFin`          | `TIMESTAMP`      |
+| `subJsonPagos`      | `JSON`           |
+| `estadoReservado`   | `BOOLEAN`        |
 
-### 18. Sub-Ison Pagos
-| Campo               | Descripción                                 |
-|---------------------|---------------------------------------------|
-| `id`                | Identificador del pago                      |
-| `asunto`            | Asunto del pago                             |
-| `fecha`             | Fecha del pago                              |
-| `monto`             | Monto del pago                              |
-| `descripcionTipoPago` | Descripción del tipo de pago              |
+- Sub-json Pagos
+```
+{
+  "pagos": [
+    {
+      "id": 0,
+      "asunto": "",
+      "fecha": "",
+      "monto": 0.0,
+      "descripcionTipoPago": ""
+    }
+  ]
+}
+```
 
-### 19. Estado Reservado
-| Campo               | Descripción                                 |
-|---------------------|---------------------------------------------|
-| `estadoReservado`   | Estado de reserva (bool)                    |
-
-### 20. Bitácora Contacto Host
-| Campo               | Descripción                                 |
-|---------------------|---------------------------------------------|
-| `idHost`            | Identificador del host                      |
-| `idCuidador`        | Identificador del cuidador                  |
-| `fechaInicioContacto` | Fecha de inicio de contacto               |
+### 18. Bitácora Contacto Host
+| Campo               | Tipo de Dato     |
+|---------------------|------------------|
+| `idHost`            | `INTEGER`        |
+| `idCuidador`        | `INTEGER`        |
+| `fechaInicioContacto` | `TIMESTAMP`    |

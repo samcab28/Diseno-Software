@@ -2,4 +2,4 @@
 
 ![ModeloBD](./img/diagrama.png)
 - [Scripts SQL](./data/)
-- [Modelos ORM (Mongoose)](../stage6-backend/src/models)
+- [Modelos ORM (Mongoose)](../stage6-backend/models/)

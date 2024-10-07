@@ -1,5 +1,3 @@
-# PostgreSQL's Tables
-
 -- Tabla: Usuario
 CREATE TABLE Usuario (
     id SERIAL PRIMARY KEY,
@@ -22,16 +20,6 @@ CREATE TABLE UsuarioRegistrado (
     ratingReviews FLOAT,
     tipoUsuario VARCHAR(64),
     PRIMARY KEY (idUsuario)
-);
-
--- Tabla: Reviews
-CREATE TABLE Reviews (
-    id SERIAL PRIMARY KEY,
-    idUsuario INTEGER REFERENCES Usuario(id),
-    idRecibeReview INTEGER REFERENCES Usuario(id),
-    calificacion INTEGER CHECK (calificacion BETWEEN 1 AND 5),
-    comentario TEXT,
-    fechaCreado TIMESTAMP DEFAULT NOW()
 );
 
 -- Tabla: Red Social
@@ -63,16 +51,6 @@ CREATE TABLE ServiciosAdicionales (
     id SERIAL PRIMARY KEY,
     idUsuario INTEGER REFERENCES Usuario(id),
     descripcion TEXT
-);
-
--- Tabla: Review Servicios
-CREATE TABLE ReviewServicios (
-    id SERIAL PRIMARY KEY,
-    idServicio INTEGER REFERENCES ServiciosAdicionales(id),
-    idUsuario INTEGER REFERENCES Usuario(id),
-    calificacion INTEGER CHECK (calificacion BETWEEN 1 AND 5),
-    comentario TEXT,
-    fechaCreado TIMESTAMP DEFAULT NOW()
 );
 
 -- Tabla: Dirección
@@ -130,17 +108,10 @@ CREATE TABLE Favorito (
     idCuidador INTEGER REFERENCES Usuario(id)
 );
 
--- Tabla: Info Casa
-CREATE TABLE InfoCasa (
-    id SERIAL PRIMARY KEY,
-    idUsuario INTEGER REFERENCES Usuario(id),
-    idDireccion INTEGER REFERENCES Direccion(id),
-    descripcionBase TEXT,
-    numHabitaciones INTEGER,
-    numBanos INTEGER,
-    descripcionCuidados TEXT,
-    piscina BOOLEAN,
-    jardin BOOLEAN,
-    mascotas BOOLEAN
+-- Tabla: Bitácora Contacto Host
+CREATE TABLE BitacoraContactoHost (
+    idHost INTEGER REFERENCES Usuario(id),
+    idCuidador INTEGER REFERENCES Usuario(id),
+    fechaInicioContacto TIMESTAMP,
+    PRIMARY KEY (idHost, idCuidador)
 );
-

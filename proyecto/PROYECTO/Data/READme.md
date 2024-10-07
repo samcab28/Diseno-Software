@@ -1,5 +1,11 @@
-# Tablas del Sistema
-## PostgreSQL
+# HACE FALTA LO DE RESTRICCIONES
+
+
+Para cada tabla o collection, escriba un ejemplo de la data que tendría esa entidad. Finalmente pegue en el canal de general el modelo de datos como imagen y los ejemplos de data de cada una. Si es nonSQL, entonces el diseño y los datos ejemplos será un json ejemplo de cada collection, con comentarios donde se ocupe aclarar alguna restricción.
+
+# Datos
+A continuación, se muestra el cuerpo base de cada tabla:
+### PostgreSQL
 ### 1. Usuario
 | Campo               | Tipo de Dato     |
 |---------------------|------------------|
@@ -129,18 +135,10 @@
 | `idUsuario`         | `INTEGER`        |
 | `idCuidador`        | `INTEGER`        |
 
-
-### 16. Bitácora Contacto Host
-| Campo               | Tipo de Dato     |
-|---------------------|------------------|
-| `idHost`            | `INTEGER`        |
-| `idCuidador`        | `INTEGER`        |
-| `fechaInicioContacto` | `TIMESTAMP`    |
-
 --------------------------------------------------------------
-## MongoDB
+### MongoDB
 
-### 17. Info Casa
+### 16. Info Casa
 | Campo               | Tipo de Dato     |
 |---------------------|------------------|
 | `id`                | `INTEGER`        |
@@ -154,7 +152,7 @@
 | `jardin`            | `BOOLEAN`        |
 | `mascotas`          | `BOOLEAN`        |
 
-### 18. Post
+### 17. Post
 | Campo               | Tipo de Dato     |
 |---------------------|------------------|
 | `id`                | `INTEGER`        |
@@ -182,3 +180,209 @@
 }
 ```
 
+### 18. Bitácora Contacto Host
+| Campo               | Tipo de Dato     |
+|---------------------|------------------|
+| `idHost`            | `INTEGER`        |
+| `idCuidador`        | `INTEGER`        |
+| `fechaInicioContacto` | `TIMESTAMP`    |
+
+# Modelo de base de datos
+Seguidamente se presenta el diagrama que corresponde a las tablas mencionadas anteriormente.
+
+![Modelo de la base de datos](./img/diagrama.png)
+
+### Modelo NoSQL
+```
+{
+  "_id": "string",               
+  "idUsuario": "integer",        
+  "motivo": "string",            
+  "idInfoBasica": "integer",     
+  "ofertaPago": "decimal",       
+  "fechaInicio": "timestamp",    
+  "fechaFin": "timestamp",      
+  "subJsonPagos": {},            // Subdocumento para detalles de pagos (puede ser un objeto vacío o tener información)
+  "estadoReservado": "boolean"   
+}
+{
+  "_id": "string",               
+  "idUsuario": "integer",        
+  "idDireccion": "integer",      
+  "descripcionBase": "string",   
+  "numHabitaciones": "integer",
+  "numBanos": "integer",       
+  "descripcionCuidados": "string", 
+  "piscina": "boolean",          
+  "jardin": "boolean",           
+  "mascotas": "boolean"       
+}
+```
+
+# Restricciones de las Tablas
+
+# Ejemplos
+```
+------ POSGRESQL ------
+{
+  "Usuario": [
+    {
+      "id": 1,
+      "nombre": "Juan",
+      "apellido": "Pérez",
+      "fechaNacimiento": "1985-05-15",
+      "ciudadResidencia": "Madrid",
+      "urlImagenPerfil": "http://example.com/imagen.jpg",
+      "telefono": "123456789",
+      "email": "juan@example.com",
+      "contrasena": "contraseña123"
+    }
+  ],
+  "UsuarioRegistrado": [
+    {
+      "idUsuario": 1,
+      "cedula": "V-12345678",
+      "hojaDelincuencia": false,
+      "tarjetaCredito": "1234-5678-9012-3456",
+      "ratingReviews": 4.5,
+      "tipoUsuario": "Cuidador"
+    }
+  ],
+  "Reviews": [
+    {
+      "id": 1,
+      "idUsuario": 1,
+      "idRecibeReview": 1,
+      "calificacion": 5,
+      "comentario": "Excelente servicio!",
+      "fechaCreado": "2024-10-01T12:00:00Z"
+    }
+  ],
+  "RedSocial": [
+    {
+      "id": 1,
+      "idUsuario": 1,
+      "nombrePlataforma": "Facebook",
+      "urlPerfil": "http://facebook.com/juan.perez"
+    }
+  ],
+  "DepositoGarantia": [
+    {
+      "id": 1,
+      "idUsuario": 1,
+      "idRecibeDep": 1,
+      "monto": 200.00,
+      "motivo": "Depósito para reservas"
+    }
+  ],
+  "BitacoraDeposito": [
+    {
+      "id": 1,
+      "idDepGar": 1,
+      "fechaCreada": "2024-10-01T12:30:00Z"
+    }
+  ],
+  "ServiciosAdicionales": [
+    {
+      "id": 1,
+      "idUsuario": 1,
+      "descripcion": "Cuidado de mascotas"
+    }
+  ],
+  "ReviewServicios": [
+    {
+      "id": 1,
+      "idServicio": 1,
+      "idUsuario": 1,
+      "calificacion": 5,
+      "comentario": "Servicio excelente, muy recomendable.",
+      "fechaCreado": "2024-10-01T12:00:00Z"
+    }
+  ],
+  "Direccion": [
+    {
+      "id": 1,
+      "idUsuario": 1,
+      "pais": "España",
+      "provincia": "Madrid",
+      "canton": "Madrid"
+    }
+  ],
+  "ContactoEmergencia": [
+    {
+      "id": 1,
+      "idUsuario": 1,
+      "nombreRelacion": "Hermano",
+      "numeroContacto": "987654321"
+    }
+  ],
+  "BitacoraTransacciones": [
+    {
+      "id": 1,
+      "idPost": 1,
+      "monto": 150.00,
+      "motivo": "Pago por servicio"
+    }
+  ],
+  "BitacoraCuidados": [
+    {
+      "id": 1,
+      "idPost": 1,
+      "idCuidador": 1,
+      "observaciones": "Se siguieron todas las instrucciones."
+    }
+  ],
+  "URLCuidados": [
+    {
+      "id": 1,
+      "idBitacoraCuido": 1,
+      "link": "http://example.com/instrucciones"
+    }
+  ],
+  "ProtocolosEmergencia": [
+    {
+      "id": 1,
+      "idInfoCasa": 1,
+      "situacionEmergencia": "Incendio",
+      "solucion": "Llamar al 112 y evacuar el edificio."
+    }
+  ],
+  "Favorito": [
+    {
+      "id": 1,
+      "idUsuario": 1,
+      "idCuidador": 1
+    }
+  ],
+
+------ MONGO DB ------
+
+  "InfoCasa": [
+    {
+      "id": 1,
+      "idUsuario": 1,
+      "idDireccion": 1,
+      "descripcionBase": "Casa acogedora en el centro de Madrid",
+      "numHabitaciones": 3,
+      "numBanos": 2,
+      "descripcionCuidados": "Ideal para familias y mascotas",
+      "piscina": false,
+      "jardin": true,
+      "mascotas": true
+    }
+  ],
+  "Post": [
+    {
+      "id": 1,
+      "idUsuario": 1,
+      "motivo": "Necesito un cuidador para mi mascota",
+      "idInfoBasica": 1,
+      "ofertaPago": 100.00,
+      "fechaInicio": "2024-10-05T00:00:00Z",
+      "fechaFin": "2024-10-12T00:00:00Z",
+      "subJsonPagos": {},
+      "estadoReservado": false
+    }
+  ]
+}
+```

@@ -222,8 +222,7 @@ Seguidamente se presenta el diagrama que corresponde a las tablas mencionadas an
 # Restricciones de las Tablas
 
 # Ejemplos
-```
------- POSGRESQL ------
+```------ POSGRESQL ------
 {
   "Usuario": [
     {

@@ -134,8 +134,6 @@ npm install react-infinite-scroll-component
 | Mostrar rates de cuidadores                            | X               | X              | X                    |                     |
 | Mostrar hoja de delincuencia                           |                 | X              |                      |                     |
 | Filtrar cuidadores                                     | X               |                |                      |                     |
-| Búsqueda textual de cuidadores                         | X               |                |                      |                     |
-| Integración con IA para recomendaciones                | X               |                |                      |                     |
 | Geolocalización y cálculo de distancia                 | X               |                |                      |                     |
 | Mostrar facilidades y credenciales                     |                 | X              | X                    |                     |
 | Paginación de resultados                               | X               |                |                      |                     |
@@ -143,3 +141,48 @@ npm install react-infinite-scroll-component
 | Enviar solicitud de contacto                           |                 |                |                      | X                   |
 
 
+
+-----------------------------------------
+# Pantallas
+
+Apuntes de las pantallas que creo que se van a necesitar para lo que es el alcance del proyecto. 
+
+## 1. Pantalla de busqueda de Cuidadores
+
+Busqueda de cuidadores
+
+Incluir geolocalizacion y posiblemente calculo tambien de distancia
+
+
+## 2. Perfil del Cuidador
+Informacion detallada del cuidador para generar confianza rapido
+
+Reviews del mae a simple vista
+
+Mostrar verificaciones (Como si tiene hoja de delicuencia o algo asi)
+
+Sistema de like/favoritos (No se si hacer una pantalla dedicada a esto, o mejor tirarlo por encima)
+
+## 3. Comparacion de Cuidadores
+
+Para comparar a varios cuidadores a la vez 
+
+## 4. Post de Necesidad de Cuidado 
+
+Formulario para el post
+
+Detalles de la casa, mascotas, y servicios que necesita
+
+## 5. Dashboard del Host
+
+Mostrar posts activos
+
+mostar solicitudes de cuidadores interesados 
+
+Ver el perfil de los cuidadores 
+
+## 6. Chat entre Host y Cuidador
+
+Pantallita de cuando hacen match
+
+chat de la conversacion

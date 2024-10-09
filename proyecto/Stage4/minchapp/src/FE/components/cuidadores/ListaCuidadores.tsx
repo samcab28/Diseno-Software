@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Row, Col, Card, Form, InputGroup, Button, Badge } from 'react-bootstrap';
-import { Search, GeoAlt, StarFill } from 'react-bootstrap-icons';
+import { Container, Row, Col, Card, Form, Button, Badge } from 'react-bootstrap';
+import { GeoAlt, StarFill, CurrencyDollar } from 'react-bootstrap-icons';
 import { Cuidador } from '../../types';
 
 const ListaCuidadores: React.FC = () => {
   const [cuidadores, setCuidadores] = useState<Cuidador[]>([]);
   const [filtroEspecialidad, setFiltroEspecialidad] = useState('');
   const [filtroPrecio, setFiltroPrecio] = useState('');
-  const [filtroDistancia, setFiltroDistancia] = useState('');
 
   useEffect(() => {
     // Simular carga de datos de cuidadores
@@ -63,71 +62,76 @@ const ListaCuidadores: React.FC = () => {
   const filtrarCuidadores = () => {
     return cuidadores.filter(cuidador => 
       (!filtroEspecialidad || cuidador.especialidad === filtroEspecialidad) &&
-      (!filtroPrecio || cuidador.tarifa <= parseInt(filtroPrecio)) &&
-      (!filtroDistancia || cuidador.ciudadResidencia.includes(filtroDistancia))
+      (!filtroPrecio || cuidador.tarifa <= parseInt(filtroPrecio))
     );
   };
 
   const cuidadoresFiltrados = filtrarCuidadores();
 
+  const EmojisEspecializados = (especialidad: string) => {
+    switch (especialidad) {
+      case 'Perros':
+        return '🐶';
+      case 'Gatos':
+        return '🐱';
+      case 'Aves':
+        return '🦜';
+      default:
+        return '🐾';
+    }
+  };
+
   return (
-    <Container>
-      <h2 className="my-4">Encuentra tu cuidador ideal</h2>
+    <Container fluid className="py-4 bg-light">
+      <h2 className="text-center mb-4">Encuentra tu cuidador ideal</h2>
       
-      <Form className="mb-4">
-        <Row>
-          <Col md={3}>
-            <InputGroup>
-              <Form.Control type="text" placeholder="Buscar cuidadores..." />
-              <Button variant="outline-secondary">
-                <Search />
-              </Button>
-            </InputGroup>
-          </Col>
-          <Col md={3}>
-            <Form.Select value={filtroEspecialidad} onChange={(e) => setFiltroEspecialidad(e.target.value)}>
-              <option value="">Especialidad</option>
-              <option value="Perros">Perros</option>
-              <option value="Gatos">Gatos</option>
-              <option value="Aves">Aves</option>
-            </Form.Select>
-          </Col>
-          <Col md={3}>
-            <Form.Select value={filtroPrecio} onChange={(e) => setFiltroPrecio(e.target.value)}>
-              <option value="">Precio máximo</option>
-              <option value="15">$15/hora</option>
-              <option value="20">$20/hora</option>
-              <option value="25">$25/hora</option>
-            </Form.Select>
-          </Col>
-          <Col md={3}>
-            <Form.Control 
-              type="text" 
-              placeholder="Ciudad" 
-              value={filtroDistancia}
-              onChange={(e) => setFiltroDistancia(e.target.value)}
-            />
-          </Col>
-        </Row>
-      </Form>
+      <Row className="justify-content-center mb-4">
+        <Col md={4} lg={3}>
+          <Form.Select 
+            value={filtroEspecialidad} 
+            onChange={(e) => setFiltroEspecialidad(e.target.value)}
+            className="mb-2"
+          >
+            <option value="">Todas las mascotas</option>
+            <option value="Perros">🐶 Perros</option>
+            <option value="Gatos">🐱 Gatos</option>
+            <option value="Aves">🦜 Aves</option>
+          </Form.Select>
+        </Col>
+        <Col md={4} lg={3}>
+          <Form.Select 
+            value={filtroPrecio} 
+            onChange={(e) => setFiltroPrecio(e.target.value)}
+            className="mb-2"
+          >
+            <option value="">Cualquier precio</option>
+            <option value="15">Hasta $15/hora</option>
+            <option value="20">Hasta $20/hora</option>
+            <option value="25">Hasta $25/hora</option>
+          </Form.Select>
+        </Col>
+      </Row>
       
-      <Row>
+      <Row className="justify-content-center">
         {cuidadoresFiltrados.map(cuidador => (
-          <Col key={cuidador.id} md={4} className="mb-4">
-            <Card>
+          <Col key={cuidador.id} md={6} lg={4} xl={3} className="mb-4">
+            <Card className="h-100 shadow-sm">
               <Card.Img variant="top" src={cuidador.urlImagenPerfil} />
               <Card.Body>
-                <Card.Title>{`${cuidador.nombre} ${cuidador.apellido}`}</Card.Title>
+                <Card.Title className="d-flex justify-content-between align-items-center">
+                  {`${cuidador.nombre} ${cuidador.apellido}`}
+                  <Badge bg="info" className="ms-2">
+                    {EmojisEspecializados(cuidador.especialidad)} {cuidador.especialidad}
+                  </Badge>
+                </Card.Title>
                 <Card.Text>
-                  <StarFill className="text-warning" /> {cuidador.ratingReviews}/5
+                  <StarFill className="text-warning me-1" />{cuidador.ratingReviews.toFixed(1)}
                   <br />
-                  <Badge bg="info">{cuidador.especialidad}</Badge>
+                  <GeoAlt className="me-1" />{cuidador.ciudadResidencia}
                   <br />
-                  <GeoAlt /> {cuidador.ciudadResidencia}
-                  <br />
-                  ${cuidador.tarifa}/hora
+                  <CurrencyDollar className="me-1" />{cuidador.tarifa}/hora
                 </Card.Text>
-                <Button variant="primary">Ver perfil</Button>
+                <Button variant="primary" className="w-100">Ver perfil</Button>
               </Card.Body>
             </Card>
           </Col>

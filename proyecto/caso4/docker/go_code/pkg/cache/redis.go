@@ -2,6 +2,8 @@ package cache
 
 import (
 	"context"
+	"fmt"
+	"os"
 	"time"
 
 	"github.com/go-redis/redis/v8"
@@ -11,11 +13,19 @@ type RedisCache struct {
 	client *redis.Client
 }
 
-// NewRedisClient crea un cliente de Redis.
+// NewRedisClient crea un cliente de Redis usando variables de entorno.
 func NewRedisClient() (*RedisCache, error) {
+	host := os.Getenv("REDIS_HOST")
+	port := os.Getenv("REDIS_PORT")
+	password := os.Getenv("REDIS_PASSWORD")
+
+	if host == "" || port == "" {
+		return nil, fmt.Errorf("REDIS_HOST y REDIS_PORT deben estar configurados")
+	}
+
 	client := redis.NewClient(&redis.Options{
-		Addr:     "localhost:30102", // Dirección de Redis
-		Password: "w6d7mIePGR",
+		Addr:     fmt.Sprintf("%s:%s", host, port),
+		Password: password,
 		DB:       0, // Usar la base de datos 0
 	})
 

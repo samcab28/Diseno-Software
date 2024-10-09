@@ -22,3 +22,8 @@ kubectl patch svc minchapp-databases-redis-master -p '{\"spec\": {\"type\": \"No
 
 cd ..
 
+cd .\api
+helm upgrade --install minchapp-api . -f values.yaml
+Start-Sleep -Seconds 10
+
+cd ..

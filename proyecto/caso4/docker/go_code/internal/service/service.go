@@ -58,11 +58,12 @@ func (s *basicService) Get35PercentRecords(ctx context.Context) ([]db.Registro, 
 func (s *basicService) Get35PercentRecordsWithPool(ctx context.Context) ([]db.Registro, error) {
 	pool := s.db.GetPool() // Obtiene el pool de conexiones
 
-	query := `SELECT id, name, release_date, required_age, price FROM (
-        SELECT *, ROW_NUMBER() OVER () AS rn
-        FROM games_info
-    ) sub
-    WHERE rn <= (SELECT COUNT(*) * 0.35 FROM games_info);`
+	query := `SELECT id, name, release_date, required_age, price
+FROM (
+    SELECT *, ROW_NUMBER() OVER (ORDER BY RANDOM()) AS rn
+    FROM games_info
+) sub
+WHERE rn <= (SELECT COUNT(*) * (0.35 + (RANDOM() * 0.1 - 0.05)) FROM games_info);`
 
 	rows, err := pool.Query(ctx, query)
 	if err != nil {

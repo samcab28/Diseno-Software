@@ -4,6 +4,9 @@ import (
 	"context"
 	"database/sql"
 
+	"fmt"
+	"os"
+
 	"github.com/jackc/pgx/v4/pgxpool"
 	_ "github.com/lib/pq"
 )
@@ -24,13 +27,25 @@ type PostgresDB struct {
 
 // Nueva conexión a PostgreSQL
 func NewPostgresConnection() (*PostgresDB, error) {
-	db, err := sql.Open("postgres", "postgres://postgres:tHjhARSwJL@localhost:30100/games?sslmode=disable")
+
+	// Obtener las variables de entorno para la conexión
+	user := os.Getenv("POSTGRES_USER")
+	password := os.Getenv("POSTGRES_PASSWORD")
+	host := os.Getenv("POSTGRES_HOSTNAME")
+	port := os.Getenv("POSTGRES_PORT")
+	dbName := os.Getenv("POSTGRES_DB")
+
+	// Crear la URL de conexión usando las variables de entorno
+	connStr := fmt.Sprintf("postgres://%s:%s@%s:%s/%s?sslmode=disable", user, password, host, port, dbName)
+
+	// Crear la conexión usando la cadena generada
+	db, err := sql.Open("postgres", connStr)
 	if err != nil {
 		return nil, err
 	}
 
 	// Crear el pool de conexiones
-	pool, err := pgxpool.Connect(context.Background(), "postgres://postgres:tHjhARSwJL@localhost:30100/games?sslmode=disable")
+	pool, err := pgxpool.Connect(context.Background(), connStr)
 	if err != nil {
 		return nil, err
 	}

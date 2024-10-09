@@ -18,17 +18,7 @@ Table UsuarioRegistrado {
   cedula varchar(64)
   hojaDelincuencia boolean
   tarjetaCredito varchar(16)
-  ratingReviews float
   tipoUsuario varchar(64)
-}
-
-Table Reviews {
-  id integer [primary key]
-  idUsuario integer
-  idRecibeReview integer
-  calificacion integer [note: 'Rango: 1-5']
-  comentario text
-  fechaCreado timestamp
 }
 
 Table RedSocial {
@@ -56,15 +46,6 @@ Table ServiciosAdicionales {
   id integer [primary key]
   idUsuario integer 
   descripcion text
-}
-
-Table ReviewServicios {
-  id integer [primary key]
-  idServicio integer 
-  idUsuario integer 
-  calificacion integer [note: 'Rango: 1-5']
-  comentario text
-  fechaCreado timestamp
 }
 
 Table Direccion {
@@ -149,15 +130,11 @@ Table BitacoraContactoHost {
 
 // Definición de Referencias
 Ref: UsuarioRegistrado.idUsuario > Usuario.id 
-Ref: Reviews.idUsuario > Usuario.id 
-Ref: Reviews.idRecibeReview > Usuario.id 
 Ref: RedSocial.idUsuario > Usuario.id 
 Ref: DepositoGarantia.idUsuario > Usuario.id 
 Ref: DepositoGarantia.idRecibeDep > Usuario.id 
 Ref: BitacoraDeposito.idDepGar > DepositoGarantia.id
 Ref: ServiciosAdicionales.idUsuario > Usuario.id
-Ref: ReviewServicios.idServicio > ServiciosAdicionales.id
-Ref: ReviewServicios.idUsuario > Usuario.id 
 Ref: Direccion.idUsuario > Usuario.id 
 Ref: ContactoEmergencia.idUsuario > Usuario.id
 Ref: BitacoraCuidados.idCuidador > Usuario.id 

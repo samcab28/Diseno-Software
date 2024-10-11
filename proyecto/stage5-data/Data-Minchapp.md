@@ -1,10 +1,7 @@
-# Diseño del modelo de datos 
+# Minchapp
 
-![ModeloBD](./img/diagrama2.png)
-
-# Tablas en PostgreSQL
+## Tablas en PostgreSQL
 ```
--- Tabla: Usuario
 CREATE TABLE Usuario (
     id SERIAL PRIMARY KEY,
     nombre VARCHAR(256) NOT NULL,
@@ -14,328 +11,198 @@ CREATE TABLE Usuario (
     urlImagenPerfil VARCHAR(512),
     telefono VARCHAR(16),
     email VARCHAR(256),
-    contrasena VARCHAR(256)
+    contrasena BYTEA
 );
 
--- Tabla: Usuario Registrado
-CREATE TABLE UsuarioRegistrado (
+-- Definimos diferentes roles como "Cuidador", "Host", "Administrador"
+CREATE TABLE TipoUsuario (
+    id SERIAL PRIMARY KEY,
+    descripcion VARCHAR(128) NOT NULL  -- Ejemplo: 'Cuidador', 'Host', 'Administrador'
+);
+
+-- Esta tabla permitirá la asignación de múltiples roles a un mismo usuario.
+CREATE TABLE UsuarioTipo (
+    idUsuario INTEGER REFERENCES Usuario(id),
+    idTipoUsuario INTEGER REFERENCES TipoUsuario(id),
+    PRIMARY KEY (idUsuario, idTipoUsuario)
+);
+
+CREATE TABLE InfoUsuario (
     idUsuario INTEGER REFERENCES Usuario(id),
     cedula VARCHAR(64),
     hojaDelincuencia BOOLEAN,
-    tarjetaCredito VARCHAR(16),
-    tipoUsuario VARCHAR(64),
     PRIMARY KEY (idUsuario)
 );
 
--- Tabla: Red Social
+-- DIRECCION
+CREATE TABLE Pais (
+    id SERIAL PRIMARY KEY,
+    nombre VARCHAR(128) NOT NULL
+);
+
+CREATE TABLE Estado (
+    id SERIAL PRIMARY KEY,
+    idPais INTEGER REFERENCES Pais(id),
+    nombre VARCHAR(128) NOT NULL
+);
+
+CREATE TABLE Ciudad (
+    id SERIAL PRIMARY KEY,
+    idEstado INTEGER REFERENCES Estado(id),
+    nombre VARCHAR(128) NOT NULL
+);
+
+CREATE TABLE Direccion (
+    id SERIAL PRIMARY KEY,
+    idCiudad INTEGER REFERENCES Ciudad(id),
+    calle1 VARCHAR(256),
+    calle2 VARCHAR(256),
+    codigoPostal VARCHAR(16),
+    latitud DECIMAL(9,6),
+    longitud DECIMAL(9,6)
+);
+---
+
+CREATE TABLE Contacto (
+    id SERIAL PRIMARY KEY,
+    idUsuario INTEGER REFERENCES Usuario(id),
+    tipoContacto VARCHAR(64),  -- Ejemplo: 'personal', 'emergencia'
+    nombre VARCHAR(256),
+    numeroContacto VARCHAR(16),
+    email VARCHAR(256)
+    deleted BOOLEAN DEFAULT FALSE  -- Para eliminaciones lógicas
+);
+
+CREATE TABLE TipoPlataforma (
+    id SERIAL PRIMARY KEY,
+    nombre VARCHAR(128) NOT NULL
+);
+
 CREATE TABLE RedSocial (
     id SERIAL PRIMARY KEY,
     idUsuario INTEGER REFERENCES Usuario(id),
-    nombrePlataforma VARCHAR(128),
+    idPlataforma INTEGER REFERENCES TipoPlataforma(id),
     urlPerfil VARCHAR(512)
 );
 
--- Tabla: Depósito de Garantía
-CREATE TABLE DepositoGarantia (
+-- Se une depósitos de garantía y pagos en una sola tabla
+CREATE TABLE Transaccion (
     id SERIAL PRIMARY KEY,
     idUsuario INTEGER REFERENCES Usuario(id),
-    idRecibeDep INTEGER REFERENCES Usuario(id),
+    fecha TIMESTAMP DEFAULT NOW(),
     monto DECIMAL(10, 2),
-    motivo TEXT
+    descripcion TEXT,
+    tipo VARCHAR(64),  -- Ejemplo: 'depósito', 'pago'
+    numeroReferencia VARCHAR(64),
+    checksum VARCHAR(64)
 );
 
--- Tabla: Bitácora Depósito
-CREATE TABLE BitacoraDeposito (
-    id SERIAL PRIMARY KEY,
-    idDepGar INTEGER REFERENCES DepositoGarantia(id),
-    fechaCreada TIMESTAMP DEFAULT NOW()
-);
-
--- Tabla: Servicios Adicionales
-CREATE TABLE ServiciosAdicionales (
+-- Una bitácora para registros de contacto y de cuidados con los cuidadores.
+CREATE TABLE Bitacora (
     id SERIAL PRIMARY KEY,
     idUsuario INTEGER REFERENCES Usuario(id),
-    descripcion TEXT
-);
-
--- Tabla: Dirección
-CREATE TABLE Direccion (
-    id SERIAL PRIMARY KEY,
-    idUsuario INTEGER REFERENCES Usuario(id),
-    pais VARCHAR(128),
-    provincia VARCHAR(128),
-    canton VARCHAR(128)
-);
-
--- Tabla: Contacto de Emergencia
-CREATE TABLE ContactoEmergencia (
-    id SERIAL PRIMARY KEY,
-    idUsuario INTEGER REFERENCES Usuario(id),
-    nombreRelacion VARCHAR(256),
-    numeroContacto VARCHAR(16)
-);
-
--- Tabla: Bitácora de Transacciones
-CREATE TABLE BitacoraTransacciones (
-    id SERIAL PRIMARY KEY,
-    idPost INTEGER,
-    monto DECIMAL(10, 2),
-    motivo TEXT
-);
-
--- Tabla: Bitácora de Cuidados
-CREATE TABLE BitacoraCuidados (
-    id SERIAL PRIMARY KEY,
-    idPost INTEGER,
     idCuidador INTEGER REFERENCES Usuario(id),
-    observaciones TEXT
+    tipo VARCHAR(64),  -- Ejemplo: 'contacto', 'cuidados'
+    fecha TIMESTAMP DEFAULT NOW(),
+    observaciones TEXT,
+    checksum VARCHAR(64)
 );
 
--- Tabla: URL de Cuidados
-CREATE TABLE URLCuidados (
-    id SERIAL PRIMARY KEY,
-    idBitacoraCuido INTEGER REFERENCES BitacoraCuidados(id),
-    link VARCHAR(512)
-);
-
--- Tabla: Protocolos de Emergencia
-CREATE TABLE ProtocolosEmergencia (
-    id SERIAL PRIMARY KEY,
-    idInfoCasa INTEGER,
-    situacionEmergencia TEXT,
-    solucion TEXT
-);
-
--- Tabla: Favorito
 CREATE TABLE Favorito (
     id SERIAL PRIMARY KEY,
     idUsuario INTEGER REFERENCES Usuario(id),
     idCuidador INTEGER REFERENCES Usuario(id)
 );
 
--- Tabla: Bitácora Contacto Host
-CREATE TABLE BitacoraContactoHost (
-    idHost INTEGER REFERENCES Usuario(id),
-    idCuidador INTEGER REFERENCES Usuario(id),
-    fechaInicioContacto TIMESTAMP,
-    PRIMARY KEY (idHost, idCuidador)
+CREATE TABLE ProtocolosEmergencia (
+    id SERIAL PRIMARY KEY,
+    idInfoCasa INTEGER REFERENCES InfoCasa(id),
+    situacionEmergencia TEXT,
+    solucion TEXT
 );
-```
 
-# Llenado de tablas en PostgreSQL
-
-```------ POSGRESQL ------
-{
-  "Usuario": [
-    {
-      "id": 1,
-      "nombre": "Juan",
-      "apellido": "Pérez",
-      "fechaNacimiento": "1985-05-15",
-      "ciudadResidencia": "Madrid",
-      "urlImagenPerfil": "http://example.com/imagen.jpg",
-      "telefono": "123456789",
-      "email": "juan@example.com",
-      "contrasena": "contraseña123"
-    }
-  ],
-  "UsuarioRegistrado": [
-    {
-      "idUsuario": 1,
-      "cedula": "V-12345678",
-      "hojaDelincuencia": false,
-      "tarjetaCredito": "1234-5678-9012-3456",
-      "tipoUsuario": "Cuidador"
-    }
-  ],
-  "RedSocial": [
-    {
-      "id": 1,
-      "idUsuario": 1,
-      "nombrePlataforma": "Facebook",
-      "urlPerfil": "http://facebook.com/juan.perez"
-    }
-  ],
-  "DepositoGarantia": [
-    {
-      "id": 1,
-      "idUsuario": 1,
-      "idRecibeDep": 1,
-      "monto": 200.00,
-      "motivo": "Depósito para reservas"
-    }
-  ],
-  "BitacoraDeposito": [
-    {
-      "id": 1,
-      "idDepGar": 1,
-      "fechaCreada": "2024-10-01T12:30:00Z"
-    }
-  ],
-  "ServiciosAdicionales": [
-    {
-      "id": 1,
-      "idUsuario": 1,
-      "descripcion": "Cuidado de mascotas"
-    }
-  ],
-  "Direccion": [
-    {
-      "id": 1,
-      "idUsuario": 1,
-      "pais": "España",
-      "provincia": "Madrid",
-      "canton": "Madrid"
-    }
-  ],
-  "ContactoEmergencia": [
-    {
-      "id": 1,
-      "idUsuario": 1,
-      "nombreRelacion": "Hermano",
-      "numeroContacto": "987654321"
-    }
-  ],
-  "BitacoraTransacciones": [
-    {
-      "id": 1,
-      "idPost": 1,
-      "monto": 150.00,
-      "motivo": "Pago por servicio"
-    }
-  ],
-  "BitacoraCuidados": [
-    {
-      "id": 1,
-      "idPost": 1,
-      "idCuidador": 1,
-      "observaciones": "Se siguieron todas las instrucciones."
-    }
-  ],
-  "URLCuidados": [
-    {
-      "id": 1,
-      "idBitacoraCuido": 1,
-      "link": "http://example.com/instrucciones"
-    }
-  ],
-  "ProtocolosEmergencia": [
-    {
-      "id": 1,
-      "idInfoCasa": 1,
-      "situacionEmergencia": "Incendio",
-      "solucion": "Llamar al 112 y evacuar el edificio."
-    }
-  ],
-  "Favorito": [
-    {
-      "id": 1,
-      "idUsuario": 1,
-      "idCuidador": 1
-    }
-  ]
-}
-```
-
-# Tablas MongoDB
+CREATE TABLE ServiciosAdicionales (
+    id SERIAL PRIMARY KEY,
+    idUsuario INTEGER REFERENCES Usuario(id),
+    descripcion TEXT NOT NULL,
+    deleted BOOLEAN DEFAULT FALSE  -- Campo para eliminaciones lógicas
+);
 
 ```
-import mongoose, { Schema, Document, model } from 'mongoose';
+
+## Tablas MongoDB
+
+```
+import mongoose, { Schema, Document } from 'mongoose';
 
 // Interfaz para el modelo `Post`
 interface IPost extends Document {
   idUsuario: number;
   motivo: string;
-  idInfoBasica: number;
+  idInfoCasa: number;
   ofertaPago: number;
   fechaInicio: Date;
   fechaFin: Date;
-  subJsonPagos: Record<string, unknown>;
   estadoReservado: boolean;
+  deleted: boolean;  // Eliminación lógica
 }
 
 // Esquema de `Post`
 const PostSchema = new Schema<IPost>({
   idUsuario: { type: Number, required: true },
   motivo: { type: String, required: true },
-  idInfoBasica: { type: Number, required: true },
+  idInfoCasa: { type: Number, required: true },
   ofertaPago: { type: Number, required: true },
   fechaInicio: { type: Date, required: true },
   fechaFin: { type: Date, required: true },
-  subJsonPagos: { type: Object, default: {} },
-  estadoReservado: { type: Boolean, default: false }
+  estadoReservado: { type: Boolean, default: false },
+  deleted: { type: Boolean, default: false }
 });
 
-// Crear modelos a partir de los esquemas
-const PostModel = model<IPost>('Post', PostSchema);
+// Crear modelo
+const PostModel = mongoose.model<IPost>('Post', PostSchema);
 
 export { PostModel };
+
 ```
 ```
 import mongoose, { Schema, Document, model } from 'mongoose';
 
-// Interfaz para el modelo `InfoCasa`
+// Interfaz para el modelo InfoCasa
 interface IInfoCasa extends Document {
-  idUsuario: number;
-  idDireccion: number;
+  idUsuario: mongoose.Types.ObjectId;  // Relación con el Usuario
   descripcionBase: string;
   numHabitaciones: number;
   numBanos: number;
-  descripcionCuidados: string;
   piscina: boolean;
   jardin: boolean;
   mascotas: boolean;
+  caracteristicasHabitaciones: Array<{
+    nombre: string;
+    valor: string;
+  }>;
 }
 
-// Esquema de `InfoCasa`
+// Esquema de InfoCasa
 const InfoCasaSchema = new Schema<IInfoCasa>({
-  idUsuario: { type: Number, required: true },
-  idDireccion: { type: Number, required: true },
+  idUsuario: { type: mongoose.Types.ObjectId, ref: 'Usuario', required: true },
   descripcionBase: { type: String, required: true },
   numHabitaciones: { type: Number, required: true },
   numBanos: { type: Number, required: true },
-  descripcionCuidados: { type: String, required: true },
-  piscina: { type: Boolean, required: true },
-  jardin: { type: Boolean, required: true },
-  mascotas: { type: Boolean, required: true }
+  piscina: { type: Boolean, default: false },
+  jardin: { type: Boolean, default: false },
+  mascotas: { type: Boolean, default: false },
+  caracteristicasHabitaciones: [
+    {
+      nombre: { type: String, required: true }, // Ej: 'tipoCama', 'tamaño', 'vistas'
+      valor: { type: String, required: true }   // Ej: 'King Size', '30 m²', 'Vista al mar'
+    }
+  ]
 });
 
-// Crear modelos a partir de los esquemas
+// Crear el modelo
 const InfoCasaModel = model<IInfoCasa>('InfoCasa', InfoCasaSchema);
 
-export {InfoCasaModel };
-```
+export { InfoCasaModel };
 
-# Llenado de tablas en MongoDB
-
-```
-"Post": [
-    {
-      "id": 1,
-      "idUsuario": 1,
-      "motivo": "Necesito un cuidador para mi mascota",
-      "idInfoBasica": 1,
-      "ofertaPago": 100.00,
-      "fechaInicio": "2024-10-05T00:00:00Z",
-      "fechaFin": "2024-10-12T00:00:00Z",
-      "subJsonPagos": {},
-      "estadoReservado": false
-    }
-  ]
-```
-```
-"InfoCasa": [
-    {
-      "id": 1,
-      "idUsuario": 1,
-      "idDireccion": 1,
-      "descripcionBase": "Casa acogedora en el centro de Madrid",
-      "numHabitaciones": 3,
-      "numBanos": 2,
-      "descripcionCuidados": "Ideal para familias y mascotas",
-      "piscina": false,
-      "jardin": true,
-      "mascotas": true
-    }
-  ]
 ```

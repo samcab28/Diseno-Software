@@ -1,4 +1,3 @@
--- Tabla: Usuario
 CREATE TABLE Usuario (
     id SERIAL PRIMARY KEY,
     nombre VARCHAR(256) NOT NULL,
@@ -8,109 +7,119 @@ CREATE TABLE Usuario (
     urlImagenPerfil VARCHAR(512),
     telefono VARCHAR(16),
     email VARCHAR(256),
-    contrasena VARCHAR(256)
+    contrasena BYTEA
 );
 
--- Tabla: Usuario Registrado
-CREATE TABLE UsuarioRegistrado (
+-- Definimos diferentes roles como "Cuidador", "Host", "Administrador"
+CREATE TABLE TipoUsuario (
+    id SERIAL PRIMARY KEY,
+    descripcion VARCHAR(128) NOT NULL  -- Ejemplo: 'Cuidador', 'Host', 'Administrador'
+);
+
+-- Esta tabla permitirá la asignación de múltiples roles a un mismo usuario.
+CREATE TABLE UsuarioTipo (
+    idUsuario INTEGER REFERENCES Usuario(id),
+    idTipoUsuario INTEGER REFERENCES TipoUsuario(id),
+    PRIMARY KEY (idUsuario, idTipoUsuario)
+);
+
+CREATE TABLE InfoUsuario (
     idUsuario INTEGER REFERENCES Usuario(id),
     cedula VARCHAR(64),
     hojaDelincuencia BOOLEAN,
-    tarjetaCredito VARCHAR(16),
-    tipoUsuario VARCHAR(64),
     PRIMARY KEY (idUsuario)
 );
 
--- Tabla: Red Social
+-- DIRECCION
+CREATE TABLE Pais (
+    id SERIAL PRIMARY KEY,
+    nombre VARCHAR(128) NOT NULL
+);
+
+CREATE TABLE Estado (
+    id SERIAL PRIMARY KEY,
+    idPais INTEGER REFERENCES Pais(id),
+    nombre VARCHAR(128) NOT NULL
+);
+
+CREATE TABLE Ciudad (
+    id SERIAL PRIMARY KEY,
+    idEstado INTEGER REFERENCES Estado(id),
+    nombre VARCHAR(128) NOT NULL
+);
+
+CREATE TABLE Direccion (
+    id SERIAL PRIMARY KEY,
+    idCiudad INTEGER REFERENCES Ciudad(id),
+    calle1 VARCHAR(256),
+    calle2 VARCHAR(256),
+    codigoPostal VARCHAR(16),
+    latitud DECIMAL(9,6),
+    longitud DECIMAL(9,6)
+);
+---
+
+CREATE TABLE Contacto (
+    id SERIAL PRIMARY KEY,
+    idUsuario INTEGER REFERENCES Usuario(id),
+    tipoContacto VARCHAR(64),  -- Ejemplo: 'personal', 'emergencia'
+    nombre VARCHAR(256),
+    numeroContacto VARCHAR(16),
+    email VARCHAR(256)
+    deleted BOOLEAN DEFAULT FALSE  -- Para eliminaciones lógicas
+);
+
+CREATE TABLE TipoPlataforma (
+    id SERIAL PRIMARY KEY,
+    nombre VARCHAR(128) NOT NULL
+);
+
 CREATE TABLE RedSocial (
     id SERIAL PRIMARY KEY,
     idUsuario INTEGER REFERENCES Usuario(id),
-    nombrePlataforma VARCHAR(128),
+    idPlataforma INTEGER REFERENCES TipoPlataforma(id),
     urlPerfil VARCHAR(512)
 );
 
--- Tabla: Depósito de Garantía
-CREATE TABLE DepositoGarantia (
+-- Se une depósitos de garantía y pagos en una sola tabla
+CREATE TABLE Transaccion (
     id SERIAL PRIMARY KEY,
     idUsuario INTEGER REFERENCES Usuario(id),
-    idRecibeDep INTEGER REFERENCES Usuario(id),
+    fecha TIMESTAMP DEFAULT NOW(),
     monto DECIMAL(10, 2),
-    motivo TEXT
+    descripcion TEXT,
+    tipo VARCHAR(64),  -- Ejemplo: 'depósito', 'pago'
+    numeroReferencia VARCHAR(64),
+    checksum VARCHAR(64)
 );
 
--- Tabla: Bitácora Depósito
-CREATE TABLE BitacoraDeposito (
-    id SERIAL PRIMARY KEY,
-    idDepGar INTEGER REFERENCES DepositoGarantia(id),
-    fechaCreada TIMESTAMP DEFAULT NOW()
-);
-
--- Tabla: Servicios Adicionales
-CREATE TABLE ServiciosAdicionales (
+-- Una bitácora para registros de contacto y de cuidados con los cuidadores.
+CREATE TABLE Bitacora (
     id SERIAL PRIMARY KEY,
     idUsuario INTEGER REFERENCES Usuario(id),
-    descripcion TEXT
-);
-
--- Tabla: Dirección
-CREATE TABLE Direccion (
-    id SERIAL PRIMARY KEY,
-    idUsuario INTEGER REFERENCES Usuario(id),
-    pais VARCHAR(128),
-    provincia VARCHAR(128),
-    canton VARCHAR(128)
-);
-
--- Tabla: Contacto de Emergencia
-CREATE TABLE ContactoEmergencia (
-    id SERIAL PRIMARY KEY,
-    idUsuario INTEGER REFERENCES Usuario(id),
-    nombreRelacion VARCHAR(256),
-    numeroContacto VARCHAR(16)
-);
-
--- Tabla: Bitácora de Transacciones
-CREATE TABLE BitacoraTransacciones (
-    id SERIAL PRIMARY KEY,
-    idPost INTEGER,
-    monto DECIMAL(10, 2),
-    motivo TEXT
-);
-
--- Tabla: Bitácora de Cuidados
-CREATE TABLE BitacoraCuidados (
-    id SERIAL PRIMARY KEY,
-    idPost INTEGER,
     idCuidador INTEGER REFERENCES Usuario(id),
-    observaciones TEXT
+    tipo VARCHAR(64),  -- Ejemplo: 'contacto', 'cuidados'
+    fecha TIMESTAMP DEFAULT NOW(),
+    observaciones TEXT,
+    checksum VARCHAR(64)
 );
 
--- Tabla: URL de Cuidados
-CREATE TABLE URLCuidados (
-    id SERIAL PRIMARY KEY,
-    idBitacoraCuido INTEGER REFERENCES BitacoraCuidados(id),
-    link VARCHAR(512)
-);
-
--- Tabla: Protocolos de Emergencia
-CREATE TABLE ProtocolosEmergencia (
-    id SERIAL PRIMARY KEY,
-    idInfoCasa INTEGER,
-    situacionEmergencia TEXT,
-    solucion TEXT
-);
-
--- Tabla: Favorito
 CREATE TABLE Favorito (
     id SERIAL PRIMARY KEY,
     idUsuario INTEGER REFERENCES Usuario(id),
     idCuidador INTEGER REFERENCES Usuario(id)
 );
 
--- Tabla: Bitácora Contacto Host
-CREATE TABLE BitacoraContactoHost (
-    idHost INTEGER REFERENCES Usuario(id),
-    idCuidador INTEGER REFERENCES Usuario(id),
-    fechaInicioContacto TIMESTAMP,
-    PRIMARY KEY (idHost, idCuidador)
+CREATE TABLE ProtocolosEmergencia (
+    id SERIAL PRIMARY KEY,
+    idInfoCasa INTEGER REFERENCES InfoCasa(id),
+    situacionEmergencia TEXT,
+    solucion TEXT
+);
+
+CREATE TABLE ServiciosAdicionales (
+    id SERIAL PRIMARY KEY,
+    idUsuario INTEGER REFERENCES Usuario(id),
+    descripcion TEXT NOT NULL,
+    deleted BOOLEAN DEFAULT FALSE  -- Campo para eliminaciones lógicas
 );

@@ -1,30 +1,30 @@
-import mongoose, { Schema, Document, model } from 'mongoose';
+import mongoose, { Schema, Document } from 'mongoose';
 
 // Interfaz para el modelo `Post`
 interface IPost extends Document {
   idUsuario: number;
   motivo: string;
-  idInfoBasica: number;
+  idInfoCasa: number;
   ofertaPago: number;
   fechaInicio: Date;
   fechaFin: Date;
-  subJsonPagos: Record<string, unknown>;
   estadoReservado: boolean;
+  deleted: boolean;  // Eliminación lógica
 }
 
 // Esquema de `Post`
 const PostSchema = new Schema<IPost>({
   idUsuario: { type: Number, required: true },
   motivo: { type: String, required: true },
-  idInfoBasica: { type: Number, required: true },
+  idInfoCasa: { type: Number, required: true },
   ofertaPago: { type: Number, required: true },
   fechaInicio: { type: Date, required: true },
   fechaFin: { type: Date, required: true },
-  subJsonPagos: { type: Object, default: {} },
-  estadoReservado: { type: Boolean, default: false }
+  estadoReservado: { type: Boolean, default: false },
+  deleted: { type: Boolean, default: false }
 });
 
-// Crear modelos a partir de los esquemas
-const PostModel = model<IPost>('Post', PostSchema);
+// Crear modelo
+const PostModel = mongoose.model<IPost>('Post', PostSchema);
 
 export { PostModel };

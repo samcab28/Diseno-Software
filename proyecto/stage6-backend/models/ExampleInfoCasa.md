@@ -1,16 +1,13 @@
-```
-"InfoCasa": [
-    {
-      "id": 1,
-      "idUsuario": 1,
-      "idDireccion": 1,
-      "descripcionBase": "Casa acogedora en el centro de Madrid",
-      "numHabitaciones": 3,
-      "numBanos": 2,
-      "descripcionCuidados": "Ideal para familias y mascotas",
-      "piscina": false,
-      "jardin": true,
-      "mascotas": true
-    }
+db.InfoCasa.insertOne({
+  idUsuario: ObjectId("usuario_id"),
+  descripcionBase: "Casa moderna cerca de la playa",
+  numHabitaciones: 3,
+  numBanos: 2,
+  piscina: true,
+  jardin: true,
+  mascotas: false,
+  caracteristicasHabitaciones: [
+    { nombre: "tipoCama", valor: "King Size" },
+    { nombre: "vistas", valor: "Vista al mar" }
   ]
-```
+});

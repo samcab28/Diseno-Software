@@ -1,0 +1,65 @@
+{{ if .Values.config.app.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: minchapp-api
+  labels:
+    app: minchapp-api
+spec:
+  replicas: {{ .Values.config.app.replicas }}
+  selector:
+    matchLabels:
+      app: minchapp-api
+  template:
+    metadata:
+      labels:
+        app: minchapp-api
+    spec:
+      containers:
+        - name: minchapp-api
+          image: "{{ .Values.config.app.image.repository }}:{{ .Values.config.app.image.tag }}"
+          ports:
+            - containerPort: 8080
+          resources:
+            limits:
+              cpu: {{ .Values.config.app.resources.limits.cpu }}
+              memory: {{ .Values.config.app.resources.limits.memory }}
+            requests:
+              cpu: {{ .Values.config.app.resources.requests.cpu }}
+              memory: {{ .Values.config.app.resources.requests.memory }}
+          env:
+            - name: POSTGRES_HOSTNAME
+              value: "minchapp-databases-postgresql"
+            - name: POSTGRES_DB
+              value: "games"
+            - name: POSTGRES_USER
+              value: "postgres"
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: minchapp-databases-postgresql
+                  key: postgres-password
+            - name: POSTGRES_PORT
+              value: "5432"
+            - name: REDIS_HOST
+              value: "minchapp-databases-redis-master"
+            - name: REDIS_PASSWORD
+              value: "Hcxl6G3QHp"
+            - name: REDIS_PORT
+              value: "6379"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.config.app.name }}
+  labels:
+    app: {{ .Values.config.app.name }}
+spec:
+  type: NodePort
+  ports:
+  - port: 80
+    targetPort: 8080
+    nodePort: {{ .Values.config.app.service.nodePort }}
+  selector:
+    app: {{ .Values.config.app.name }}
+{{ end }}

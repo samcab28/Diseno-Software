@@ -1,0 +1,24 @@
+config:
+  app:
+    enabled: true 
+    name: minchapp-api
+    # Configuración de la imagen Docker
+    image:
+      repository: pamreth/go-code
+      tag: latest
+    # Configuración del servicio
+    service:
+      type: NodePort
+      port: 8080
+      nodePort: 30105 
+    # Configuración de recursos (puedes ajustar esto según las necesidades)
+    resources:
+      limits:
+        cpu: "500m"          # Aumentar el límite de CPU a 500m
+        memory: "512Mi"      # Aumentar el límite de memoria a 512Mi
+      requests:
+        cpu: "250m"          # Aumentar la solicitud de CPU a 250m
+        memory: "256Mi"      # Aumentar la solicitud de memoria a 256Mi
+    # Configuración de tolerancias, afinidades, y otras opciones de despliegue
+    tolerations: []
+    affinity: {}

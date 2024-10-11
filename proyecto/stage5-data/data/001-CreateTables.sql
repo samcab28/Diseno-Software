@@ -17,7 +17,6 @@ CREATE TABLE UsuarioRegistrado (
     cedula VARCHAR(64),
     hojaDelincuencia BOOLEAN,
     tarjetaCredito VARCHAR(16),
-    ratingReviews FLOAT,
     tipoUsuario VARCHAR(64),
     PRIMARY KEY (idUsuario)
 );

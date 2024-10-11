@@ -1,34 +1,15 @@
 import React, { useState } from 'react';
 import { Container, Form, Button, Row, Col } from 'react-bootstrap';
 import { Post, InfoCasa } from '../types/index';
-interface PostForm {
-  motivo: string;
-  infoBasica: string;
-  ofertaPago: number;
-  fechaInicio: string;
-  fechaFin: string;
-  subconPagos: string;
-}
-
-interface InfoCasaForm {
-  idDireccion: number; // Como si se hubiera seleccionado de una lista
-  descripcionBase: string;
-  numHabitaciones: number;
-  numBanos: number;
-  descripcionCuidados: string;
-  piscina: boolean;
-  jardin: boolean;
-  mascotas: boolean;
-}
 
 const PublishCareNeedPage: React.FC = () => {
-    const [postForm, setPostForm] = useState<Omit<Post, 'id' | 'idUsuario' | 'estadoRservado'>>({
+    const [postForm, setPostForm] = useState<Omit<Post, 'id' | 'idUsuario' | 'estadoReservado'>>({
       motivo: '',
-      infoBasica: '',
+      idInfoBasica: 0, 
       ofertaPago: 0,
       fechaInicio: new Date(),
       fechaFin: new Date(),
-      subconPagos: '',
+      subJsonPagos: {}, 
     });
   
     const [infoCasaForm, setInfoCasaForm] = useState<Omit<InfoCasa, 'id' | 'idUsuario'>>({
@@ -44,18 +25,24 @@ const PublishCareNeedPage: React.FC = () => {
   
     const handlePostChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
       const { name, value } = e.target;
-      setPostForm(prev => ({ ...prev, [name]: value }));
+      setPostForm(prev => ({ 
+        ...prev, 
+        [name]: name === 'ofertaPago' || name === 'idInfoBasica' ? Number(value) : value 
+      }));
     };
   
     const handleInfoCasaChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
       const { name, value, type } = e.target;
       const updatedValue = type === 'checkbox' ? (e.target as HTMLInputElement).checked : value;
-      setInfoCasaForm(prev => ({ ...prev, [name]: updatedValue }));
+      setInfoCasaForm(prev => ({ 
+        ...prev, 
+        [name]: ['numHabitaciones', 'numBanos'].includes(name) ? Number(value) : updatedValue 
+      }));
     };
   
     const handleSubmit = (e: React.FormEvent) => {
       e.preventDefault();
-      // Logica para enviar los datos al servidor
+      // Lógica para enviar los datos al servidor
       console.log({ post: postForm, infoCasa: infoCasaForm });
     };
 
@@ -78,13 +65,13 @@ const PublishCareNeedPage: React.FC = () => {
           </Col>
           <Col md={6}>
             <Form.Group className="mb-3">
-              <Form.Label>Información Básica</Form.Label>
+              <Form.Label>ID de Información Básica</Form.Label>
               <Form.Control 
-                type="text" 
-                name="infoBasica"
-                value={postForm.infoBasica}
+                type="number" 
+                name="idInfoBasica"
+                value={postForm.idInfoBasica}
                 onChange={handlePostChange}
-                placeholder="Información básica del cuidado"
+                placeholder="ID de información básica"
               />
             </Form.Group>
           </Col>
@@ -119,22 +106,13 @@ const PublishCareNeedPage: React.FC = () => {
               <Form.Control 
                 type="date" 
                 name="fechaFin"
-                value={postForm.fechaInicio instanceof Date ? postForm.fechaInicio.toISOString().split('T')[0] : postForm.fechaInicio}
+                value={postForm.fechaFin instanceof Date ? postForm.fechaFin.toISOString().split('T')[0] : postForm.fechaFin}
                 onChange={handlePostChange}
               />
             </Form.Group>
           </Col>
         </Row>
-        <Form.Group className="mb-3">
-          <Form.Label>Subcontratación de Pagos</Form.Label>
-          <Form.Control 
-            type="text" 
-            name="subconPagos"
-            value={postForm.subconPagos}
-            onChange={handlePostChange}
-            placeholder="Detalles de subcontratación de pagos"
-          />
-        </Form.Group>
+        {/* Eliminado el campo subconPagos ya que no es parte de la interfaz Post */}
         <h2>Información de la Casa</h2>
         <Row>
           <Col md={6}>

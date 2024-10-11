@@ -1,26 +1,28 @@
 import React from 'react';
 import { Card, Button, Row, Col, Badge } from 'react-bootstrap';
+import { Post, InfoCasa } from '../../types';
 
-interface CareRequest {
-  id: string;
-  description: string;
-  startDate: string;
-  endDate: string;
+interface SolicitudCuidado extends Post {
+  infoCasa: InfoCasa;
 }
 
-const CareRequestList: React.FC<{ requests: CareRequest[] }> = ({ requests }) => {
+const CareRequestList: React.FC<{ solicitudes: SolicitudCuidado[] }> = ({ solicitudes }) => {
   return (
     <Row>
-      {requests.map((request) => (
-        <Col key={request.id} md={6} lg={4} className="mb-4">
+      {solicitudes.map((solicitud) => (
+        <Col key={solicitud.id} md={6} lg={4} className="mb-4">
           <Card>
             <Card.Body>
-              <Card.Title>{request.description}</Card.Title>
+              <Card.Title>{solicitud.motivo}</Card.Title>
               <Card.Text>
-                <Badge bg="info" className="me-2">Inicio: {request.startDate}</Badge>
-                <Badge bg="info">Fin: {request.endDate}</Badge>
+                <Badge bg="info" className="me-2">Inicio: {solicitud.fechaInicio.toLocaleDateString()}</Badge>
+                <Badge bg="info">Fin: {solicitud.fechaFin.toLocaleDateString()}</Badge>
+              </Card.Text>
+              <Card.Text>
+                {solicitud.infoCasa.descripcionBase}
               </Card.Text>
               <Button variant="outline-primary">Ver detalles</Button>
+              <Button variant="primary" className="ms-2">Me interesa</Button>
             </Card.Body>
           </Card>
         </Col>
@@ -29,4 +31,4 @@ const CareRequestList: React.FC<{ requests: CareRequest[] }> = ({ requests }) =>
   );
 };
 
-export { CareRequestList };
+export default CareRequestList;

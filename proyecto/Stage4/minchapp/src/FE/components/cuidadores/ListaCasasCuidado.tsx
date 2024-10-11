@@ -1,115 +1,129 @@
-import React, { useState } from 'react';
-import { Card, Button, Row, Col, Form, Container } from 'react-bootstrap';
-import { CasaCuidado } from '../../types';
+import React, { useState, useEffect } from 'react';
+import { Container, Card, Button, Row, Col, Badge, Toast } from 'react-bootstrap';
+import { Calendar, GeoAlt, Cash, Heart, HeartFill, Chat } from 'react-bootstrap-icons';
+import { Post, InfoCasa } from '../../types/index';
+
+interface NecesidadCuidado extends Post {
+  infoCasa: InfoCasa;
+  liked?: boolean;
+  matched?: boolean;
+}
 
 const ListaCasasCuidado: React.FC = () => {
-  const [casas, setCasas] = useState<CasaCuidado[]>([
-    {
-      id: 1,
-      idUsuario: 1,
-      idDireccion: 1,
-      titulo: 'Casa con jardín en San Jose',
-      descripcionBase: 'Hermosa casa con amplio jardín, con 3 gatos.',
-      numHabitaciones: 3,
-      numBanos: 2,
-      descripcionCuidados: 'Cuidado de 3 gatos, regar plantas',
-      piscina: false,
-      jardin: true,
-      mascotas: true,
-      fechaInicio: new Date('2023-07-01'),
-      fechaFin: new Date('2023-07-15')
-    },
-    {
-      id: 2,
-      idUsuario: 2,
-      idDireccion: 2,
-      titulo: 'Apartamento céntrico en Escazú',
-      descripcionBase: 'Cómodo apartamento cerca de la universidad.',
-      numHabitaciones: 2,
-      numBanos: 1,
-      descripcionCuidados: 'Cuidado de plantas y recibir correo',
-      piscina: false,
-      jardin: false,
-      mascotas: false,
-      fechaInicio: new Date('2023-08-05'),
-      fechaFin: new Date('2023-08-20')
-    },
-  ]);
+  const [necesidades, setNecesidades] = useState<NecesidadCuidado[]>([]);
+  const [showMatchToast, setShowMatchToast] = useState(false);
+  const [matchedNecesidad, setMatchedNecesidad] = useState<NecesidadCuidado | null>(null);
 
-  const [filtroUbicacion, setFiltroUbicacion] = useState('');
-  const [filtroFechaInicio, setFiltroFechaInicio] = useState('');
-  const [filtroFechaFin, setFiltroFechaFin] = useState('');
+  useEffect(() => {
+    // Logica para obtener la info 
+    const necesidadesEjemplo: NecesidadCuidado[] = [
+      {
+        id: 1,
+        idUsuario: 1,
+        motivo: "Viaje de negocios",
+        idInfoBasica: 1,
+        ofertaPago: 50,
+        fechaInicio: new Date("2023-07-01"),
+        fechaFin: new Date("2023-07-10"),
+        subJsonPagos: {},
+        estadoReservado: false,
+        infoCasa: {
+          id: 1,
+          idUsuario: 1,
+          idDireccion: 1,
+          descripcionBase: "Casa amplia con jardín",
+          numHabitaciones: 3,
+          numBanos: 2,
+          descripcionCuidados: "Cuidado de dos perros y regar plantas",
+          piscina: false,
+          jardin: true,
+          mascotas: true
+        },
+        liked: false,
+        matched: false
+      },
+    ];
+    setNecesidades(necesidadesEjemplo);
+  }, []);
 
-  const filtrarCasas = () => {
-    return casas.filter(casa => 
-      (!filtroUbicacion || casa.titulo.toLowerCase().includes(filtroUbicacion.toLowerCase())) &&
-      (!filtroFechaInicio || new Date(casa.fechaInicio) >= new Date(filtroFechaInicio)) &&
-      (!filtroFechaFin || new Date(casa.fechaFin) <= new Date(filtroFechaFin))
-    );
+  const handleLike = (index: number) => {
+    const updatedNecesidades = [...necesidades];
+    updatedNecesidades[index].liked = !updatedNecesidades[index].liked;
+    
+    // Simulamos un match con una probabilidad del 50%
+    if (updatedNecesidades[index].liked && Math.random() > 0.5) {
+      updatedNecesidades[index].matched = true;
+      setMatchedNecesidad(updatedNecesidades[index]);
+      setShowMatchToast(true);
+    }
+    
+    setNecesidades(updatedNecesidades);
   };
 
-  const casasFiltradas = filtrarCasas();
-
   return (
-    <Container>
-      <h2 className="my-4">Casas disponibles para cuidar</h2>
-      <Form className="mb-4">
-        <Row>
-          <Col md={4}>
-            <Form.Control 
-              type="text" 
-              placeholder="Buscar por ubicación..." 
-              value={filtroUbicacion}
-              onChange={(e) => setFiltroUbicacion(e.target.value)}
-            />
-          </Col>
-          <Col md={4}>
-            <Form.Control 
-              type="date" 
-              placeholder="Fecha de inicio" 
-              value={filtroFechaInicio}
-              onChange={(e) => setFiltroFechaInicio(e.target.value)}
-            />
-          </Col>
-          <Col md={4}>
-            <Form.Control 
-              type="date" 
-              placeholder="Fecha de fin" 
-              value={filtroFechaFin}
-              onChange={(e) => setFiltroFechaFin(e.target.value)}
-            />
-          </Col>
-        </Row>
-      </Form>
-
+    <Container className="my-4">
+      <h2>Necesidades de Cuidado Disponibles</h2>
       <Row>
-        {casasFiltradas.map((casa) => (
-          <Col key={casa.id} md={4} className="mb-4">
+        {necesidades.map((necesidad, index) => (
+          <Col md={6} lg={4} key={index} className="mb-4">
             <Card>
               <Card.Body>
-                <Card.Title>{casa.titulo}</Card.Title>
+                <Card.Title>{necesidad.motivo}</Card.Title>
                 <Card.Text>
-                  {casa.descripcionBase}
+                  <GeoAlt /> {necesidad.infoCasa.descripcionBase}
                   <br />
-                  <strong>Habitaciones:</strong> {casa.numHabitaciones}
+                  <Calendar /> {necesidad.fechaInicio.toLocaleDateString()} - {necesidad.fechaFin.toLocaleDateString()}
                   <br />
-                  <strong>Baños:</strong> {casa.numBanos}
-                  <br />
-                  <strong>Desde:</strong> {casa.fechaInicio.toLocaleDateString()}
-                  <br />
-                  <strong>Hasta:</strong> {casa.fechaFin.toLocaleDateString()}
-                  <br />
-                  <strong>Características:</strong>
-                  {casa.piscina && ' Piscina,'}
-                  {casa.jardin && ' Jardín,'}
-                  {casa.mascotas && ' Mascotas'}
+                  <Cash /> ${necesidad.ofertaPago}/día
                 </Card.Text>
-                <Button variant="primary">Ver detalles</Button>
+                <h6>Detalles de la casa:</h6>
+                <p>
+                  Habitaciones: {necesidad.infoCasa.numHabitaciones}, 
+                  Baños: {necesidad.infoCasa.numBanos}
+                </p>
+                <p>{necesidad.infoCasa.descripcionCuidados}</p>
+                {necesidad.infoCasa.piscina && <Badge bg="info" className="me-1">Piscina</Badge>}
+                {necesidad.infoCasa.jardin && <Badge bg="success" className="me-1">Jardín</Badge>}
+                {necesidad.infoCasa.mascotas && <Badge bg="warning">Mascotas</Badge>}
+                <div className="mt-3 d-flex justify-content-between">
+                  <Button 
+                    variant={necesidad.liked ? "danger" : "outline-danger"} 
+                    onClick={() => handleLike(index)}
+                  >
+                    {necesidad.liked ? <HeartFill /> : <Heart />} Me interesa
+                  </Button>
+                  {necesidad.matched && (
+                    <Button variant="success">
+                      <Chat /> Chatear
+                    </Button>
+                  )}
+                </div>
               </Card.Body>
             </Card>
           </Col>
         ))}
       </Row>
+
+      <Toast 
+        show={showMatchToast} 
+        onClose={() => setShowMatchToast(false)}
+        delay={3000}
+        autohide
+        style={{
+          position: 'fixed',
+          top: 20,
+          right: 20,
+          minWidth: '250px'
+        }}
+      >
+        <Toast.Header>
+          <strong className="me-auto">¡Nuevo Match!</strong>
+        </Toast.Header>
+        <Toast.Body>
+          Has hecho match con la necesidad de cuidado: "{matchedNecesidad?.motivo}". 
+          ¡Puedes comenzar a chatear!
+        </Toast.Body>
+      </Toast>
     </Container>
   );
 };

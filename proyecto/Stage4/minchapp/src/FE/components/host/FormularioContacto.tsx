@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Container, Form, Button, Alert, Row, Col } from 'react-bootstrap';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-import { Post } from '../../types';
+import { Post } from '../../types/index';
 
 interface FormularioContactoProps {
   idCuidador: number;

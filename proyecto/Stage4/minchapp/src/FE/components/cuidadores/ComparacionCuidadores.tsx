@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Table, Image, Button, Badge, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import { StarFill, InfoCircle } from 'react-bootstrap-icons';
-import { UsuarioRegistrado, ServicioAdicional } from '../../types';
+import { UsuarioRegistrado, ServicioAdicional } from '../../types/index';
 
 interface CuidadorConServicios extends UsuarioRegistrado {
   servicios: ServicioAdicional[];

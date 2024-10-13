@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Card, Button, ListGroup, Badge, Carousel, Modal } from 'react-bootstrap';
 import { StarFill, Shield, Cash, Facebook, Instagram, Twitter, Linkedin, GeoAlt, Phone, Envelope, Award } from 'react-bootstrap-icons';
-import { UsuarioRegistrado, RedSocial, DepositoGarantia, ServicioAdicional, BitacoraCuidados } from '../../types';
+import { UsuarioRegistrado, RedSocial, DepositoGarantia, ServicioAdicional, BitacoraCuidados } from '../../types/index';
+import ChatComponent from '../host/ChatComponent';
 
 interface Credencial {
   id: number;
@@ -23,6 +24,7 @@ const PerfilCuidador: React.FC<PerfilCuidadorProps> = ({ idCuidador }) => {
   const [bitacoras, setBitacoras] = useState<BitacoraCuidados[]>([]);
   const [credenciales, setCredenciales] = useState<Credencial[]>([]);
   const [showMediaModal, setShowMediaModal] = useState(false);
+  const [showChat, setShowChat] = useState(false);
   const [mediaItems] = useState([
     { type: 'image', src: 'https://example.com/image1.jpg', alt: 'Cuidando mascotas' },
     { type: 'video', src: 'https://example.com/video1.mp4', alt: 'Video presentación' },
@@ -178,9 +180,20 @@ const PerfilCuidador: React.FC<PerfilCuidadorProps> = ({ idCuidador }) => {
             </Card>
           ))}
 
-          <Button variant="primary" className="mt-3">Contactar Cuidador</Button>
+          <Button variant="primary" className="mt-3 me-2" onClick={() => setShowChat(!showChat)}>
+            {showChat ? 'Cerrar Chat' : 'Abrir Chat'}
+          </Button>
+          <Button variant="outline-primary" className="mt-3">Contactar Cuidador</Button>
         </Col>
       </Row>
+
+      {showChat && (
+        <Row className="mt-4">
+          <Col>
+            <ChatComponent hostId={1} cuidadorId={idCuidador} />
+          </Col>
+        </Row>
+      )}
 
       <Modal show={showMediaModal} onHide={() => setShowMediaModal(false)} size="lg">
         <Modal.Header closeButton>

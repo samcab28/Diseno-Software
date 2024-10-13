@@ -5,7 +5,7 @@ import './App.css';
 import { Header } from './FE/components/common/Header';
 import Footer from './FE/components/common/Footer';
 import PublishCareNeed from './FE/components/host/PublishCareNeed';
-import FormularioContacto from './FE/components/host/FormularioContacto';
+import DashboardHost from './FE/components/host/DashboardHost';
 import ListaCasasCuidado from './FE/components/cuidadores/ListaCasasCuidado';
 import PerfilCuidador from './FE/components/cuidadores/PerfilCuidador';
 import ListaCuidadores from './FE/components/cuidadores/ListaCuidadores';
@@ -35,10 +35,10 @@ function App() {
                 <Nav.Link as={Link} to="/publicar-necesidad">Publicar Necesidad</Nav.Link>
                 <Nav.Link as={Link} to="/explorar-necesidades">Explorar Necesidades</Nav.Link>
                 <Nav.Link as={Link} to="/perfil-usuario">Perfil Usuario</Nav.Link>
-                <Nav.Link as={Link} to="/formulario-contacto">Contacto</Nav.Link>
                 <Nav.Link as={Link} to="/lista-cuidadores">Lista Cuidadores</Nav.Link>
                 <Nav.Link as={Link} to="/comparacion-cuidadores">Comparar Cuidadores</Nav.Link>
                 <Nav.Link as={Link} to="/care-request-list">Solicitudes de Cuidado</Nav.Link>
+                <Nav.Link as={Link} to="/dashboard-host">Dashboard host</Nav.Link>
               </Nav>
             </Navbar.Collapse>
           </Container>
@@ -65,10 +65,10 @@ function App() {
             ratingReviews: 4.5,
             tipoUsuario: 'host'
           }} />} />
-          <Route path="/formulario-contacto" element={<FormularioContacto idCuidador={1} />} />
           <Route path="/lista-cuidadores" element={<ListaCuidadores />} />
           <Route path="/comparacion-cuidadores" element={<ComparacionCuidadores />} />
-          <Route path="/care-request-list" element={<CareRequestList solicitudes={[]} />} />
+          <Route path="/care-request-list" element={<CareRequestList />} />
+          <Route path="/dashboard-host" element={<DashboardHost hostId={1} />} />
         </Routes>
 
         <Footer />

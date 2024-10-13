@@ -149,40 +149,179 @@ Apuntes de las pantallas que creo que se van a necesitar para lo que es el alcan
 
 ## 1. Pantalla de busqueda de Cuidadores
 
-Busqueda de cuidadores
+Busqueda de cuidadores - (Feed de cuidadores) (ya)
 
-Incluir geolocalizacion y posiblemente calculo tambien de distancia
+Incluir geolocalizacion y posiblemente calculo tambien de distancia (ya)
 
 
 ## 2. Perfil del Cuidador
 Informacion detallada del cuidador para generar confianza rapido
 
-Reviews del mae a simple vista
+Reviews del mae a simple vista (falta mejorar la vista pero ahi esta)
 
-Mostrar verificaciones (Como si tiene hoja de delicuencia o algo asi)
+Mostrar verificaciones (Como si tiene hoja de delicuencia o algo asi) (ya)
 
 Sistema de like/favoritos (No se si hacer una pantalla dedicada a esto, o mejor tirarlo por encima)
 
 ## 3. Comparacion de Cuidadores
 
-Para comparar a varios cuidadores a la vez 
+Para comparar a varios cuidadores a la vez (ya)
 
 ## 4. Post de Necesidad de Cuidado 
 
-Formulario para el post
+Formulario para el post (falta mejorar para que se vea mas amigable)
 
-Detalles de la casa, mascotas, y servicios que necesita
+Detalles de la casa, mascotas, y servicios que necesita (ya)
 
 ## 5. Dashboard del Host
 
-Mostrar posts activos
+Mostrar posts activos 
 
-mostar solicitudes de cuidadores interesados 
+mostar solicitudes de cuidadores interesados (ya)
 
-Ver el perfil de los cuidadores 
+Ver el perfil de los cuidadores (ya pero falta hacerlo mas bonito)
 
 ## 6. Chat entre Host y Cuidador
 
-Pantallita de cuando hacen match
+Pantallita de cuando hacen match 
 
 chat de la conversacion
+
+# Documentación de Pantallas de Minchapp
+
+## 1. Pantalla de Búsqueda de Cuidadores (ListaCuidadores)
+
+![Lista de Cuidadores](./src/FE/assets/ListaCuidadores/ListaCuidadores1.png)
+
+### Descripción
+Esta pantalla muestra un feed de cuidadores disponibles, permitiendo a los usuarios buscar y filtrar cuidadores según las necesidades del host. 
+
+### Funcionalidades
+- Lista de cuidadores con información básica (nombre, foto, calificación, especialidades)
+- Filtros de búsqueda (por tipo de mascota o servico, y por calificacion)
+- Geolocalización y cálculo de distancia
+- Sistema de paginación 
+
+### Acciones del Usuario
+- Aplicar filtros de búsqueda (Ejemplo busqueda por servicios para gatos)
+![Filtro para gatos](./src/FE/assets/ListaCuidadores/ListaCuidadores2.png)
+
+- Visualiar los cuidadores ya filtrados (Ejemplo con servicios para gatos)
+![Cuidadores filtrados](./src/FE/assets/ListaCuidadores/ListaCuidadores3.png)
+
+- Ver perfil detallado de un cuidador 
+
+( Me falta dirigir y mostrar el perfil del cuidador seleccionado aca)
+
+- Marcar cuidadores como favoritos
+![Marcar Favorito](./src/FE/assets/ListaCuidadores/ListaCuidadores4.png)
+
+
+### Mensajes y Notificaciones
+Cuando se aplica un filtro y no hay matches con respecto a eso pienso poner: 
+- "No se encontraron cuidadores que coincidan con tus criterios de búsqueda"
+
+Perdir acceso a la ubicacion para poder hacer el calculo de distancia
+- "Permitir acceso a tu ubicación para mostrar cuidadores cercanos"
+
+Cuando ambos se dan like (Tipo Tinder)
+- "!Nuevo Match¡ Has hecho match con Pamela Morataya. ¡Puedes comenzar a chatear!"
+
+## 2. Perfil del Cuidador (PerfilCuidador)
+
+![Perfil Cuidador](./src/FE/assets/PerfilCuidador/PerfilCuidador1.png)
+
+### Descripción
+Muestra información detallada sobre un cuidador específico, incluyendo sus calificaciones, experiencia y verificaciones.
+
+### Funcionalidades
+- Información personal del cuidador
+- Galería de fotos y videos
+- Lista de servicios ofrecidos
+- Calificaciones y reseñas de otros usuarios
+- Verificaciones (hoja de delincuencia, certificaciones)
+
+### Acciones del Usuario
+- Contactar al cuidador
+- Dejar una reseña (si ya ha utilizado sus servicios)
+
+### Mensajes y Notificaciones
+- "Cuidador verificado" (badge)
+- "¿Estás seguro de que quieres contactar a este cuidador?" (confirmación)
+
+## 3. Comparación de Cuidadores (ComparacionCuidadores)
+
+### Descripción
+Permite a los usuarios comparar varios cuidadores lado a lado para facilitar la toma de decisiones.
+
+### Funcionalidades
+- Tabla comparativa de cuidadores (hasta 3 o 4)
+- Comparación de servicios, calificaciones y experiencia
+
+### Acciones del Usuario
+- Seleccionar cuidadores para comparar
+- Ver perfil completo de un cuidador
+
+### Mensajes y Notificaciones
+- "Selecciona al menos dos cuidadores para comparar"
+- "Has alcanzado el máximo de cuidadores para comparar"
+
+## 4. Publicación de Necesidad de Cuidado (PublishCareNeed)
+
+
+### Descripción
+Formulario para que los hosts publiquen una nueva necesidad de cuidado.
+
+### Funcionalidades
+- Formulario detallado para describir la necesidad de cuidado
+- Sección para detalles de la casa y mascotas
+- Especificación de servicios requeridos
+- Selección de fechas y duración del servicio
+
+### Acciones del Usuario
+- Completar y enviar el formulario
+- Subir fotos de la casa y mascotas
+- Especificar preferencias de cuidador
+
+### Mensajes y Notificaciones
+- "Tu publicación ha sido creada exitosamente"
+- "Por favor completa todos los campos requeridos" (mensaje de error)
+
+## 5. Dashboard del Host (DashboardHost)
+
+### Descripción
+Panel de control para que los hosts gestionen sus publicaciones activas y vean las solicitudes de cuidadores interesados.
+
+### Funcionalidades
+- Lista de publicaciones activas
+- Solicitudes de cuidadores interesados
+
+### Acciones del Usuario
+- Ver detalles de publicaciones
+- Revisar perfiles de cuidadores interesados
+- Aceptar o rechazar solicitudes
+- Editar o cancelar publicaciones
+
+### Mensajes y Notificaciones
+- "Tienes X nuevas solicitudes de cuidadores"
+- "¿Estás seguro de que quieres cancelar esta publicación?"
+
+## 6. Chat entre Host y Cuidador (ChatComponent)
+
+
+### Descripción
+Interfaz de chat para la comunicación directa entre hosts y cuidadores.
+
+### Funcionalidades
+- Mensajería en tiempo real
+- Historial de conversaciones
+
+### Acciones del Usuario
+- Enviar y recibir mensajes
+- Ver estado de lectura de mensajes
+
+### Mensajes y Notificaciones
+- "Nuevo mensaje de X"
+- "Tu mensaje ha sido enviado"
+
+

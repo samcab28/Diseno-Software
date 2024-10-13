@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Card, Form, Button, Badge, Toast, Pagination } from 'react-bootstrap';
 import { GeoAlt, StarFill, CurrencyDollar, Heart, HeartFill, Chat } from 'react-bootstrap-icons';
-import { Usuario, UsuarioRegistrado, Favorito, ServicioAdicional } from '../../types';
+import { Usuario, UsuarioRegistrado, Favorito, ServicioAdicional } from '../../types/index';
 
 interface CuidadorConFavorito extends UsuarioRegistrado {
   servicios: ServicioAdicional[];
@@ -197,7 +197,6 @@ const ListaCuidadores: React.FC = () => {
                     <span> ({cuidador.distancia.toFixed(2)} km)</span>
                   )}
                   <br />
-                  <CurrencyDollar className="me-1" />Tarifa por hora
                 </Card.Text>
                 <div className="d-flex justify-content-between">
                   <Button 

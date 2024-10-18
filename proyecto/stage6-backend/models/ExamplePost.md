@@ -1,10 +1,10 @@
-db.Post.insertOne({
-  idUsuario: ObjectId("652f2fc93f1a4b1f78b4d812"),  // ID del usuario que crea el post
-  motivo: "Busco cuidador para mis mascotas durante las vacaciones",
-  idInfoBasica: ObjectId("652f2f5c3f1a4b1f78b4d809"),  // ID de la InfoCasa relacionada
-  ofertaPago: 150.00,  // Oferta de pago por el servicio
-  fechaInicio: new Date("2024-12-20"),  // Fecha de inicio del servicio
-  fechaFin: new Date("2024-12-27"),  // Fecha de fin del servicio
-  estadoReservado: false,  // Estado de la reserva
-  deleted: false  // Campo para indicar si está eliminado
-});
+{
+  "idUsuario": 1, 
+  "motivo": "Interesado en alquilar la casa para vacaciones",
+  "idInfoCasa": "60d5fdb4f5a1d90bc8f55a2f",  
+  "ofertaPago": 1500,  // Monto ofrecido en la oferta de pago
+  "fechaInicio": "2024-12-01T00:00:00Z",  // Fecha de inicio del alquiler
+  "fechaFin": "2024-12-15T00:00:00Z",  // Fecha de fin del alquiler
+  "estado": "pendiente",  // Estado del post (puede ser pendiente, aceptado, rechazado o completado)
+  "deleted": false  // Indicador de si el post está marcado como eliminado
+}

@@ -1,16 +1,10 @@
-```
-"InfoCasa": [
-    {
-      "id": 1,
-      "idUsuario": 1,
-      "idDireccion": 1,
-      "descripcionBase": "Casa acogedora en el centro de Madrid",
-      "numHabitaciones": 3,
-      "numBanos": 2,
-      "descripcionCuidados": "Ideal para familias y mascotas",
-      "piscina": false,
-      "jardin": true,
-      "mascotas": true
-    }
+{
+  "idUsuario": 1,  
+  "descripcionBase": "Casa con 3 habitaciones, 2 baños, cocina y sala de estar.",
+  "idDireccion": 101,  
+  "caracteristicas": [
+    { "tipo": "habitación principal", "tamano (m^2)": 20, "ventanas": 2 },
+    { "tipo": "habitación secundaria", "tamano (m^2)": 15, "ventanas": 1 },
+    { "tipo": "baño", "tamano (m^2)": 10, "ventanas": 1 }
   ]
-```
+}

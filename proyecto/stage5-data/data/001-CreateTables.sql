@@ -1,116 +1,202 @@
--- Tabla: Usuario
-CREATE TABLE Usuario (
-    id SERIAL PRIMARY KEY,
+CREATE TABLE Usuarios (
+    idUsuario SERIAL PRIMARY KEY,  
     nombre VARCHAR(256) NOT NULL,
-    apellido VARCHAR(256) NOT NULL,
+    apellido1 VARCHAR(256) NOT NULL,
+    apellido2 VARCHAR(256) NOT NULL,
     fechaNacimiento DATE,
-    ciudadResidencia VARCHAR(256),
     urlImagenPerfil VARCHAR(512),
     telefono VARCHAR(16),
-    email VARCHAR(256),
-    contrasena VARCHAR(256)
+    email VARCHAR(256) UNIQUE,
+    contrasena BYTEA,
+    idDireccion INTEGER REFERENCES Direccion(idDireccion)
 );
 
--- Tabla: Usuario Registrado
-CREATE TABLE UsuarioRegistrado (
-    idUsuario INTEGER REFERENCES Usuario(id),
-    cedula VARCHAR(64),
-    hojaDelincuencia BOOLEAN,
-    tarjetaCredito VARCHAR(16),
-    tipoUsuario VARCHAR(64),
-    PRIMARY KEY (idUsuario)
+-- Tabla que define diferentes roles como "Cuidador", "Host", "Administrador"
+CREATE TABLE TipoUsuario (
+    idTipoUsuario SERIAL PRIMARY KEY,  
+    descripcion VARCHAR(128) NOT NULL  -- Ejemplo: 'Cuidador', 'Host', 'Administrador'
 );
 
--- Tabla: Red Social
+-- Tabla que permite la asignación de múltiples roles a un mismo usuario
+-- Un usuario puede ser, por ejemplo, 'Cuidador' y 'Host' al mismo tiempo.
+CREATE TABLE UsuariosClasificacion (
+    idUsuario INTEGER REFERENCES Usuarios(idUsuario),
+    idTipoUsuario INTEGER REFERENCES TipoUsuario(idTipoUsuario),
+    PRIMARY KEY (idUsuario, idTipoUsuario)
+);
+
+CREATE TABLE TiposDocumentos (
+    idTipoDocumento SERIAL PRIMARY KEY,
+    nombreDocumento VARCHAR(50) NOT NULL
+);
+
+-- Tabla de Documentos por Usuario (cada usuario puede tener múltiples documentos)
+CREATE TABLE DocumentosUsuario (
+    idDocUser SERIAL PRIMARY KEY,
+    idUsuario INTEGER REFERENCES Usuarios(idUsuario),
+    idTipoDocumento INTEGER REFERENCES TiposDocumentos(idTipoDocumento),
+    numeroDocumento VARCHAR(64) NOT NULL,
+    fechaEmision DATE,
+    fechaExpiracion DATE
+);
+
+-- DIRECCION
+-- Habilitar la extensión PostGIS: para manejar la parte de latitudes y longitudes
+CREATE EXTENSION IF NOT EXISTS postgis;
+
+CREATE TABLE Pais (
+    idPais SERIAL PRIMARY KEY,  
+    nombre VARCHAR(128) NOT NULL
+);
+
+CREATE TABLE Estado (
+    idEstado SERIAL PRIMARY KEY,  
+    idPais INTEGER REFERENCES Pais(idPais),
+    nombre VARCHAR(128) NOT NULL
+);
+
+CREATE TABLE Ciudad (
+    idCiudad SERIAL PRIMARY KEY, 
+    idEstado INTEGER REFERENCES Estado(idEstado),
+    nombre VARCHAR(128) NOT NULL
+);
+
+CREATE TABLE Direccion (
+    idDireccion SERIAL PRIMARY KEY,  
+    idCiudad INTEGER REFERENCES Ciudad(idCiudad),
+    codigoPostal VARCHAR(16),
+    -- agregar address/detalles varchar
+    ubicacion GEOGRAPHY(Point, 4326)  -- Usar el tipo de dato GEOGRAPHY para almacenar latitud y longitud
+);
+ -- 4326 corresponde al sistema WGS 84, que es el sistema de referencia geográfica más comúnmente utilizado, especialmente en aplicaciones de GPS y mapas.
+-- Ejemplo de Uso: Un punto que representa la ubicación de la Torre Eiffel en París podría ser representado como ST_MakePoint(2.2945, 48.8584), donde 2.2945 es la longitud y 48.8584 es la latitud.
+
+-- CONTACTO
+CREATE TABLE TipoContacto (
+    idTipoContacto SERIAL PRIMARY KEY,
+    nombre VARCHAR(256) UNIQUE  -- Ejemplo: 'personal', 'emergencia', 'teléfono', 'correo electrónico'
+);
+
+-- Tabla de contactos
+CREATE TABLE Contacto (
+    idContacto SERIAL PRIMARY KEY,
+    idUsuario INTEGER REFERENCES Usuarios(idUsuario),
+    idContactInfo INTEGER REFERENCES ContactInfo(idContactInfo), -- el id puede no estar o ser la union de usuario y contact info
+    deleted BOOLEAN DEFAULT FALSE 
+);
+
+-- Tabla de información de contacto
+CREATE TABLE ContactInfo (
+    idContactInfo SERIAL PRIMARY KEY,
+    tipoContacto INTEGER REFERENCES TipoContacto(idTipoContacto),
+    valor VARCHAR(256),  -- Teléfono o Correo
+    deleted BOOLEAN DEFAULT FALSE  
+);
+---
+-----------------------------
+CREATE TABLE TipoPlataforma (
+    idTipoPlataforma SERIAL PRIMARY KEY,  
+    nombre VARCHAR(128) NOT NULL
+);
+
 CREATE TABLE RedSocial (
-    id SERIAL PRIMARY KEY,
-    idUsuario INTEGER REFERENCES Usuario(id),
-    nombrePlataforma VARCHAR(128),
+    idRedSocial SERIAL PRIMARY KEY,  
+    idUsuario INTEGER REFERENCES Usuarios(idUsuario),
+    idPlataforma INTEGER REFERENCES TipoPlataforma(idTipoPlataforma),
     urlPerfil VARCHAR(512)
 );
+----------------------------
 
--- Tabla: Depósito de Garantía
-CREATE TABLE DepositoGarantia (
-    id SERIAL PRIMARY KEY,
-    idUsuario INTEGER REFERENCES Usuario(id),
-    idRecibeDep INTEGER REFERENCES Usuario(id),
+-- Se une depósitos de garantía y pagos en una sola tabla
+CREATE TABLE TipoTransaccion (
+    idTipoTransaccion SERIAL PRIMARY KEY,  
+    descripcion VARCHAR(64) UNIQUE NOT NULL  -- Descripción del tipo de transacción (ejemplo: 'depósito', 'pago')
+);
+
+-- Tabla de transacciones
+CREATE TABLE Transacciones (
+    idTransaccion SERIAL PRIMARY KEY,  
+    idUsuario INTEGER REFERENCES Usuarios(idUsuario),
+    idTipoTransaccion INTEGER REFERENCES TipoTransaccion(idTipoTransaccion),  -- Referencia al tipo de transacción
+    fecha TIMESTAMP DEFAULT NOW(),
     monto DECIMAL(10, 2),
-    motivo TEXT
+    descripcion TEXT,
+    numeroReferencia INTEGER,
+    checksum VARCHAR(64) 
 );
 
--- Tabla: Bitácora Depósito
-CREATE TABLE BitacoraDeposito (
-    id SERIAL PRIMARY KEY,
-    idDepGar INTEGER REFERENCES DepositoGarantia(id),
-    fechaCreada TIMESTAMP DEFAULT NOW()
+-- Una bitácora para registros de contacto y de cuidados con los cuidadores.
+CREATE TABLE TipoEvento (
+    idTipoEvento SERIAL PRIMARY KEY, 
+    descripcion VARCHAR(64) UNIQUE NOT NULL  -- Descripción del tipo de evento (ejemplo: 'contacto', 'cuidado')
 );
 
--- Tabla: Servicios Adicionales
-CREATE TABLE ServiciosAdicionales (
-    id SERIAL PRIMARY KEY,
-    idUsuario INTEGER REFERENCES Usuario(id),
-    descripcion TEXT
+-- Tabla que define los diferentes niveles de gravedad o tipo de evento en la bitácora
+CREATE TABLE NivelesBitacora (
+    idNivel SERIAL PRIMARY KEY,
+    nivel VARCHAR(32) UNIQUE NOT NULL  -- Ejemplos: 'Warning', 'Information', 'Error', etc.
 );
 
--- Tabla: Dirección
-CREATE TABLE Direccion (
-    id SERIAL PRIMARY KEY,
-    idUsuario INTEGER REFERENCES Usuario(id),
-    pais VARCHAR(128),
-    provincia VARCHAR(128),
-    canton VARCHAR(128)
+-- Tabla de bitácora
+CREATE TABLE Bitacora (
+    idBitacora SERIAL PRIMARY KEY,
+    idTipoEvento INTEGER REFERENCES TipoEvento(idTipoEvento),  
+    idNivel INTEGER REFERENCES NivelesBitacora(idNivel),  
+    source_id VARCHAR(64),  -- FK artificial: identifica la tabla/entidad que genera el evento
+    object_id VARCHAR(64),  -- Identifica el objeto afectado (ej: idUsuario, idDocumento, etc.)
+    fecha TIMESTAMP DEFAULT NOW(),  -- Fecha y hora del evento
+    detalles TEXT,  
+    checksum VARCHAR(64)  
 );
 
--- Tabla: Contacto de Emergencia
-CREATE TABLE ContactoEmergencia (
-    id SERIAL PRIMARY KEY,
-    idUsuario INTEGER REFERENCES Usuario(id),
-    nombreRelacion VARCHAR(256),
-    numeroContacto VARCHAR(16)
+CREATE TABLE Favoritos (
+    idFavorito SERIAL PRIMARY KEY,  
+    idUsuario INTEGER REFERENCES Usuarios(idUsuario),
+    idCuidador INTEGER REFERENCES Usuarios(idUsuario),
+    deleted BOOLEAN DEFAULT FALSE
 );
 
--- Tabla: Bitácora de Transacciones
-CREATE TABLE BitacoraTransacciones (
-    id SERIAL PRIMARY KEY,
-    idPost INTEGER,
-    monto DECIMAL(10, 2),
-    motivo TEXT
+CREATE TABLE Match ( -- para lograr establecer una relación de confianza entre el host y el cuidador
+    idMatch SERIAL PRIMARY KEY,
+    idHost INTEGER REFERENCES Usuarios(idUsuario),  
+    idCuidador INTEGER REFERENCES Usuarios(idUsuario),
+    idPost INTEGER REFERENCES Post(idPost),
+    fechaEstablecimiento TIMESTAMP DEFAULT NOW(), 
+    estado VARCHAR(64) DEFAULT 'inactivo',  -- Estado de la relación:'activo', 'inactivo', 'completado'
+    observaciones TEXT,
+    deleted BOOLEAN DEFAULT FALSE 
 );
 
--- Tabla: Bitácora de Cuidados
-CREATE TABLE BitacoraCuidados (
-    id SERIAL PRIMARY KEY,
-    idPost INTEGER,
-    idCuidador INTEGER REFERENCES Usuario(id),
+-- Tabla que almacena el historial de eventos relacionados con los cuidadores
+CREATE TABLE HistorialCuidador (
+    idHistorial SERIAL PRIMARY KEY,
+    idCuidador INTEGER REFERENCES Usuarios(idUsuario),
+    fecha TIMESTAMP DEFAULT NOW(),
+    evento TEXT,  -- Descripción del evento o actividad relacionada al cuidador
     observaciones TEXT
 );
 
--- Tabla: URL de Cuidados
-CREATE TABLE URLCuidados (
-    id SERIAL PRIMARY KEY,
-    idBitacoraCuido INTEGER REFERENCES BitacoraCuidados(id),
-    link VARCHAR(512)
+-- Tabla para gestionar contratos entre host y cuidador
+CREATE TABLE ContratosCuidador (
+    idContrato SERIAL PRIMARY KEY,
+    idHost INTEGER REFERENCES Usuarios(idUsuario),
+    idCuidador INTEGER REFERENCES Usuarios(idUsuario),
+    fechaInicio DATE NOT NULL,  -- Fecha en que el cuidador empieza su trabajo en la casa del host
+    fechaFin DATE,  -- Fecha en que termina el contrato, si existe
+    estado VARCHAR(64) DEFAULT 'pendiente',  -- Estado del contrato: 'activo', 'completado', 'cancelado'
+    observaciones TEXT
 );
 
--- Tabla: Protocolos de Emergencia
 CREATE TABLE ProtocolosEmergencia (
-    id SERIAL PRIMARY KEY,
-    idInfoCasa INTEGER,
+    idProtocolo SERIAL PRIMARY KEY, 
+    idInfoCasa INTEGER REFERENCES InfoCasa(id),
     situacionEmergencia TEXT,
-    solucion TEXT
+    solucion TEXT NOT NULL
 );
 
--- Tabla: Favorito
-CREATE TABLE Favorito (
-    id SERIAL PRIMARY KEY,
-    idUsuario INTEGER REFERENCES Usuario(id),
-    idCuidador INTEGER REFERENCES Usuario(id)
-);
-
--- Tabla: Bitácora Contacto Host
-CREATE TABLE BitacoraContactoHost (
-    idHost INTEGER REFERENCES Usuario(id),
-    idCuidador INTEGER REFERENCES Usuario(id),
-    fechaInicioContacto TIMESTAMP,
-    PRIMARY KEY (idHost, idCuidador)
+CREATE TABLE ServiciosAdicionales (
+    idServicio SERIAL PRIMARY KEY, 
+    idUsuario INTEGER REFERENCES Usuarios(idUsuario),
+    descripcion TEXT NOT NULL,
+    deleted BOOLEAN DEFAULT FALSE 
 );

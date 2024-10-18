@@ -1,32 +1,22 @@
 import mongoose, { Schema, Document, model } from 'mongoose';
 
-// Interfaz para el modelo `InfoCasa`
+// Interfaz para el modelo InfoCasa
 interface IInfoCasa extends Document {
-  idUsuario: number;
-  idDireccion: number;
+  idUsuario: mongoose.Types.number;  // Relación con el Usuario
   descripcionBase: string;
-  numHabitaciones: number;
-  numBanos: number;
-  descripcionCuidados: string;
-  piscina: boolean;
-  jardin: boolean;
-  mascotas: boolean;
+  idDireccion: mongoose.Types.number; // Referencia a la colección de Direcciones (Tipo correcto)
+  caracteristicas: Schema.Types.Mixed[]; // Arreglo de objetos para características
 }
 
-// Esquema de `InfoCasa`
+// Esquema de InfoCasa
 const InfoCasaSchema = new Schema<IInfoCasa>({
-  idUsuario: { type: Number, required: true },
-  idDireccion: { type: Number, required: true },
+  idUsuario: { type: mongoose.Types.number, required: true, ref: 'Usuario' },
   descripcionBase: { type: String, required: true },
-  numHabitaciones: { type: Number, required: true },
-  numBanos: { type: Number, required: true },
-  descripcionCuidados: { type: String, required: true },
-  piscina: { type: Boolean, required: true },
-  jardin: { type: Boolean, required: true },
-  mascotas: { type: Boolean, required: true }
+  idDireccion: { type: mongoose.Types.number, required: true, ref: 'Direccion' }, // Nueva referencia a Direccion
+  caracteristicas: { type: [Schema.Types.Mixed], required: false } // Arreglo de mixed, sin campo `custom`
 });
 
-// Crear modelos a partir de los esquemas
+// Crear el modelo
 const InfoCasaModel = model<IInfoCasa>('InfoCasa', InfoCasaSchema);
 
-export {InfoCasaModel };
+export { InfoCasaModel };

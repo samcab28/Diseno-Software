@@ -1,71 +1,147 @@
--- 002_insert_initial_data.sql
+-- Inserción en la tabla Usuarios
+INSERT INTO Usuarios (nombre, apellido1, apellido2, fechaNacimiento, urlImagenPerfil, telefono, email, contrasena, idDireccion)
+VALUES 
+('Juan', 'Perez', 'Lopez', '1990-05-10', 'https://imagen.com/juan', '123456789', 'juan.perez@example.com', ENCODE(DIGEST('password123', 'sha256'), 'hex'), 1);
 
--- Llenado de la tabla Usuario
-INSERT INTO Usuario (nombre, apellido, fechaNacimiento, ciudadResidencia, urlImagenPerfil, telefono, email, contrasena) VALUES
-('Juan', 'Pérez', '1985-05-15', 'Madrid', 'http://example.com/imagen.jpg', '123456789', 'juan@example.com', 'contraseña123'),
-('Ana', 'García', '1990-07-10', 'Barcelona', 'http://example.com/imagen2.jpg', '987654321', 'ana@example.com', 'contraseña456');
+-- Inserción en la tabla TipoUsuario
+INSERT INTO TipoUsuario (descripcion)
+VALUES 
+('Cuidador'),
+('Host'),
+('Administrador');
 
--- Llenado de la tabla UsuarioRegistrado
-INSERT INTO UsuarioRegistrado (idUsuario, cedula, hojaDelincuencia, tarjetaCredito, ratingReviews, tipoUsuario) VALUES
-(1, 'V-12345678', FALSE, '1234-5678-9012-3456', 4.5, 'Cuidador'),
-(2, 'V-87654321', TRUE, '6543-2109-8765-4321', 3.8, 'Host');
+-- Inserción en la tabla UsuariosClasificacion (asignar roles a un usuario)
+INSERT INTO UsuariosClasificacion (idUsuario, idTipoUsuario)
+VALUES 
+(1, 1),  -- Usuario con id 1 tiene el rol de 'Cuidador'
+(1, 2);  -- Usuario con id 1 tiene el rol de 'Host'
 
--- Llenado de la tabla RedSocial
-INSERT INTO RedSocial (idUsuario, nombrePlataforma, urlPerfil) VALUES
-(1, 'Facebook', 'http://facebook.com/juan.perez'),
-(2, 'LinkedIn', 'http://linkedin.com/ana.garcia');
+-- Inserción en la tabla TiposDocumentos
+INSERT INTO TiposDocumentos (nombreDocumento)
+VALUES 
+('Pasaporte'),
+('Licencia de Conducir');
 
--- Llenado de la tabla DepositoGarantia
-INSERT INTO DepositoGarantia (idUsuario, idRecibeDep, monto, motivo) VALUES
-(1, 2, 200.00, 'Depósito de reserva'),
-(2, 1, 150.00, 'Depósito de seguridad');
+-- Inserción en la tabla DocumentosUsuario (documentos del usuario)
+INSERT INTO DocumentosUsuario (idUsuario, idTipoDocumento, numeroDocumento, fechaEmision, fechaExpiracion)
+VALUES 
+(1, 1, 'ABC123456', '2020-01-01', '2030-01-01'),  -- Pasaporte
+(1, 2, 'XYZ987654', '2021-05-10', '2026-05-10');  -- Licencia de Conducir
 
--- Llenado de la tabla BitacoraDeposito
-INSERT INTO BitacoraDeposito (idDepGar, fechaCreada) VALUES
-(1, NOW()),
-(2, NOW());
+-- Inserción en la tabla Pais
+INSERT INTO Pais (nombre)
+VALUES 
+('Costa Rica');
 
--- Llenado de la tabla ServiciosAdicionales
-INSERT INTO ServiciosAdicionales (idUsuario, descripcion) VALUES
-(1, 'Cuidado de mascotas'),
-(2, 'Limpieza profunda de hogar');
+-- Inserción en la tabla Estado
+INSERT INTO Estado (idPais, nombre)
+VALUES 
+(1, 'San José');
 
--- Llenado de la tabla Direccion
-INSERT INTO Direccion (idUsuario, pais, provincia, canton) VALUES
-(1, 'España', 'Madrid', 'Madrid'),
-(2, 'España', 'Cataluña', 'Barcelona');
+-- Inserción en la tabla Ciudad
+INSERT INTO Ciudad (idEstado, nombre)
+VALUES 
+(1, 'Escazú');
 
--- Llenado de la tabla ContactoEmergencia
-INSERT INTO ContactoEmergencia (idUsuario, nombreRelacion, numeroContacto) VALUES
-(1, 'Hermano', '987654321'),
-(2, 'Padre', '123456789');
+-- Inserción en la tabla Direccion
+INSERT INTO Direccion (idCiudad, codigoPostal, ubicacion)
+VALUES 
+(1, '10203', ST_SetSRID(ST_MakePoint(-84.1366, 9.9271), 4326));  -- Escazú
 
--- Llenado de la tabla BitacoraTransacciones
-INSERT INTO BitacoraTransacciones (idPost, monto, motivo) VALUES
-(1, 100.00, 'Pago de reserva inicial'),
-(2, 150.00, 'Pago por servicio adicional');
+-- Inserción en la tabla TipoContacto
+INSERT INTO TipoContacto (nombre)
+VALUES 
+('Personal'),
+('Emergencia'),
+('Teléfono'),
+('Correo Electrónico');
 
--- Llenado de la tabla BitacoraCuidados
-INSERT INTO BitacoraCuidados (idPost, idCuidador, observaciones) VALUES
-(1, 1, 'Seguimiento de todas las instrucciones.'),
-(2, 2, 'Cuidados específicos proporcionados.');
+-- Inserción en la tabla ContactInfo (información de contacto)
+INSERT INTO ContactInfo (tipoContacto, valor)
+VALUES 
+(1, '123456789'),  -- Teléfono
+(2, '987654321'),  -- Emergencia
+(3, '555123456'),  -- Teléfono adicional
+(4, 'juan.perez@example.com');  -- Correo
 
--- Llenado de la tabla URLCuidados
-INSERT INTO URLCuidados (idBitacoraCuido, link) VALUES
-(1, 'http://example.com/cuidados1'),
-(2, 'http://example.com/cuidados2');
+-- Inserción en la tabla Contacto (asociación de contacto con usuario)
+INSERT INTO Contacto (idUsuario, idContactInfo)
+VALUES 
+(1, 1),  -- Usuario con id 1 tiene teléfono
+(1, 2),  -- Usuario con id 1 tiene contacto de emergencia
+(1, 3),  -- Usuario con id 1 tiene otro teléfono
+(1, 4);  -- Usuario con id 1 tiene correo electrónico
 
--- Llenado de la tabla ProtocolosEmergencia
-INSERT INTO ProtocolosEmergencia (idInfoCasa, situacionEmergencia, solucion) VALUES
-(1, 'Incendio', 'Evacuar y llamar a emergencias.'),
-(2, 'Inundación', 'Cerrar el suministro de agua y llamar a un técnico.');
+-- Inserción en la tabla TipoPlataforma
+INSERT INTO TipoPlataforma (nombre)
+VALUES 
+('Facebook'),
+('Instagram');
 
--- Llenado de la tabla Favorito
-INSERT INTO Favorito (idUsuario, idCuidador) VALUES
-(1, 2),
-(2, 1);
+-- Inserción en la tabla RedSocial (asociación de un usuario con redes sociales)
+INSERT INTO RedSocial (idUsuario, idPlataforma, urlPerfil)
+VALUES 
+(1, 1, 'https://facebook.com/juan.perez'),
+(1, 2, 'https://instagram.com/juan.perez');
 
--- Llenado de la tabla BitacoraContactoHost
-INSERT INTO BitacoraContactoHost (idHost, idCuidador, fechaInicioContacto) VALUES
-(1, 2, NOW()),
-(2, 1, NOW());
+-- Inserción en la tabla TipoTransaccion
+INSERT INTO TipoTransaccion (descripcion)
+VALUES 
+('Depósito'),
+('Pago');
+
+-- Inserción en la tabla Transacciones (transacciones del usuario)
+INSERT INTO Transacciones (idUsuario, idTipoTransaccion, monto, descripcion, numeroReferencia, checksum)
+VALUES 
+(1, 1, 500.00, 'Depósito de garantía', 123456, ENCODE(DIGEST('deposito123', 'sha256'), 'hex')),
+(1, 2, 100.00, 'Pago de servicio', 789012, ENCODE(DIGEST('pago456', 'sha256'), 'hex'));
+
+-- Inserción en la tabla TipoEvento
+INSERT INTO TipoEvento (descripcion)
+VALUES 
+('Contacto'),
+('Cuidado');
+
+-- Inserción en la tabla NivelesBitacora
+INSERT INTO NivelesBitacora (nivel)
+VALUES 
+('Warning'),
+('Information'),
+('Error');
+
+-- Inserción en la tabla Bitacora (bitácora de eventos)
+INSERT INTO Bitacora (idTipoEvento, idNivel, source_id, object_id, detalles)
+VALUES 
+(1, 2, 'Usuarios', '1', 'Usuario registrado correctamente'),
+(2, 3, 'Usuarios', '1', 'Error al intentar actualizar el perfil del usuario');
+
+-- Inserción en la tabla Favoritos
+INSERT INTO Favoritos (idUsuario, idCuidador)
+VALUES 
+(1, 2);  -- Usuario 1 tiene al cuidador 2 como favorito
+
+-- Inserción en la tabla Match (relación entre Host y Cuidador)
+INSERT INTO Match (idHost, idCuidador, estado)
+VALUES 
+(1, 2, 'activo');
+
+-- Inserción en la tabla HistorialCuidador (historial de eventos con el cuidador)
+INSERT INTO HistorialCuidador (idCuidador, evento)
+VALUES 
+(2, 'Cuidador asignado a usuario Juan Pérez'),
+(2, 'Cuidador completó su tarea con éxito');
+
+-- Inserción en la tabla ContratosCuidador (contrato entre Host y Cuidador)
+INSERT INTO ContratosCuidador (idHost, idCuidador, fechaInicio, estado)
+VALUES 
+(1, 2, '2024-10-01', 'activo');
+
+-- Inserción en la tabla ProtocolosEmergencia
+INSERT INTO ProtocolosEmergencia (idInfoCasa, situacionEmergencia, solucion)
+VALUES 
+(1, 'Incendio', 'Evacuar inmediatamente y llamar al 911');
+
+-- Inserción en la tabla ServiciosAdicionales
+INSERT INTO ServiciosAdicionales (idUsuario, descripcion)
+VALUES 
+(1, 'Servicio de limpieza');

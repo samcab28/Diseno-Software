@@ -1,86 +1,167 @@
-// Use DBML to define your database structure
-// Docs: https://dbml.dbdiagram.io/docs
-
 Table Usuario {
   id integer [primary key]
   nombre varchar(256)
-  apellido varchar(256)
+  apellido1 varchar(256)
+  apellido2 varchar(256)
   fechaNacimiento date
-  ciudadResidencia varchar(256)
   urlImagenPerfil varchar(512)
   telefono varchar(16)
-  email varchar(256)
-  contrasena varchar(256)
+  email varchar(256) [unique]
+  contrasena bytea
+  idDireccion integer
 }
 
-Table UsuarioRegistrado {
-  idUsuario integer [primary key]
-  cedula varchar(64)
-  hojaDelincuencia boolean
-  tarjetaCredito varchar(16)
-  tipoUsuario varchar(64)
+Table TipoUsuario {
+  id integer [primary key]
+  descripcion varchar(128)
+}
+
+Table UsuariosClasificacion {
+  idUsuario integer
+  idTipoUsuario integer
+  primary key (idUsuario, idTipoUsuario)
+}
+
+Table TiposDocumentos {
+  id integer [primary key]
+  nombreDocumento varchar(50)
+}
+
+Table DocumentosUsuario {
+  id integer [primary key]
+  idUsuario integer
+  idTipoDocumento integer
+  numeroDocumento varchar(64)
+  fechaEmision date
+  fechaExpiracion date
+}
+
+Table Pais {
+  id integer [primary key]
+  nombre varchar(128)
+}
+
+Table Estado {
+  id integer [primary key]
+  idPais integer
+  nombre varchar(128)
+}
+
+Table Ciudad {
+  id integer [primary key]
+  idEstado integer
+  nombre varchar(128)
+}
+
+Table Direccion {
+  id integer [primary key]
+  idCiudad integer
+  codigoPostal varchar(16)
+  ubicacion geography(Point, 4326)
+}
+
+Table TipoContacto {
+  id integer [primary key]
+  nombre varchar(256) [unique]
+}
+
+Table ContactInfo {
+  id integer [primary key]
+  tipoContacto integer
+  valor varchar(256)
+  deleted boolean [default: false]
+}
+
+Table Contacto {
+  id integer [primary key]
+  idUsuario integer
+  idContactInfo integer
+  deleted boolean [default: false]
+}
+
+Table TipoPlataforma {
+  id integer [primary key]
+  nombre varchar(128)
 }
 
 Table RedSocial {
   id integer [primary key]
   idUsuario integer
-  nombrePlataforma varchar(128)
+  idPlataforma integer
   urlPerfil varchar(512)
 }
 
-Table DepositoGarantia {
+Table TipoTransaccion {
+  id integer [primary key]
+  descripcion varchar(64) [unique]
+}
+
+Table Transacciones {
   id integer [primary key]
   idUsuario integer
-  idRecibeDep integer
-  monto decimal(10,2)
-  motivo text
-}
-
-Table BitacoraDeposito {
-  id integer [primary key]
-  idDepGar integer 
-  fechaCreada timestamp
-}
-
-Table ServiciosAdicionales {
-  id integer [primary key]
-  idUsuario integer 
+  idTipoTransaccion integer
+  fecha timestamp 
+  monto decimal(10, 2)
   descripcion text
+  numeroReferencia integer
+  checksum varchar(64)
 }
 
-Table Direccion {
+Table TipoEvento {
   id integer [primary key]
-  idUsuario integer 
-  pais varchar(128)
-  provincia varchar(128)
-  canton varchar(128)
+  descripcion varchar(64) [unique]
 }
 
-Table ContactoEmergencia {
+Table NivelesBitacora {
   id integer [primary key]
-  idUsuario integer 
-  nombreRelacion varchar(256)
-  numeroContacto varchar(16)
+  nivel varchar(32) [unique]
 }
 
-Table BitacoraTransacciones {
+Table Bitacora {
   id integer [primary key]
+  idTipoEvento integer
+  idNivel integer
+  source_id varchar(64)
+  object_id varchar(64)
+  fecha timestamp
+  detalles text
+  checksum varchar(64)
+}
+
+Table Favoritos {
+  id integer [primary key]
+  idUsuario integer
+  idCuidador integer
+  deleted boolean [default: false]
+}
+
+Table Match {
+  id integer [primary key]
+  idHost integer
+  idCuidador integer
   idPost integer
-  monto decimal(10,2)
-  motivo text
+  fechaEstablecimiento timestamp 
+  estado varchar(64) [default: 'inactivo']
+  observaciones text
+  deleted boolean [default: false]
 }
 
-Table BitacoraCuidados {
+Table HistorialCuidador {
   id integer [primary key]
-  idPost integer
-  idCuidador integer 
+  idCuidador integer
+  fecha timestamp 
+  evento text
   observaciones text
 }
 
-Table URLCuidados {
+Table ContratosCuidador {
   id integer [primary key]
-  idBitacoraCuido integer 
-  link varchar(512)
+  idHost integer
+  idCuidador integer
+  fechaInicio date
+  fechaFin date
+  estado varchar(64) [default: 'pendiente']
+  observaciones text
 }
 
 Table ProtocolosEmergencia {
@@ -90,63 +171,62 @@ Table ProtocolosEmergencia {
   solucion text
 }
 
-Table Favorito {
+Table ServiciosAdicionales {
   id integer [primary key]
-  idUsuario integer 
-  idCuidador integer
-}
-
-Table InfoCasa {
-  id integer [primary key]
-  idUsuario integer 
-  idDireccion integer 
-  descripcionBase text
-  numHabitaciones integer
-  numBanos integer
-  descripcionCuidados text
-  piscina boolean
-  jardin boolean
-  mascotas boolean
+  idUsuario integer
+  descripcion text
+  deleted boolean [default: false]
 }
 
 Table Post {
   id integer [primary key]
-  idUsuario integer 
+  idUsuario integer [ref: > Usuario.id]
   motivo text
-  idInfoBasica integer 
-  ofertaPago decimal(10,2)
-  fechaInicio timestamp
-  fechaFin timestamp
-  subJsonPagos json
-  estadoReservado boolean
+  idInfoCasa integer [ref: > InfoCasa.id]
+  ofertaPago integer
+  fechaPublicacion timestamp 
+  fechaInicio date
+  fechaFin date
+  estado enum('pendiente', 'aceptado', 'rechazado', 'completado')
+  deleted boolean [default: false]
 }
 
-Table BitacoraContactoHost {
-  idHost integer 
-  idCuidador integer 
-  fechaInicioContacto timestamp
-  primary key (idHost, idCuidador)
+
+Table InfoCasa {
+  id integer [primary key]
+  idUsuario integer [ref: > Usuario.id]
+  descripcionBase text
+  idDireccion integer [ref: > Direccion.id]
+  caracteristicas jsonb
 }
+
+
 
 // Definición de Referencias
-Ref: UsuarioRegistrado.idUsuario > Usuario.id 
+Ref: Usuario.idDireccion > Direccion.id 
+Ref: UsuariosClasificacion.idUsuario > Usuario.id 
+Ref: UsuariosClasificacion.idTipoUsuario > TipoUsuario.id 
+Ref: DocumentosUsuario.idUsuario > Usuario.id 
+Ref: DocumentosUsuario.idTipoDocumento > TiposDocumentos.id 
+Ref: Direccion.idCiudad > Ciudad.id 
+Ref: Ciudad.idEstado > Estado.id 
+Ref: Estado.idPais > Pais.id 
+Ref: Contacto.idUsuario > Usuario.id 
+Ref: Contacto.idContactInfo > ContactInfo.id 
+Ref: ContactInfo.tipoContacto > TipoContacto.id 
 Ref: RedSocial.idUsuario > Usuario.id 
-Ref: DepositoGarantia.idUsuario > Usuario.id 
-Ref: DepositoGarantia.idRecibeDep > Usuario.id 
-Ref: BitacoraDeposito.idDepGar > DepositoGarantia.id
-Ref: ServiciosAdicionales.idUsuario > Usuario.id
-Ref: Direccion.idUsuario > Usuario.id 
-Ref: ContactoEmergencia.idUsuario > Usuario.id
-Ref: BitacoraCuidados.idCuidador > Usuario.id 
-Ref: URLCuidados.idBitacoraCuido > BitacoraCuidados.id
-Ref: Favorito.idUsuario > Usuario.id
-Ref: Favorito.idCuidador > Usuario.id 
-Ref: InfoCasa.idUsuario > Usuario.id 
-Ref: InfoCasa.idDireccion > Direccion.id 
-Ref: Post.idUsuario > Usuario.id
-Ref: Post.idInfoBasica > InfoCasa.id 
-Ref: BitacoraContactoHost.idHost > Usuario.id 
-Ref: BitacoraContactoHost.idCuidador > Usuario.id 
-Ref: BitacoraTransacciones.idPost > Post.id 
+Ref: RedSocial.idPlataforma > TipoPlataforma.id 
+Ref: Transacciones.idUsuario > Usuario.id 
+Ref: Transacciones.idTipoTransaccion > TipoTransaccion.id 
+Ref: Bitacora.idTipoEvento > TipoEvento.id 
+Ref: Bitacora.idNivel > NivelesBitacora.id 
+Ref: Favoritos.idUsuario > Usuario.id 
+Ref: Favoritos.idCuidador > Usuario.id 
+Ref: Match.idHost > Usuario.id 
+Ref: Match.idCuidador > Usuario.id 
+Ref: Match.idPost > Post.id 
+Ref: HistorialCuidador.idCuidador > Usuario.id 
+Ref: ContratosCuidador.idHost > Usuario.id 
+Ref: ContratosCuidador.idCuidador > Usuario.id 
 Ref: ProtocolosEmergencia.idInfoCasa > InfoCasa.id 
-Ref: BitacoraCuidados.idPost > Post.id 
+Ref: ServiciosAdicionales.idUsuario > Usuario.id 

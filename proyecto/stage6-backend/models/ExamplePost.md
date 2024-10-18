@@ -1,15 +1,10 @@
-```
-"Post": [
-    {
-      "id": 1,
-      "idUsuario": 1,
-      "motivo": "Necesito un cuidador para mi mascota",
-      "idInfoBasica": 1,
-      "ofertaPago": 100.00,
-      "fechaInicio": "2024-10-05T00:00:00Z",
-      "fechaFin": "2024-10-12T00:00:00Z",
-      "subJsonPagos": {},
-      "estadoReservado": false
-    }
-  ]
-```
+{
+  "idUsuario": 1, 
+  "motivo": "Interesado en alquilar la casa para vacaciones",
+  "idInfoCasa": "60d5fdb4f5a1d90bc8f55a2f",  
+  "ofertaPago": 1500,  // Monto ofrecido en la oferta de pago
+  "fechaInicio": "2024-12-01T00:00:00Z",  // Fecha de inicio del alquiler
+  "fechaFin": "2024-12-15T00:00:00Z",  // Fecha de fin del alquiler
+  "estado": "pendiente",  // Estado del post (puede ser pendiente, aceptado, rechazado o completado)
+  "deleted": false  // Indicador de si el post está marcado como eliminado
+}

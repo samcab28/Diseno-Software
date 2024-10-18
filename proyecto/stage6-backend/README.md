@@ -1,11 +1,16 @@
-# Diagrams
+# Diagramas
+
+## Link 
+
+link para visualizacion del diagrama: https://drive.google.com/file/d/1Q5sAv6P_gfNhdm_OQcERwHUXc0Nr1yqY/view?usp=sharing 
+
+Se hace el envio del link debido a que la union de todos los diagramas es hace que se vea muy grande. 
 
 ## IA PROVIDER
 ![IA Provider](./imagenDiagrama/IA_Bridge.png)
 
 ## Payment Provider
 ![Payment Provider](./imagenDiagrama/PaymentBridge.png)
-
 
 ## Database Manager
 ![Database Manager](./imagenDiagrama/Database.png)

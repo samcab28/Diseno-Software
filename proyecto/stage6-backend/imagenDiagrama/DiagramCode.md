@@ -2,6 +2,85 @@
 
 En este archivo se tendra el codigo uml de los diagramas, en caso de consultarlo o graficarlo de manera inmediate en plataformas como [Mermaid Live](https://mermaid.live/edit)
 
+## UNION 
+
+``` uml
+classDiagram
+    class SystemOrchestrator {
+        -aiService: AIService
+        -paymentService: Payment
+        -dataManager: DataManager
+        -apiGateway: APIGateway
+        -cognitoAuth: CognitoAuthService
+        -externalServices: ExternalServicesFacade
+        -notificationService: NotificationService
+        +initializeSystems()
+        +processAIRequest(request: Request)
+        +processPayment(paymentRequest: Request)
+        +handleDataOperation(operation: string)
+        +authenticateUser(credentials: UserCredentials)
+        +notifyUser(notification: Notification)
+        +callExternalService(serviceName: string)
+    }
+
+    class AIService {
+        -aiProvider: AIProvider
+        +analyze(): AIAnalysisResult
+        +predict(): PredictionResult
+    }
+
+    class Payment {
+        -paymentProvider: PaymentProvider
+        +process(): PaymentResult
+        +authorize(): AuthorizationResult
+    }
+
+    class DataManager {
+        -repository: IDataRepository
+        -securityManager: SecurityManager
+        +performOperation(operation: string)
+    }
+
+    class APIGateway {
+        -routingStrategy: RoutingStrategy
+        -authenticationService: AuthenticationService
+        +handleRequest(request: Request)
+    }
+
+    class CognitoAuthService {
+        -userPool: CognitoUserPool
+        +signIn(username: string, password: string)
+        +signUp(username: string, password: string)
+    }
+
+    class ExternalServicesFacade {
+        -serviceFactory: ExternalServiceFactory
+        +getService(serviceName: string)
+        +callService(serviceName: string)
+    }
+
+    class NotificationService {
+        -snsClient: SNSClient
+        -sqsClient: SQSClient
+        +sendNotification(notification: Notification)
+    }
+
+    SystemOrchestrator --> AIService
+    SystemOrchestrator --> Payment
+    SystemOrchestrator --> DataManager
+    SystemOrchestrator --> APIGateway
+    SystemOrchestrator --> CognitoAuthService
+    SystemOrchestrator --> ExternalServicesFacade
+    SystemOrchestrator --> NotificationService
+
+    APIGateway --> CognitoAuthService : Autenticación
+    DataManager --> NotificationService : Notificaciones de eventos
+    ExternalServicesFacade --> NotificationService : Notificaciones externas
+    Payment --> DataManager : Persistencia
+    AIService --> DataManager : Almacenamiento de resultados
+    Payment --> NotificationService : Notificaciones de pago
+``` 
+
 ## IA PROVIDER
 ``` uml
 ```uml

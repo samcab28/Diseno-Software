@@ -14,6 +14,7 @@ classDiagram
         -cognitoAuth: CognitoAuthService
         -externalServices: ExternalServicesFacade
         -notificationService: NotificationService
+        -backendService: BackendService
         +initializeSystems()
         +processAIRequest(request: Request)
         +processPayment(paymentRequest: Request)
@@ -21,48 +22,24 @@ classDiagram
         +authenticateUser(credentials: UserCredentials)
         +notifyUser(notification: Notification)
         +callExternalService(serviceName: string)
+        +handleBackendRequest(request: BackendRequest)
     }
 
-    class AIService {
-        -aiProvider: AIProvider
-        +analyze(): AIAnalysisResult
-        +predict(): PredictionResult
-    }
+    class AIService
+    class Payment
+    class DataManager
+    class APIGateway
+    class CognitoAuthService
+    class ExternalServicesFacade
+    class NotificationService
 
-    class Payment {
-        -paymentProvider: PaymentProvider
-        +process(): PaymentResult
-        +authorize(): AuthorizationResult
-    }
-
-    class DataManager {
-        -repository: IDataRepository
-        -securityManager: SecurityManager
-        +performOperation(operation: string)
-    }
-
-    class APIGateway {
-        -routingStrategy: RoutingStrategy
-        -authenticationService: AuthenticationService
-        +handleRequest(request: Request)
-    }
-
-    class CognitoAuthService {
-        -userPool: CognitoUserPool
-        +signIn(username: string, password: string)
-        +signUp(username: string, password: string)
-    }
-
-    class ExternalServicesFacade {
-        -serviceFactory: ExternalServiceFactory
-        +getService(serviceName: string)
-        +callService(serviceName: string)
-    }
-
-    class NotificationService {
-        -snsClient: SNSClient
-        -sqsClient: SQSClient
-        +sendNotification(notification: Notification)
+    class BackendService {
+        -dataManager: DataManager
+        -cognitoAuth: CognitoAuthService
+        -notificationService: NotificationService
+        +handleCuidadorRequests(request: Request)
+        +handleHostRequests(request: Request)
+        +handleGeneralRequests(request: Request)
     }
 
     SystemOrchestrator --> AIService
@@ -72,8 +49,13 @@ classDiagram
     SystemOrchestrator --> CognitoAuthService
     SystemOrchestrator --> ExternalServicesFacade
     SystemOrchestrator --> NotificationService
+    SystemOrchestrator --> BackendService
 
-    APIGateway --> CognitoAuthService : Autenticación
+    BackendService --> DataManager
+    BackendService --> CognitoAuthService
+    BackendService --> NotificationService
+
+    APIGateway --> BackendService : Enrutamiento de solicitudes
     DataManager --> NotificationService : Notificaciones de eventos
     ExternalServicesFacade --> NotificationService : Notificaciones externas
     Payment --> DataManager : Persistencia
@@ -81,8 +63,88 @@ classDiagram
     Payment --> NotificationService : Notificaciones de pago
 ``` 
 
-## IA PROVIDER
+## Backend Manager
 ``` uml
+classDiagram
+    class BackendService {
+        -dataManager: DataManager
+        -cognitoAuth: CognitoAuthService
+        -notificationService: NotificationService
+        +handleCuidadorRequests(request: Request)
+        +handleHostRequests(request: Request)
+        +handleGeneralRequests(request: Request)
+    }
+
+    class AuthController {
+        +login(email: string, password: string): JWTToken
+    }
+
+    class CuidadorController {
+        +getCuidadorData(email: string): CuidadorData
+        +getOpportunities(): Opportunity[]
+        +getDetailedOpportunity(id: string): DetailedOpportunity
+        +getSentRequests(): Request[]
+        +getCaretakerServices(): Service[]
+        +getAllPostsWithHouseInfo(): PostWithHouseInfo[]
+        +handleLikeOnPost(postId: string): LikeResult
+        +getAllCaretakersWithServices(): CaretakerWithServices[]
+        +getDetailedCaretakerProfile(id: number): DetailedCaretakerProfile
+        +expressInterestInCaretaker(id: number): InterestResult
+    }
+
+    class HostController {
+        +getHostData(): HostData
+        +getPostsByHost(userId: number): Post[]
+        +getFavoritesForHost(userId: number): Favorite[]
+        +getRequestsForHost(userId: number): HostRequest[]
+        +getMessagesBetweenHostAndCaretaker(hostId: number, cuidadorId: number): Message[]
+        +sendMessage(message: MessageData): SendMessageResult
+    }
+
+    class GeneralController {
+        +getAllPosts(): Post[]
+    }
+
+    class DataManager {
+        +getUserData(userId: number): UserData
+        +getOpportunities(): Opportunity[]
+        +getPosts(): Post[]
+        +getServices(): Service[]
+        +getLikes(): Like[]
+        +getFavorites(): Favorite[]
+        +getRequests(): Request[]
+        +getMessages(): Message[]
+    }
+
+    class CognitoAuthService {
+        +signIn(username: string, password: string): AuthResult
+        +signUp(username: string, password: string): SignUpResult
+        +verifyToken(token: string): VerificationResult
+    }
+
+    class NotificationService {
+        +sendNotification(notification: Notification)
+    }
+
+    BackendService --> AuthController
+    BackendService --> CuidadorController
+    BackendService --> HostController
+    BackendService --> GeneralController
+    BackendService --> DataManager
+    BackendService --> CognitoAuthService
+    BackendService --> NotificationService
+
+    AuthController --> CognitoAuthService
+    CuidadorController --> DataManager
+    HostController --> DataManager
+    GeneralController --> DataManager
+
+    CuidadorController --> NotificationService
+    HostController --> NotificationService
+``` 
+
+## IA PROVIDER
+
 ```uml
 classDiagram
     %% Abstracción refinada

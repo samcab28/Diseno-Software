@@ -40,6 +40,13 @@ CREATE TABLE DocumentosUsuario (
     fechaExpiracion DATE
 );
 
+CREATE TABLE UsuariosVerificados (
+    idUsuario INTEGER REFERENCES Usuarios(idUsuario),
+    fechaVerificacion DATE NOT NULL DEFAULT CURRENT_DATE,  -- Fecha en que fue verificado
+    PRIMARY KEY (idUsuario)  -- Para asegurarse de que un usuario solo aparezca una vez como verificado
+);
+
+
 -- DIRECCION
 -- Habilitar la extensión PostGIS: para manejar la parte de latitudes y longitudes
 CREATE EXTENSION IF NOT EXISTS postgis;

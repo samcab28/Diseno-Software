@@ -63,6 +63,12 @@
       "fechaExpiracion": "2026-05-10"
     }
   ],
+  "UsuariosVerificados": [
+    {
+      "idUsuario": 1,
+      "fechaVerificacion": "2024-10-20",
+    }
+  ],
   "Pais": [
     {
       "idPais": 1,

@@ -28,6 +28,12 @@ VALUES
 (1, 1, 'ABC123456', '2020-01-01', '2030-01-01'),  -- Pasaporte
 (1, 2, 'XYZ987654', '2021-05-10', '2026-05-10');  -- Licencia de Conducir
 
+
+-- Usuario Verificado
+INSERT INTO UsuariosVerificados (idUsuario, fechaVerificacion)
+VALUES
+(1, '2024-10-20')
+
 -- Inserción en la tabla Pais
 INSERT INTO Pais (nombre)
 VALUES 

@@ -36,6 +36,11 @@ Table DocumentosUsuario {
   fechaExpiracion date
 }
 
+Table UsuariosVerificados {
+  idUsuario integer [primary key]
+  fechaVerificacion date
+}
+
 Table Pais {
   id integer [primary key]
   nombre varchar(128)
@@ -207,6 +212,7 @@ Ref: Usuario.idDireccion > Direccion.id
 Ref: UsuariosClasificacion.idUsuario > Usuario.id 
 Ref: UsuariosClasificacion.idTipoUsuario > TipoUsuario.id 
 Ref: DocumentosUsuario.idUsuario > Usuario.id 
+Ref: UsuariosVerificados.idUsuario > Usuario.id 
 Ref: DocumentosUsuario.idTipoDocumento > TiposDocumentos.id 
 Ref: Direccion.idCiudad > Ciudad.id 
 Ref: Ciudad.idEstado > Estado.id 

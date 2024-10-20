@@ -1,16 +1,28 @@
-// postgreSQLRepository.ts
-import { Pool, PoolConfig } from 'pg';
+import { Pool, PoolConfig, QueryResult } from 'pg';
 import { IRepository } from '../services/dataManager';
 
 export class PostgreSQLRepository implements IRepository {
+    private static instance: PostgreSQLRepository;
     private pool: Pool;
     private isConnected: boolean = false;
 
-    constructor(config: PoolConfig) {
+    private constructor(config: PoolConfig) {
         this.pool = new Pool(config);
     }
 
+    public static getInstance(config: PoolConfig): PostgreSQLRepository {
+        if (!PostgreSQLRepository.instance) {
+            PostgreSQLRepository.instance = new PostgreSQLRepository(config);
+        }
+        return PostgreSQLRepository.instance;
+    }
+
     async connect(): Promise<void> {
+        if (this.isConnected) {
+            console.log('Already connected to PostgreSQL database');
+            return;
+        }
+
         try {
             const client = await this.pool.connect();
             client.release();
@@ -23,6 +35,11 @@ export class PostgreSQLRepository implements IRepository {
     }
 
     async disconnect(): Promise<void> {
+        if (!this.isConnected) {
+            console.log('Already disconnected from PostgreSQL database');
+            return;
+        }
+
         try {
             await this.pool.end();
             this.isConnected = false;
@@ -35,7 +52,7 @@ export class PostgreSQLRepository implements IRepository {
 
     async query(query: string, params?: any[]): Promise<any> {
         if (!this.isConnected) {
-            throw new Error('Not connected to the database');
+            await this.connect();
         }
         try {
             const result = await this.pool.query(query, params);
@@ -46,9 +63,9 @@ export class PostgreSQLRepository implements IRepository {
         }
     }
 
-    async execute(command: string, params?: any[]): Promise<any> {
+    async execute(command: string, params?: any[]): Promise<QueryResult> {
         if (!this.isConnected) {
-            throw new Error('Not connected to the database');
+            await this.connect();
         }
         try {
             const result = await this.pool.query(command, params);

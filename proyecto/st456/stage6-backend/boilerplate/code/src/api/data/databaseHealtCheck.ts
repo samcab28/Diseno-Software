@@ -1,3 +1,5 @@
+// src/api/healthCheck/databaseHealthCheckRouter.ts
+
 import { OpenAPIRegistry } from "@asteasolutions/zod-to-openapi";
 import express, { type Request, type Response, type Router } from "express";
 import { z } from "zod";
@@ -5,29 +7,13 @@ import { z } from "zod";
 import { createApiResponse } from "@/api-docs/openAPIResponseBuilders";
 import { ServiceResponse } from "@/common/models/serviceResponse";
 import { handleServiceResponse } from "@/common/utils/httpHandlers";
-import { PostgreSQLRepository } from "./repositories/postgreSQLRepository";
+import { PostgreSQLRepository } from "../data/repositories/postgreSQLRepository";
+import { dbConfig } from "../../config/database";
 
 export const databaseHealthCheckRegistry = new OpenAPIRegistry();
 export const databaseHealthCheckRouter: Router = express.Router();
 
-const postgresRepository = new PostgreSQLRepository({
-  host: 'localhost',
-  port: 30200,
-  user: 'postgres',
-  password: 'JFgEfCkTf0',
-  database: 'minchapp'
-});
-
-// Conectar a la base de datos al inicio de la aplicación
-postgresRepository.connect()
-  .then(() => console.log("Connected to database"))
-  .catch((error) => console.error("Failed to connect to database", error));
-
-// Asegurar que la conexión se cierre cuando la aplicación se detenga
-process.on('SIGINT', async () => {
-  await postgresRepository.disconnect();
-  process.exit(0);
-});
+const postgresRepository = PostgreSQLRepository.getInstance(dbConfig);
 
 databaseHealthCheckRegistry.registerPath({
   method: "get",

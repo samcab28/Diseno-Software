@@ -1,39 +1,44 @@
-import { Notification } from './models/notification';
+import { SNSClient } from './snsClient';
+import { SQSClient } from './sqsClient';
+import { Notification } from './notification';
+import { NotificationResult } from './notificationResult';
+import { SubscriptionResult } from './subscriptionResult';
+import { UnsubscriptionResult } from './unsubscriptionResult';
 
 export class NotificationService {
-    private snsClient: any; // Replace with actual SNS client type
-    private sqsClient: any; // Replace with actual SQS client type
+    private snsClient: SNSClient;
+    private sqsClient: SQSClient;
     private topicArn: string;
     private queueUrl: string;
 
-    constructor(snsClient: any, sqsClient: any, topicArn: string, queueUrl: string) {
+    constructor(snsClient: SNSClient, sqsClient: SQSClient, topicArn: string, queueUrl: string) {
         this.snsClient = snsClient;
         this.sqsClient = sqsClient;
         this.topicArn = topicArn;
         this.queueUrl = queueUrl;
     }
 
-    public sendNotification(notification: Notification): any {
-        // Implementation
+    public async sendNotification(notification: Notification): Promise<NotificationResult> {
+        // Implementación
     }
 
-    public subscribeToTopic(endpoint: string, protocol: string): any {
-        // Implementation
+    public async subscribeToTopic(endpoint: string, protocol: string): Promise<SubscriptionResult> {
+        // Implementación
     }
 
-    public unsubscribeFromTopic(subscriptionArn: string): any {
-        // Implementation
+    public async unsubscribeFromTopic(subscriptionArn: string): Promise<UnsubscriptionResult> {
+        // Implementación
     }
 
-    public receiveNotifications(): Notification[] {
-        // Implementation
+    public async receiveNotifications(): Promise<Notification[]> {
+        // Implementación
     }
 
-    private createTopic(topicName: string): string {
-        // Implementation
+    private async createTopic(topicName: string): Promise<string> {
+        // Implementación
     }
 
-    private createQueue(queueName: string): string {
-        // Implementation
+    private async createQueue(queueName: string): Promise<string> {
+        // Implementación
     }
 }

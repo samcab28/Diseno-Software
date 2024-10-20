@@ -1,29 +1,29 @@
-import { AIProvider } from '../providers/aiProvider';
+import { AIProvider } from '../providers/aiProvider
 
-export class AIService {
-    private aiProvider: AIProvider;
+export abstract class AIService {
+    protected aiProvider: AIProvider;
 
     constructor(aiProvider: AIProvider) {
         this.aiProvider = aiProvider;
     }
 
-    public analyze(): any {
+    analyze(): AIAnalysisResult {
         // Implementation
     }
 
-    public predict(): any {
+    predict(): PredictionResult {
         // Implementation
     }
 
-    public train(): any {
+    train(): TrainingResult {
         // Implementation
     }
 
-    public evaluate(): any {
+    evaluate(): EvaluationResult {
         // Implementation
     }
 
-    public validate(): any {
+    validate(): ValidationResult {
         // Implementation
     }
 }

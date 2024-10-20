@@ -1,29 +1,29 @@
 import { PaymentProvider } from '../providers/paymentProvider';
 
-export class Payment {
-    private paymentProvider: PaymentProvider;
+export abstract class Payment {
+    protected paymentProvider: PaymentProvider;
 
     constructor(paymentProvider: PaymentProvider) {
         this.paymentProvider = paymentProvider;
     }
 
-    public process(): any {
+    process(): PaymentResult {
         // Implementation
     }
 
-    public authorize(): any {
+    authorize(): AuthorizationResult {
         // Implementation
     }
 
-    public capture(): any {
+    capture(): CaptureResult {
         // Implementation
     }
 
-    public void(): any {
+    void(): VoidResult {
         // Implementation
     }
 
-    public refund(): any {
+    refund(): RefundResult {
         // Implementation
     }
 }

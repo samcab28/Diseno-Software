@@ -1,43 +1,53 @@
+import { CognitoUserPool } from 'amazon-cognito-identity-js';
+import { UserAttributes } from './models/userAttributes';
+import { SignUpResult } from './models/signUpResult.ts';
+import { SignInResult } from './models/signInResult';
+import { RefreshTokenResult } from './models/refreshTokenResult';
+import { ForgotPasswordResult } from './models/forgotPasswordResult';
+import { ConfirmForgotPasswordResult } from './models/confirmForgotPasswordResult';
+import { GetUserAttributesResult } from './models/getUserAttributesResult';
+import { UpdateUserAttributesResult } from './models/updateUserAttributesResult';
+
 export class CognitoAuthService {
-    private userPool: any; // Replace with actual Cognito user pool type
+    private userPool: CognitoUserPool;
     private clientId: string;
     private clientSecret: string;
 
-    constructor(userPool: any, clientId: string, clientSecret: string) {
+    constructor(userPool: CognitoUserPool, clientId: string, clientSecret: string) {
         this.userPool = userPool;
         this.clientId = clientId;
         this.clientSecret = clientSecret;
     }
 
-    public signUp(username: string, password: string, attributes: any): any {
-        // Implementation
+    public async signUp(username: string, password: string, attributes: UserAttributes): Promise<SignUpResult> {
+        // Implementación
     }
 
-    public confirmSignUp(username: string, confirmationCode: string): any {
-        // Implementation
+    public async confirmSignUp(username: string, confirmationCode: string): Promise<ConfirmSignUpResult> {
+        // Implementación
     }
 
-    public signIn(username: string, password: string): any {
-        // Implementation
+    public async signIn(username: string, password: string): Promise<SignInResult> {
+        // Implementación
     }
 
-    public refreshToken(refreshToken: string): any {
-        // Implementation
+    public async refreshToken(refreshToken: string): Promise<RefreshTokenResult> {
+        // Implementación
     }
 
-    public forgotPassword(username: string): any {
-        // Implementation
+    public async forgotPassword(username: string): Promise<ForgotPasswordResult> {
+        // Implementación
     }
 
-    public confirmForgotPassword(username: string, confirmationCode: string, newPassword: string): any {
-        // Implementation
+    public async confirmForgotPassword(username: string, confirmationCode: string, newPassword: string): Promise<ConfirmForgotPasswordResult> {
+        // Implementación
     }
 
-    public getUserAttributes(accessToken: string): any {
-        // Implementation
+    public async getUserAttributes(accessToken: string): Promise<GetUserAttributesResult> {
+        // Implementación
     }
 
-    public updateUserAttributes(accessToken: string, attributes: any): any {
-        // Implementation
+    public async updateUserAttributes(accessToken: string, attributes: UserAttributes): Promise<UpdateUserAttributesResult> {
+        // Implementación
     }
 }

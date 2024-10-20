@@ -1,27 +1,34 @@
-import { IDataRepository } from '../repositories/iDataRepository';
-import { SecurityManager } from './securityManager';
-import { BackupStrategy } from './backupStrategy';
+// dataManager.ts
+export interface IRepository {
+    connect(): Promise<void>;
+    disconnect(): Promise<void>;
+    query(query: string, params?: any[]): Promise<any>;
+    execute(command: string, params?: any[]): Promise<any>;
+}
 
 export class DataManager {
-    private repository: IDataRepository;
-    private securityManager: SecurityManager;
-    private backupStrategy: BackupStrategy;
+    private repository: IRepository;
 
-    constructor(repository: IDataRepository, securityManager: SecurityManager, backupStrategy: BackupStrategy) {
+    constructor(repository: IRepository) {
         this.repository = repository;
-        this.securityManager = securityManager;
-        this.backupStrategy = backupStrategy;
     }
 
-    public setRepository(repository: IDataRepository): void {
-        // Implementation
+    public async connect(): Promise<void> {
+        await this.repository.connect();
     }
 
-    public performOperation(operation: string, data: any): any {
-        // Implementation
+    public async disconnect(): Promise<void> {
+        await this.repository.disconnect();
     }
 
-    public performBackup(): any {
-        // Implementation
+    public async performOperation(operation: string, data: string, params?: any[]): Promise<any> {
+        switch (operation) {
+            case 'query':
+                return await this.repository.query(data, params);
+            case 'execute':
+                return await this.repository.execute(data, params);
+            default:
+                throw new Error('Unknown operation');
+        }
     }
 }

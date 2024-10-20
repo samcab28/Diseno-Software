@@ -1,7 +1,7 @@
 -- Inserción en la tabla Usuarios
 INSERT INTO Usuarios (nombre, apellido1, apellido2, fechaNacimiento, urlImagenPerfil, telefono, email, contrasena, idDireccion)
 VALUES 
-('Juan', 'Perez', 'Lopez', '1990-05-10', 'https://imagen.com/juan', '123456789', 'juan.perez@example.com', ENCODE(DIGEST('password123', 'sha256'), 'hex'), 1);
+('Juan', 'Perez', 'Lopez', '1990-05-10', 'https://imagen.com/juan', '123456789', 'juan.perez@example.com', DIGEST('password123', 'sha256'), 1);
 
 -- Inserción en la tabla TipoUsuario
 INSERT INTO TipoUsuario (descripcion)
@@ -99,8 +99,8 @@ VALUES
 -- Inserción en la tabla Transacciones (transacciones del usuario)
 INSERT INTO Transacciones (idUsuario, idTipoTransaccion, monto, descripcion, numeroReferencia, checksum)
 VALUES 
-(1, 1, 500.00, 'Depósito de garantía', 123456, ENCODE(DIGEST('deposito123', 'sha256'), 'hex')),
-(1, 2, 100.00, 'Pago de servicio', 789012, ENCODE(DIGEST('pago456', 'sha256'), 'hex'));
+(1, 1, 500.00, 'Depósito de garantía', 123456, DIGEST('deposito123', 'sha256')),
+(1, 2, 100.00, 'Pago de servicio', 789012, DIGEST('pago456', 'sha256'));
 
 -- Inserción en la tabla TipoEvento
 INSERT INTO TipoEvento (descripcion)
@@ -116,10 +116,10 @@ VALUES
 ('Error');
 
 -- Inserción en la tabla Bitacora (bitácora de eventos)
-INSERT INTO Bitacora (idTipoEvento, idNivel, source_id, object_id, detalles)
+INSERT INTO Bitacora (idTipoEvento, idNivel, source_id, object_id, detalles, checksum)
 VALUES 
-(1, 2, 'Usuarios', '1', 'Usuario registrado correctamente'),
-(2, 3, 'Usuarios', '1', 'Error al intentar actualizar el perfil del usuario');
+(1, 2, 'Usuarios', '1', 'Usuario registrado correctamente', DIGEST('AAA', 'sha256')),
+(2, 3, 'Usuarios', '1', 'Error al intentar actualizar el perfil del usuario', DIGEST('BBB', 'sha256'));
 
 -- Inserción en la tabla Favoritos
 INSERT INTO Favoritos (idUsuario, idCuidador)
@@ -127,9 +127,9 @@ VALUES
 (1, 2);  -- Usuario 1 tiene al cuidador 2 como favorito
 
 -- Inserción en la tabla Match (relación entre Host y Cuidador)
-INSERT INTO Match (idHost, idCuidador, estado)
+INSERT INTO Match (idHost, idCuidador, idPost, estado)
 VALUES 
-(1, 2, 'activo');
+(1, 2, 'dasd789jf5a1d90bc8f55a2f', 'activo');
 
 -- Inserción en la tabla HistorialCuidador (historial de eventos con el cuidador)
 INSERT INTO HistorialCuidador (idCuidador, evento)
@@ -145,7 +145,7 @@ VALUES
 -- Inserción en la tabla ProtocolosEmergencia
 INSERT INTO ProtocolosEmergencia (idInfoCasa, situacionEmergencia, solucion)
 VALUES 
-(1, 'Incendio', 'Evacuar inmediatamente y llamar al 911');
+('60d5fdb4f5a1d90bc8f55a2f', 'Incendio', 'Evacuar inmediatamente y llamar al 911');
 
 -- Inserción en la tabla ServiciosAdicionales
 INSERT INTO ServiciosAdicionales (idUsuario, descripcion)

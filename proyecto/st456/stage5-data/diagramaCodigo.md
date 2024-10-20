@@ -109,7 +109,7 @@ Table Transacciones {
   monto decimal(10, 2)
   descripcion text
   numeroReferencia integer
-  checksum varchar(64)
+  checksum bytea
 }
 
 Table TipoEvento {
@@ -130,7 +130,7 @@ Table Bitacora {
   object_id varchar(64)
   fecha timestamp
   detalles text
-  checksum varchar(64)
+  checksum bytea
 }
 
 Table Favoritos {
@@ -144,7 +144,7 @@ Table Match {
   id integer [primary key]
   idHost integer
   idCuidador integer
-  idPost integer
+  idPost varchar(24)
   fechaEstablecimiento timestamp 
   estado varchar(64) [default: 'inactivo']
   observaciones text
@@ -171,7 +171,7 @@ Table ContratosCuidador {
 
 Table ProtocolosEmergencia {
   id integer [primary key]
-  idInfoCasa integer
+  idInfoCasa varchar(24)
   situacionEmergencia text
   solucion text
 }
@@ -184,10 +184,10 @@ Table ServiciosAdicionales {
 }
 
 Table Post {
-  id integer [primary key]
+  id ObjectId [primary key]
   idUsuario integer [ref: > Usuario.id]
   motivo text
-  idInfoCasa integer [ref: > InfoCasa.id]
+  idInfoCasa ObjectId
   ofertaPago integer
   fechaPublicacion timestamp 
   fechaInicio date
@@ -198,7 +198,7 @@ Table Post {
 
 
 Table InfoCasa {
-  id integer [primary key]
+  id ObjectId [primary key]
   idUsuario integer [ref: > Usuario.id]
   descripcionBase text
   idDireccion integer [ref: > Direccion.id]

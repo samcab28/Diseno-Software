@@ -396,5 +396,3 @@
     }
   ]
   ```
-
-Note: All endpoints should include proper error handling. Common HTTP status codes should be used (e.g., 200 for success, 400 for bad request, 401 for unauthorized, 404 for not found, 500 for server errors).

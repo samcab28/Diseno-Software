@@ -17,48 +17,8 @@ Se ha seguido toda la ejecucion del proyecto paso a paso de manera correcta, log
 
 # lista de cambios del boilerplate
 
-Script de creacion para el sistema, se debe de tener en cuenta que para hoy 11 de octubre, todavia NO se ha hecho la union con el frontend, no obstante ya se cuentan con todos los archivos necesarios para soportar los demas microservicios. 
+1. creacion de todos los archivos necesarios siguiendo los diagramas 
+2. creacion de la conexion a la base de datos
+3. creacion de una solicitud a la base de datos 
 
-```
-# Crear directorios principales
-mkdir -p src/common/models/{interfaces,types}
-mkdir -p src/common/middleware/auth
-mkdir -p src/common/utils
-
-# Crear directorios de API
-mkdir -p src/api/orchestrator
-mkdir -p src/api/ai/{services,providers}
-mkdir -p src/api/payment/{services,providers}
-mkdir -p src/api/data/{services,repositories}
-mkdir -p src/api/gateway/{services,strategies}
-mkdir -p src/api/auth/{services,models}
-mkdir -p src/api/external/{services,providers}
-mkdir -p src/api/notification/{services,clients,models}
-
-# Crear directorios de configuración
-mkdir -p src/config
-
-# Crear archivos de interfaces
-touch src/common/models/interfaces/IDataRepository.ts
-touch src/common/models/interfaces/IAIProvider.ts
-touch src/common/models/interfaces/IPaymentProvider.ts
-touch src/common/models/interfaces/IExternalService.ts
-
-# Crear archivos de tipos
-touch src/common/models/types/AITypes.ts
-touch src/common/models/types/PaymentTypes.ts
-touch src/common/models/types/NotificationTypes.ts
-touch src/common/models/types/ServiceTypes.ts
-
-# Crear archivos principales
-touch src/api/orchestrator/systemOrchestrator.ts
-touch src/api/orchestrator/orchestratorRoutes.ts
-touch src/api/orchestrator/orchestratorController.ts
-
-# Crear archivos de configuración
-touch src/config/aws.ts
-touch src/config/cognito.ts
-touch src/config/database.ts
-touch src/config/external.ts
-```
 

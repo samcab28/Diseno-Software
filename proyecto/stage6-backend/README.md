@@ -4,9 +4,18 @@
 
 link para visualizacion del diagrama: https://drive.google.com/file/d/1Q5sAv6P_gfNhdm_OQcERwHUXc0Nr1yqY/view?usp=sharing 
 
-Se hace el envio del link debido a que la union de todos los diagramas es hace que se vea muy grande. 
+Se hace el envio del link debido a que la union de todos los diagramas es hace que se vea muy grande.
 
-## IA PROVIDER
+## Diagrama Completo
+![Diagrama Completo](./imagenDiagrama/DiagramaCompleto.png)
+
+## System Orchestrator
+![System orchestrator](./imagenDiagrama/SystemOrchestrator.png)
+
+## Backend Manager
+![Backend Provider](./imagenDiagrama/BackendManager.png)
+
+## IA Provider
 ![IA Provider](./imagenDiagrama/IA_Bridge.png)
 
 ## Payment Provider

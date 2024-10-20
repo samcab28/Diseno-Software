@@ -1,12 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Form, Button, Card } from 'react-bootstrap';
-
-interface Message {
-  id: number;
-  senderId: number;
-  text: string;
-  timestamp: Date;
-}
+import { MensajeChat } from '../../types';
+import mockApiHost from '../../services/mockApiHost';
 
 interface ChatComponentProps {
   hostId: number;
@@ -14,31 +9,42 @@ interface ChatComponentProps {
 }
 
 const ChatComponent: React.FC<ChatComponentProps> = ({ hostId, cuidadorId }) => {
-  const [messages, setMessages] = useState<Message[]>([]);
+  const [messages, setMessages] = useState<MensajeChat[]>([]);
   const [newMessage, setNewMessage] = useState('');
 
   useEffect(() => {
-    // Aquí se cargarían los mensajes desde una API
-    const mockMessages: Message[] = [
-      { id: 1, senderId: hostId, text: "Hola, ¿estás disponible para cuidar mi casa la próxima semana?", timestamp: new Date('2023-07-10T10:00:00') },
-      { id: 2, senderId: cuidadorId, text: "¡Hola! Sí, estoy disponible.", timestamp: new Date('2023-07-10T10:05:00') },
-    ];
-    setMessages(mockMessages);
+    const fetchMessages = async () => {
+      try {
+        const fetchedMessages = await mockApiHost.getMessages(hostId, cuidadorId);
+        setMessages(fetchedMessages);
+      } catch (error) {
+        console.error('Error fetching messages:', error);
+      }
+    };
+
+    fetchMessages();
   }, [hostId, cuidadorId]);
 
-  const handleSendMessage = (e: React.FormEvent) => {
+  const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
     if (newMessage.trim() === '') return;
 
-    const newMsg: Message = {
-      id: messages.length + 1,
-      senderId: hostId, // Asumimos que el host está enviando el mensaje
-      text: newMessage,
-      timestamp: new Date(),
+    const newMsg: MensajeChat = {
+      id: (messages.length + 1).toString(),
+      idEmisor: hostId,
+      idReceptor: cuidadorId,
+      contenido: newMessage,
+      fecha: new Date(),
+      leido: false
     };
 
-    setMessages([...messages, newMsg]);
-    setNewMessage('');
+    try {
+      await mockApiHost.sendMessage(newMsg);
+      setMessages([...messages, newMsg]);
+      setNewMessage('');
+    } catch (error) {
+      console.error('Error sending message:', error);
+    }
   };
 
   return (
@@ -51,17 +57,17 @@ const ChatComponent: React.FC<ChatComponentProps> = ({ hostId, cuidadorId }) => 
               {messages.map((msg) => (
                 <div
                   key={msg.id}
-                  className={`mb-2 ${msg.senderId === hostId ? 'text-end' : 'text-start'}`}
+                  className={`mb-2 ${msg.idEmisor === hostId ? 'text-end' : 'text-start'}`}
                 >
                   <Card
-                    bg={msg.senderId === hostId ? 'primary' : 'light'}
-                    text={msg.senderId === hostId ? 'white' : 'dark'}
+                    bg={msg.idEmisor === hostId ? 'primary' : 'light'}
+                    text={msg.idEmisor === hostId ? 'white' : 'dark'}
                     style={{ display: 'inline-block', maxWidth: '70%' }}
                   >
                     <Card.Body>
-                      <Card.Text>{msg.text}</Card.Text>
+                      <Card.Text>{msg.contenido}</Card.Text>
                       <Card.Text>
-                        <small>{msg.timestamp.toLocaleTimeString()}</small>
+                        <small>{msg.fecha.toLocaleTimeString()}</small>
                       </Card.Text>
                     </Card.Body>
                   </Card>

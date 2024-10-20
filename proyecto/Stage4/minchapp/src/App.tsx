@@ -1,80 +1,45 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Link, Routes } from 'react-router-dom';
-import { Container, Nav, Navbar } from 'react-bootstrap';
-import './App.css';
-import { Header } from './FE/components/common/Header';
-import Footer from './FE/components/common/Footer';
-import PublishCareNeed from './FE/components/host/PublishCareNeed';
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
+import { AuthProvider } from './FE/context/AuthContext';
+import Login from './FE/components/common/Login';
 import DashboardHost from './FE/components/host/DashboardHost';
-import ListaCasasCuidado from './FE/components/cuidadores/ListaCasasCuidado';
-import PerfilCuidador from './FE/components/cuidadores/PerfilCuidador';
-import ListaCuidadores from './FE/components/cuidadores/ListaCuidadores';
-import ComparacionCuidadores from './FE/components/cuidadores/ComparacionCuidadores';
-import CareRequestList from './FE/components/cuidadores/CareRequestList';
-import UserProfile from './FE/components/profile/UserProfile';
+import DashboardCuidador from './FE/components/cuidadores/DashboardCuidador';
+import ProtectedRoute from './FE/components/common/ProtectedRoute';
+import Unauthorized from './FE/components/common/Unauthorized';
+import DetalleOportunidad from './FE/components/host/DetalleOportunidad';
+import BuscarOportunidades from './FE/components/cuidadores/BuscarOportunidades';
+import SolicitudesEnviadas from './FE/components/cuidadores/SolicitudesEnviadas';
+import PublishCareNeed from './FE/components/host/PublishCareNeed';
+import NotificacionesCuidadores from './FE/components/host/NotificacionesCuidadores';
+import PerfilCuidador from './FE/components/profile/PerfilCuidador';
 
-const Home = () => (
-  <Container className="mt-4">
-    <h1>Bienvenido a Minchapp</h1>
-    <p>Conectamos cuidadores confiables con hogares que necesitan atención.</p>
-  </Container>
-);
-
-function App() {
+const App: React.FC = () => {
   return (
-    <Router>
-      <div className="App">
-        <Header />
-        <Navbar bg="light" expand="lg">
-          <Container>
-            <Navbar.Toggle aria-controls="basic-navbar-nav" />
-            <Navbar.Collapse id="basic-navbar-nav">
-              <Nav className="me-auto">
-                <Nav.Link as={Link} to="/">Inicio</Nav.Link>
-                <Nav.Link as={Link} to="/perfil-cuidador">Perfil Cuidador</Nav.Link>
-                <Nav.Link as={Link} to="/publicar-necesidad">Publicar Necesidad</Nav.Link>
-                <Nav.Link as={Link} to="/explorar-necesidades">Explorar Necesidades</Nav.Link>
-                <Nav.Link as={Link} to="/perfil-usuario">Perfil Usuario</Nav.Link>
-                <Nav.Link as={Link} to="/lista-cuidadores">Lista Cuidadores</Nav.Link>
-                <Nav.Link as={Link} to="/comparacion-cuidadores">Comparar Cuidadores</Nav.Link>
-                <Nav.Link as={Link} to="/care-request-list">Solicitudes de Cuidado</Nav.Link>
-                <Nav.Link as={Link} to="/dashboard-host">Dashboard host</Nav.Link>
-              </Nav>
-            </Navbar.Collapse>
-          </Container>
-        </Navbar>
-
+    <AuthProvider>
+      <Router>
         <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/perfil-cuidador" element={<PerfilCuidador idCuidador={1} />} />
-          <Route path="/publicar-necesidad" element={<PublishCareNeed />} />
-          <Route path="/explorar-necesidades" element={<ListaCasasCuidado />} />
-          <Route path="/perfil-usuario" element={<UserProfile user={{
-            id: 1,
-            nombre: 'Usuario',
-            apellido: 'Ejemplo',
-            contrasena: 'Hola',
-            fechaNacimiento: new Date('1990-01-01'),
-            ciudadResidencia: 'Ciudad Ejemplo',
-            urlImagenPerfil: 'https://example.com/profile.jpg',
-            telefono: '1234567890',
-            email: 'usuario@ejemplo.com',
-            cedula: '1234567890',
-            hojaDelincuencia: true,
-            tarjetaCredito: '1234-5678-9012-3456',
-            ratingReviews: 4.5,
-            tipoUsuario: 'host'
-          }} />} />
-          <Route path="/lista-cuidadores" element={<ListaCuidadores />} />
-          <Route path="/comparacion-cuidadores" element={<ComparacionCuidadores />} />
-          <Route path="/care-request-list" element={<CareRequestList />} />
-          <Route path="/dashboard-host" element={<DashboardHost hostId={1} />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/unauthorized" element={<Unauthorized />} />
+          
+          <Route element={<ProtectedRoute allowedRoles={['host']} />}>
+            <Route path="/host-dashboard" element={<DashboardHost />} />
+            <Route path="/publicar-necesidad" element={<PublishCareNeed />} />
+            <Route path="/notificaciones-cuidadores/:id" element={<NotificacionesCuidadores />} />
+            <Route path="/perfil-cuidador/:id" element={<PerfilCuidador />} />
+          </Route>
+          
+          <Route element={<ProtectedRoute allowedRoles={['cuidador']} />}>
+            <Route path="/cuidador-dashboard" element={<DashboardCuidador />} />
+            <Route path="/detalle-oportunidad/:id" element={<DetalleOportunidad />} />
+            <Route path="/buscar-oportunidades" element={<BuscarOportunidades />} />
+            <Route path="/solicitudes-enviadas" element={<SolicitudesEnviadas />} />
+          </Route>
+          
+          <Route path="*" element={<Navigate to="/login" replace />} />
         </Routes>
-
-        <Footer />
-      </div>
-    </Router>
+      </Router>
+    </AuthProvider>
   );
-}
+};
 
 export default App;

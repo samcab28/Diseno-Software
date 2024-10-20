@@ -1,83 +1,130 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Row, Col, Card, Button, ListGroup } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
-import { Post, UsuarioRegistrado } from '../../types/index';
+import { Container, Row, Col, Card, Button, ListGroup, Badge } from 'react-bootstrap';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
+import { Usuario, IPost, Favoritos, SolicitudCuidador } from '../../types';
+import mockApiHost from '../../services/mockApiHost';
+import { FaUser, FaEnvelope, FaPhone, FaCalendar, FaDollarSign, FaPlus, FaSignOutAlt } from 'react-icons/fa';
+import '../../styles/DashboardHost.css';
 
-interface DashboardHostProps {
-  hostId: number;
-}
-
-const DashboardHost: React.FC<DashboardHostProps> = ({ hostId }) => {
-  const [activePosts, setActivePosts] = useState<Post[]>([]);
-  const [interestedCuidadores, setInterestedCuidadores] = useState<UsuarioRegistrado[]>([]);
+const DashboardHost: React.FC = () => {
+  const { token, logout } = useAuth();
+  const navigate = useNavigate();
+  const [host, setHost] = useState<Usuario | null>(null);
+  const [posts, setPosts] = useState<IPost[]>([]);
+  const [favoritos, setFavoritos] = useState<Favoritos[]>([]);
+  const [solicitudes, setSolicitudes] = useState<SolicitudCuidador[]>([]);
 
   useEffect(() => {
-    // Logica para pedir los posts activos y request de cuidadores
-    setActivePosts([
-      { id: 1, motivo: 'Cuidado de perro', fechaInicio: new Date('2023-07-15'), fechaFin: new Date('2023-07-20') },
-      { id: 2, motivo: 'Cuidado de casa', fechaInicio: new Date('2023-08-01'), fechaFin: new Date('2023-08-10') },
-    ] as Post[]);
+    const fetchData = async () => {
+      if (token) {
+        try {
+          const hostData = await mockApiHost.getHost(token.jwtToken);
+          setHost(hostData);
 
-    setInterestedCuidadores([
-      { id: 1, nombre: 'Ana', apellido: 'García', ratingReviews: 4.8 },
-      { id: 2, nombre: 'Carlos', apellido: 'Pérez', ratingReviews: 4.5 },
-    ] as UsuarioRegistrado[]);
-  }, [hostId]);
+          const userId = hostData.idUsuario;
+          const postsData = await mockApiHost.getPosts(userId);
+          setPosts(postsData);
+
+          const favoritosData = await mockApiHost.getFavoritos(userId);
+          setFavoritos(favoritosData);
+
+          const solicitudesData = await mockApiHost.getSolicitudes(userId);
+          setSolicitudes(solicitudesData);
+        } catch (error) {
+          console.error('Error fetching data:', error);
+        }
+      }
+    };
+
+    fetchData();
+  }, [token]);
+
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
+  };
 
   return (
-    <Container className="my-4">
-      <h1>Dashboard del Host</h1>
+    <Container className="mt-4 dashboard-container">
+      <div className="d-flex justify-content-between align-items-center mb-4">
+        <h1>Dashboard del Host</h1>
+        <Button variant="outline-danger" onClick={handleLogout}>
+          <FaSignOutAlt className="me-2" />Cerrar Sesión
+        </Button>
+      </div>
       <Row>
-        <Col md={6}>
-          <Card className="mb-4">
-            <Card.Header as="h5">Posts Activos</Card.Header>
-            <ListGroup variant="flush">
-              {activePosts.map(post => (
-                <ListGroup.Item key={post.id}>
-                  <div>{post.motivo}</div>
-                  <small>
-                    {post.fechaInicio.toLocaleDateString()} - {post.fechaFin.toLocaleDateString()}
-                  </small>
-                  <div>
-                    <Button variant="outline-primary" size="sm" className="mt-2">
-                      Ver Detalles
-                    </Button>
-                  </div>
-                </ListGroup.Item>
-              ))}
-            </ListGroup>
+        <Col md={4}>
+          <Card className="mb-4 shadow-sm">
+            <Card.Img variant="top" src={host?.urlImagenPerfil} />
+            <Card.Body>
+              <Card.Title><FaUser className="me-2" />{`${host?.nombre} ${host?.apellido1}`}</Card.Title>
+              <Card.Text>
+                <FaEnvelope className="me-2" /> {host?.email}<br />
+                <FaPhone className="me-2" /> {host?.telefono}
+              </Card.Text>
+            </Card.Body>
           </Card>
-          <Link to="/publicar-necesidad">
-            <Button variant="primary">
-              Crear Nuevo Post
+          <Link to="/publicar-necesidad" className="d-grid gap-2 mb-4">
+            <Button variant="primary" size="lg">
+              <FaPlus className="me-2" />Crear Nueva Publicación
             </Button>
           </Link>
         </Col>
-        <Col md={6}>
-          <Card>
-            <Card.Header as="h5">Cuidadores Interesados</Card.Header>
-            <ListGroup variant="flush">
-              {interestedCuidadores.map(cuidador => (
-                <ListGroup.Item key={cuidador.id}>
-                  <div>{`${cuidador.nombre} ${cuidador.apellido}`}</div>
-                  <small>Rating: {cuidador.ratingReviews.toFixed(1)}</small>
-                  <div>
-                    <Link to={`/perfil-cuidador/${cuidador.id}`} className="me-2">
-                      <Button 
-                        variant="outline-info" 
-                        size="sm" 
-                        className="mt-2"
-                      >
-                        Ver Perfil
-                      </Button>
+        <Col md={8}>
+          <Card className="mb-4 shadow-sm">
+            <Card.Body>
+              <Card.Title>Publicaciones Activas</Card.Title>
+              <ListGroup variant="flush">
+                {posts.map(post => (
+                  <ListGroup.Item key={post._id.toString()} className="d-flex justify-content-between align-items-start">
+                    <div className="ms-2 me-auto">
+                      <div className="fw-bold">{post.motivo}</div>
+                      <FaCalendar className="me-2" />
+                      {post.fechaInicio.toLocaleDateString()} - {post.fechaFin.toLocaleDateString()}<br />
+                      <FaDollarSign className="me-2" />{post.ofertaPago}<br />
+                      Estado: <Badge bg={post.estado === 'pendiente' ? 'warning' : 'success'}>{post.estado}</Badge>
+                    </div>
+                    <Link to={`/notificaciones-cuidadores/${post._id.toString()}`}>
+                      <Button variant="primary" size="sm">Ver Cuidadores Interesados</Button>
                     </Link>
-                    <Button variant="outline-success" size="sm" className="mt-2">
-                      Contactar
-                    </Button>
-                  </div>
-                </ListGroup.Item>
-              ))}
-            </ListGroup>
+                  </ListGroup.Item>
+                ))}
+              </ListGroup>
+            </Card.Body>
+          </Card>
+          <Card className="mb-4 shadow-sm">
+            <Card.Body>
+              <Card.Title>Solicitudes Pendientes</Card.Title>
+              <ListGroup variant="flush">
+                {solicitudes.map(solicitud => (
+                  <ListGroup.Item key={solicitud.idSolicitud} className="d-flex justify-content-between align-items-start">
+                    <div className="ms-2 me-auto">
+                      <div className="fw-bold">Solicitud de Cuidador ID: {solicitud.idCuidador}</div>
+                      Estado: <Badge bg={solicitud.estado === 'pendiente' ? 'warning' : 'success'}>{solicitud.estado}</Badge>
+                    </div>
+                    <Link to={`/perfil-cuidador/${solicitud.idCuidador}`}>
+                      <Button variant="info" size="sm">Ver Perfil</Button>
+                    </Link>
+                  </ListGroup.Item>
+                ))}
+              </ListGroup>
+            </Card.Body>
+          </Card>
+          <Card className="mb-4 shadow-sm">
+            <Card.Body>
+              <Card.Title>Cuidadores Favoritos</Card.Title>
+              <ListGroup variant="flush">
+                {favoritos.map(favorito => (
+                  <ListGroup.Item key={favorito.idFavorito} className="d-flex justify-content-between align-items-center">
+                    <div>Cuidador ID: {favorito.idCuidador}</div>
+                    <Link to={`/perfil-cuidador/${favorito.idCuidador}`}>
+                      <Button variant="info" size="sm">Ver Perfil</Button>
+                    </Link>
+                  </ListGroup.Item>
+                ))}
+              </ListGroup>
+            </Card.Body>
           </Card>
         </Col>
       </Row>

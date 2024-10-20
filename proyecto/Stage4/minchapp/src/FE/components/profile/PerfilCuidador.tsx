@@ -25,17 +25,21 @@ const PerfilCuidador: React.FC = () => {
         }
       } catch (error) {
         console.error('Error fetching cuidador profile:', error);
-        // Aquí podrías manejar el error, por ejemplo, mostrando un mensaje al usuario
       }
     };
 
     fetchCuidador();
   }, [id]);
 
-  const handleExpresarInteres = () => {
-    // Aquí normalmente enviarías una solicitud al backend para expresar interés
-    console.log(`Interés expresado en el cuidador ${id}`);
-    setInteresExpresado(true);
+  const handleExpresarInteres = async () => {
+    if (id) {
+      try {
+        await mockApiCuidador.expresarInteres(id);
+        setInteresExpresado(true);
+      } catch (error) {
+        console.error('Error al expresar interés:', error);
+      }
+    }
   };
 
   if (!cuidador) {

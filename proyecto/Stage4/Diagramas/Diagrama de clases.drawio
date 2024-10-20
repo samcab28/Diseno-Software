@@ -1,0 +1,70 @@
+<mxfile host="app.diagrams.net">
+  <diagram name="Diagrama de clases UML - Minchapp">
+    <mxGraphModel dx="1062" dy="500" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        
+        <!-- Usuario Class -->
+        <mxCell id="2" value="Usuario" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#CCFFCC;strokeColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="80" y="50" width="160" height="180" as="geometry" />
+        </mxCell>
+        <mxCell id="3" value="idUsuario: int&#xa;nombre: string&#xa;apellido1: string&#xa;apellido2: string&#xa;email: string&#xa;contrasena: string&#xa;fechaNacimiento: Date&#xa;urlImagenPerfil: string&#xa;telefono: string&#xa;idDireccion: int" style="text;html=1;strokeColor=none;fillColor=none;" vertex="1" parent="2">
+          <mxGeometry x="0" y="30" width="160" height="150" as="geometry" />
+        </mxCell>
+        
+        <!-- Post Class -->
+        <mxCell id="4" value="Post" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#99CCFF;strokeColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="300" y="50" width="160" height="180" as="geometry" />
+        </mxCell>
+        <mxCell id="5" value="_id: int&#xa;idUsuario: int&#xa;motivo: string&#xa;idInfoCasa: int&#xa;ofertaPago: double&#xa;fechaInicio: Date&#xa;fechaFin: Date&#xa;estado: string&#xa;fechaPublicacion: Date&#xa;deleted: boolean" style="text;html=1;strokeColor=none;fillColor=none;" vertex="1" parent="4">
+          <mxGeometry x="0" y="30" width="160" height="150" as="geometry" />
+        </mxCell>
+
+        <!-- InfoCasa Class -->
+        <mxCell id="6" value="InfoCasa" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFCC99;strokeColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="520" y="50" width="160" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="7" value="_id: int&#xa;idUsuario: int&#xa;descripcionBase: string&#xa;idDireccion: int&#xa;caracteristicas: string" style="text;html=1;strokeColor=none;fillColor=none;" vertex="1" parent="6">
+          <mxGeometry x="0" y="30" width="160" height="90" as="geometry" />
+        </mxCell>
+        
+        <!-- MensajeChat Class -->
+        <mxCell id="8" value="MensajeChat" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFF99;strokeColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="80" y="300" width="160" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="9" value="id: int&#xa;idEmisor: int&#xa;idReceptor: int&#xa;contenido: string&#xa;fecha: Date&#xa;leido: boolean" style="text;html=1;strokeColor=none;fillColor=none;" vertex="1" parent="8">
+          <mxGeometry x="0" y="30" width="160" height="90" as="geometry" />
+        </mxCell>
+
+        <!-- SolicitudCuidador Class -->
+        <mxCell id="10" value="SolicitudCuidador" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FF9999;strokeColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="300" y="300" width="160" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="11" value="idSolicitud: int&#xa;idNotificacion: int&#xa;idCuidador: int&#xa;idPost: int&#xa;estado: string" style="text;html=1;strokeColor=none;fillColor=none;" vertex="1" parent="10">
+          <mxGeometry x="0" y="30" width="160" height="90" as="geometry" />
+        </mxCell>
+
+        <!-- Relación Usuario 1 --- * Post -->
+        <mxCell id="12" value="" style="endArrow=none;startArrow=none;strokeColor=#000000;" edge="1" parent="1" source="2" target="4">
+          <mxGeometry width="50" height="50" relative="1" as="geometry" />
+        </mxCell>
+        
+        <!-- Relación Post 1 --- 1 InfoCasa -->
+        <mxCell id="13" value="" style="endArrow=none;startArrow=none;strokeColor=#000000;" edge="1" parent="1" source="4" target="6">
+          <mxGeometry width="50" height="50" relative="1" as="geometry" />
+        </mxCell>
+        
+        <!-- Relación Usuario 1 --- * MensajeChat -->
+        <mxCell id="14" value="" style="endArrow=none;startArrow=none;strokeColor=#000000;" edge="1" parent="1" source="2" target="8">
+          <mxGeometry width="50" height="50" relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Relación Post 1 --- * SolicitudCuidador -->
+        <mxCell id="15" value="" style="endArrow=none;startArrow=none;strokeColor=#000000;" edge="1" parent="1" source="4" target="10">
+          <mxGeometry width="50" height="50" relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

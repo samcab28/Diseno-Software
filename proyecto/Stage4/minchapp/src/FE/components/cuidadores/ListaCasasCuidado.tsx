@@ -1,103 +1,67 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Card, Button, Row, Col, Badge, Toast } from 'react-bootstrap';
-import { Calendar, GeoAlt, Cash, Heart, HeartFill, Chat } from 'react-bootstrap-icons';
-import { Post, InfoCasa } from '../../types/index';
-
-interface NecesidadCuidado extends Post {
-  infoCasa: InfoCasa;
-  liked?: boolean;
-  matched?: boolean;
-}
+import { Container, Card, Button, Row, Col, Toast } from 'react-bootstrap';
+import { useAuth } from '../../context/AuthContext';
+import { IPost, IInfoCasa } from '../../types';
+import mockApiCuidador from '../../services/mockApiCuidador';
 
 const ListaCasasCuidado: React.FC = () => {
-  const [necesidades, setNecesidades] = useState<NecesidadCuidado[]>([]);
-  const [showMatchToast, setShowMatchToast] = useState(false);
-  const [matchedNecesidad, setMatchedNecesidad] = useState<NecesidadCuidado | null>(null);
+  const { token } = useAuth();
+  const [posts, setPosts] = useState<(IPost & { infoCasa: IInfoCasa })[]>([]);
+  const [likedPosts, setLikedPosts] = useState<Set<string>>(new Set());
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState('');
 
   useEffect(() => {
-    // Logica para obtener la info 
-    const necesidadesEjemplo: NecesidadCuidado[] = [
-      {
-        id: 1,
-        idUsuario: 1,
-        motivo: "Viaje de negocios",
-        idInfoBasica: 1,
-        ofertaPago: 50,
-        fechaInicio: new Date("2023-07-01"),
-        fechaFin: new Date("2023-07-10"),
-        subJsonPagos: {},
-        estadoReservado: false,
-        infoCasa: {
-          id: 1,
-          idUsuario: 1,
-          idDireccion: 1,
-          descripcionBase: "Casa amplia con jardín",
-          numHabitaciones: 3,
-          numBanos: 2,
-          descripcionCuidados: "Cuidado de dos perros y regar plantas",
-          piscina: false,
-          jardin: true,
-          mascotas: true
-        },
-        liked: false,
-        matched: false
-      },
-    ];
-    setNecesidades(necesidadesEjemplo);
+    const fetchPosts = async () => {
+      try {
+        const postsData = await mockApiCuidador.getPosts();
+        setPosts(postsData);
+      } catch (error) {
+        console.error('Error fetching posts:', error);
+        // Aquí podrías manejar el error, por ejemplo, mostrando un mensaje al usuario
+      }
+    };
+
+    fetchPosts();
   }, []);
 
-  const handleLike = (index: number) => {
-    const updatedNecesidades = [...necesidades];
-    updatedNecesidades[index].liked = !updatedNecesidades[index].liked;
-    
-    // Simulamos un match con una probabilidad del 50%
-    if (updatedNecesidades[index].liked && Math.random() > 0.5) {
-      updatedNecesidades[index].matched = true;
-      setMatchedNecesidad(updatedNecesidades[index]);
-      setShowMatchToast(true);
+  const handleLike = async (postId: string) => {
+    try {
+      await mockApiCuidador.handleLike(postId);
+      
+      setToastMessage(`Se ha enviado una notificación al host de la publicación ${postId}`);
+      setShowToast(true);
+
+      // Actualizamos el estado local para reflejar el "like"
+      setLikedPosts(prev => new Set(prev).add(postId));
+    } catch (error) {
+      console.error('Error handling like:', error);
+      setToastMessage('Hubo un error al procesar tu interés. Por favor, intenta de nuevo.');
+      setShowToast(true);
     }
-    
-    setNecesidades(updatedNecesidades);
   };
 
   return (
-    <Container className="my-4">
-      <h2>Necesidades de Cuidado Disponibles</h2>
+    <Container className="mt-4">
+      <h2>Casas Disponibles para Cuidar</h2>
       <Row>
-        {necesidades.map((necesidad, index) => (
-          <Col md={6} lg={4} key={index} className="mb-4">
-            <Card>
+        {posts.map(post => (
+          <Col md={4} key={post._id.toString()}>
+            <Card className="mb-4">
               <Card.Body>
-                <Card.Title>{necesidad.motivo}</Card.Title>
+                <Card.Title>{post.motivo}</Card.Title>
                 <Card.Text>
-                  <GeoAlt /> {necesidad.infoCasa.descripcionBase}
-                  <br />
-                  <Calendar /> {necesidad.fechaInicio.toLocaleDateString()} - {necesidad.fechaFin.toLocaleDateString()}
-                  <br />
-                  <Cash /> ${necesidad.ofertaPago}/día
+                  Descripción: {post.infoCasa.descripcionBase}<br />
+                  Fecha: {post.fechaInicio.toLocaleDateString()} - {post.fechaFin.toLocaleDateString()}<br />
+                  Oferta: ${post.ofertaPago}
                 </Card.Text>
-                <h6>Detalles de la casa:</h6>
-                <p>
-                  Habitaciones: {necesidad.infoCasa.numHabitaciones}, 
-                  Baños: {necesidad.infoCasa.numBanos}
-                </p>
-                <p>{necesidad.infoCasa.descripcionCuidados}</p>
-                {necesidad.infoCasa.piscina && <Badge bg="info" className="me-1">Piscina</Badge>}
-                {necesidad.infoCasa.jardin && <Badge bg="success" className="me-1">Jardín</Badge>}
-                {necesidad.infoCasa.mascotas && <Badge bg="warning">Mascotas</Badge>}
-                <div className="mt-3 d-flex justify-content-between">
-                  <Button 
-                    variant={necesidad.liked ? "danger" : "outline-danger"} 
-                    onClick={() => handleLike(index)}
-                  >
-                    {necesidad.liked ? <HeartFill /> : <Heart />} Me interesa
-                  </Button>
-                  {necesidad.matched && (
-                    <Button variant="success">
-                      <Chat /> Chatear
-                    </Button>
-                  )}
-                </div>
+                <Button 
+                  variant={likedPosts.has(post._id.toString()) ? "success" : "primary"} 
+                  onClick={() => handleLike(post._id.toString())}
+                  disabled={likedPosts.has(post._id.toString())}
+                >
+                  {likedPosts.has(post._id.toString()) ? "Interesado" : "Me Interesa"}
+                </Button>
               </Card.Body>
             </Card>
           </Col>
@@ -105,24 +69,20 @@ const ListaCasasCuidado: React.FC = () => {
       </Row>
 
       <Toast 
-        show={showMatchToast} 
-        onClose={() => setShowMatchToast(false)}
-        delay={3000}
+        show={showToast} 
+        onClose={() => setShowToast(false)} 
+        delay={3000} 
         autohide
         style={{
-          position: 'fixed',
+          position: 'absolute',
           top: 20,
           right: 20,
-          minWidth: '250px'
         }}
       >
         <Toast.Header>
-          <strong className="me-auto">¡Nuevo Match!</strong>
+          <strong className="mr-auto">Notificación</strong>
         </Toast.Header>
-        <Toast.Body>
-          Has hecho match con la necesidad de cuidado: "{matchedNecesidad?.motivo}". 
-          ¡Puedes comenzar a chatear!
-        </Toast.Body>
+        <Toast.Body>{toastMessage}</Toast.Body>
       </Toast>
     </Container>
   );

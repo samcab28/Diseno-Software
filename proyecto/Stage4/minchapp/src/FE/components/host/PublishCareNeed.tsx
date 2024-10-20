@@ -1,201 +1,193 @@
 import React, { useState } from 'react';
-import { Container, Form, Button, Row, Col } from 'react-bootstrap';
-import { Post, InfoCasa } from '../../types/index';
+import { Container, Form, Button, Card, Alert, Row, Col } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
+import mockApiHost from '../../services/mockApiHost';
+import { IPost, IInfoCasa } from '../../types';
+import { FaCalendar, FaDollarSign, FaHome, FaPaw, FaBed, FaBath } from 'react-icons/fa';
+import '../../styles/PublicarNecesidad.css';
 
-const PublishCareNeedPage: React.FC = () => {
-    const [postForm, setPostForm] = useState<Omit<Post, 'id' | 'idUsuario' | 'estadoReservado'>>({
-      motivo: '',
-      idInfoBasica: 0,
-      ofertaPago: 0,
-      fechaInicio: new Date(),
-      fechaFin: new Date(),
-      subJsonPagos: {}
-    });
-  
-    const [infoCasaForm, setInfoCasaForm] = useState<Omit<InfoCasa, 'id' | 'idUsuario'>>({
-      idDireccion: 0,
-      descripcionBase: '',
-      numHabitaciones: 0,
-      numBanos: 0,
-      descripcionCuidados: '',
-      piscina: false,
-      jardin: false,
-      mascotas: false,
-    });
-  
-    const handlePostChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-      const { name, value } = e.target;
-      setPostForm(prev => ({ 
-        ...prev, 
-        [name]: name === 'ofertaPago' || name === 'idInfoBasica' ? Number(value) : value 
-      }));
-    };
-  
-    const handleInfoCasaChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-      const { name, value, type } = e.target;
-      const updatedValue = type === 'checkbox' ? (e.target as HTMLInputElement).checked : value;
-      setInfoCasaForm(prev => ({ ...prev, [name]: updatedValue }));
-    };
-  
-    const handleSubmit = (e: React.FormEvent) => {
-      e.preventDefault();
-      // Lógica para enviar los datos al servidor
-      console.log({ post: postForm, infoCasa: infoCasaForm });
-    };
+const PublishCareNeed: React.FC = () => {
+  const navigate = useNavigate();
+  const { token } = useAuth();
+  const [formData, setFormData] = useState({
+    motivo: '',
+    fechaInicio: '',
+    fechaFin: '',
+    ofertaPago: '',
+    descripcionBase: '',
+    numHabitaciones: '',
+    numBanos: '',
+    mascotas: ''
+  });
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState(false);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setError('');
+    setSuccess(false);
+
+    try {
+      const idUsuario = token?.payload?.sub ? parseInt(token.payload.sub) : 0;
+      
+      const infoCasa: Partial<IInfoCasa> = {
+        idUsuario,
+        descripcionBase: formData.descripcionBase,
+        caracteristicas: [
+          { tipo: 'habitaciones', cantidad: parseInt(formData.numHabitaciones) },
+          { tipo: 'baños', cantidad: parseInt(formData.numBanos) },
+          { tipo: 'mascotas', cantidad: parseInt(formData.mascotas) }
+        ]
+      };
+
+      const post: Partial<IPost> = {
+        idUsuario,
+        motivo: formData.motivo,
+        ofertaPago: parseFloat(formData.ofertaPago),
+        fechaInicio: new Date(formData.fechaInicio),
+        fechaFin: new Date(formData.fechaFin),
+        estado: 'pendiente',
+        fechaPublicacion: new Date(),
+        deleted: false
+      };
+
+      // Aquí llamarías a tu API real. Por ahora, usamos el mock.
+      await mockApiHost.publicarNecesidad(post, infoCasa, idUsuario);
+      setSuccess(true);
+      setTimeout(() => navigate('/host-dashboard'), 2000);
+    } catch (err) {
+      setError('Error al publicar la necesidad. Por favor, intente de nuevo.');
+    }
+  };
 
   return (
-    <Container className="my-4">
-      <h1>Publicar Necesidad de Cuidado</h1>
-      <Form onSubmit={handleSubmit}>
-        <Row>
-          <Col md={6}>
+    <Container className="mt-4">
+      <h1 className="mb-4">Publicar Nueva Necesidad de Cuidado</h1>
+      <Card>
+        <Card.Body>
+          <Form onSubmit={handleSubmit}>
             <Form.Group className="mb-3">
-              <Form.Label>Motivo</Form.Label>
-              <Form.Control 
-                type="text" 
+              <Form.Label><FaHome className="me-2" />Motivo del cuidado</Form.Label>
+              <Form.Control
+                type="text"
                 name="motivo"
-                value={postForm.motivo}
-                onChange={handlePostChange}
-                placeholder="Motivo del cuidado"
+                value={formData.motivo}
+                onChange={handleChange}
+                required
+                placeholder="Ej: Cuidado de casa durante vacaciones"
               />
             </Form.Group>
-          </Col>
-          <Col md={6}>
+
+            <Row>
+              <Col md={6}>
+                <Form.Group className="mb-3">
+                  <Form.Label><FaCalendar className="me-2" />Fecha de inicio</Form.Label>
+                  <Form.Control
+                    type="date"
+                    name="fechaInicio"
+                    value={formData.fechaInicio}
+                    onChange={handleChange}
+                    required
+                  />
+                </Form.Group>
+              </Col>
+              <Col md={6}>
+                <Form.Group className="mb-3">
+                  <Form.Label><FaCalendar className="me-2" />Fecha de fin</Form.Label>
+                  <Form.Control
+                    type="date"
+                    name="fechaFin"
+                    value={formData.fechaFin}
+                    onChange={handleChange}
+                    required
+                  />
+                </Form.Group>
+              </Col>
+            </Row>
+
             <Form.Group className="mb-3">
-              <Form.Label>ID de Información Básica</Form.Label>
-              <Form.Control 
-                type="number" 
-                name="idInfoBasica"
-                value={postForm.idInfoBasica}
-                onChange={handlePostChange}
-                placeholder="ID de información básica"
-              />
-            </Form.Group>
-          </Col>
-        </Row>
-        <Row>
-          <Col md={4}>
-            <Form.Group className="mb-3">
-              <Form.Label>Oferta de Pago</Form.Label>
-              <Form.Control 
-                type="number" 
+              <Form.Label><FaDollarSign className="me-2" />Oferta de pago (por día)</Form.Label>
+              <Form.Control
+                type="number"
                 name="ofertaPago"
-                value={postForm.ofertaPago}
-                onChange={handlePostChange}
-                placeholder="Monto ofrecido"
+                value={formData.ofertaPago}
+                onChange={handleChange}
+                required
+                placeholder="Ej: 50"
               />
             </Form.Group>
-          </Col>
-          <Col md={4}>
+
             <Form.Group className="mb-3">
-              <Form.Label>Fecha de Inicio</Form.Label>
-              <Form.Control 
-                type="date" 
-                name="fechaInicio"
-                value={postForm.fechaInicio instanceof Date ? postForm.fechaInicio.toISOString().split('T')[0] : postForm.fechaInicio}
-                onChange={handlePostChange}
-              />
-            </Form.Group>
-          </Col>
-          <Col md={4}>
-            <Form.Group className="mb-3">
-              <Form.Label>Fecha de Fin</Form.Label>
-              <Form.Control 
-                type="date" 
-                name="fechaFin"
-                value={postForm.fechaFin instanceof Date ? postForm.fechaFin.toISOString().split('T')[0] : postForm.fechaFin}
-                onChange={handlePostChange}
-              />
-            </Form.Group>
-          </Col>
-        </Row>
-        
-        {/* Campos para InfoCasa */}
-        <h2>Información de la Casa</h2>
-        <Row>
-          <Col md={6}>
-            <Form.Group className="mb-3">
-              <Form.Label>Descripción Base</Form.Label>
-              <Form.Control 
-                as="textarea" 
-                rows={3} 
+              <Form.Label><FaHome className="me-2" />Descripción de la casa</Form.Label>
+              <Form.Control
+                as="textarea"
                 name="descripcionBase"
-                value={infoCasaForm.descripcionBase}
-                onChange={handleInfoCasaChange}
-                placeholder="Descripción general de la casa"
+                value={formData.descripcionBase}
+                onChange={handleChange}
+                required
+                placeholder="Describe brevemente tu casa"
               />
             </Form.Group>
-          </Col>
-          <Col md={6}>
-            <Form.Group className="mb-3">
-              <Form.Label>Descripción de Cuidados</Form.Label>
-              <Form.Control 
-                as="textarea" 
-                rows={3} 
-                name="descripcionCuidados"
-                value={infoCasaForm.descripcionCuidados}
-                onChange={handleInfoCasaChange}
-                placeholder="Detalles específicos sobre los cuidados requeridos"
-              />
-            </Form.Group>
-          </Col>
-        </Row>
-        <Row>
-          <Col md={4}>
-            <Form.Group className="mb-3">
-              <Form.Label>Número de Habitaciones</Form.Label>
-              <Form.Control 
-                type="number" 
-                name="numHabitaciones"
-                value={infoCasaForm.numHabitaciones}
-                onChange={handleInfoCasaChange}
-              />
-            </Form.Group>
-          </Col>
-          <Col md={4}>
-            <Form.Group className="mb-3">
-              <Form.Label>Número de Baños</Form.Label>
-              <Form.Control 
-                type="number" 
-                name="numBanos"
-                value={infoCasaForm.numBanos}
-                onChange={handleInfoCasaChange}
-              />
-            </Form.Group>
-          </Col>
-          <Col md={4}>
-            <Form.Group className="mb-3">
-              <Form.Label>Características</Form.Label>
-              <Form.Check 
-                type="checkbox" 
-                label="Piscina" 
-                name="piscina"
-                checked={infoCasaForm.piscina}
-                onChange={handleInfoCasaChange}
-              />
-              <Form.Check 
-                type="checkbox" 
-                label="Jardín" 
-                name="jardin"
-                checked={infoCasaForm.jardin}
-                onChange={handleInfoCasaChange}
-              />
-              <Form.Check 
-                type="checkbox" 
-                label="Mascotas" 
-                name="mascotas"
-                checked={infoCasaForm.mascotas}
-                onChange={handleInfoCasaChange}
-              />
-            </Form.Group>
-          </Col>
-        </Row>
-        <Button variant="primary" type="submit">
-          Publicar Necesidad de Cuidado
-        </Button>
-      </Form>
+
+            <Row>
+              <Col md={4}>
+                <Form.Group className="mb-3">
+                  <Form.Label><FaBed className="me-2" />Número de habitaciones</Form.Label>
+                  <Form.Control
+                    type="number"
+                    name="numHabitaciones"
+                    value={formData.numHabitaciones}
+                    onChange={handleChange}
+                    required
+                    placeholder="Ej: 2"
+                  />
+                </Form.Group>
+              </Col>
+              <Col md={4}>
+                <Form.Group className="mb-3">
+                  <Form.Label><FaBath className="me-2" />Número de baños</Form.Label>
+                  <Form.Control
+                    type="number"
+                    name="numBanos"
+                    value={formData.numBanos}
+                    onChange={handleChange}
+                    required
+                    placeholder="Ej: 1"
+                  />
+                </Form.Group>
+              </Col>
+              <Col md={4}>
+                <Form.Group className="mb-3">
+                  <Form.Label><FaPaw className="me-2" />Cantidad de mascotas</Form.Label>
+                  <Form.Control
+                    type="number"
+                    name="mascotas"
+                    value={formData.mascotas}
+                    onChange={handleChange}
+                    required
+                    placeholder="Ej: 2"
+                  />
+                </Form.Group>
+              </Col>
+            </Row>
+
+            {error && <Alert variant="danger">{error}</Alert>}
+            {success && <Alert variant="success">Necesidad publicada con éxito. Redirigiendo...</Alert>}
+
+            <Button variant="primary" type="submit">
+              Publicar Necesidad
+            </Button>
+          </Form>
+        </Card.Body>
+      </Card>
     </Container>
   );
 };
 
-export default PublishCareNeedPage;
+export default PublishCareNeed;

@@ -1435,81 +1435,319 @@ module.exports = { createOrder };
 
 ## Plan de Pruebas 
 
-# Plan de Pruebas - KnowBlock
+Este documento detalla el plan de pruebas para la plataforma KnowBlock, un sistema de validación de conocimientos basado en blockchain. El plan cubre todos los aspectos críticos del sistema, desde pruebas unitarias hasta pruebas de integración y seguridad.
 
-Este plan de pruebas está diseñado para validar la funcionalidad y el rendimiento de los componentes clave de la plataforma KnowBlock.
+### Objetivos
 
-### Objetivos de las Pruebas
-- Verificar la funcionalidad de los endpoints de la API
-- Evaluar el rendimiento y la escalabilidad del sistema
-- Comprobar la seguridad de las transacciones y la protección de datos de usuario
-- Validar la integración con sistemas blockchain y plataformas educativas externas
+- Validar la funcionalidad completa de la API REST
+- Verificar la integridad de las transacciones en blockchain
+- Asegurar la protección de datos sensibles
+- Validar el rendimiento bajo diferentes escenarios de carga
+- Garantizar la usabilidad y experiencia del usuario
 
-### Tipos de Pruebas
+### Alcance
 
-#### Pruebas Unitarias
-- Pruebas de cada microservicio de forma aislada
-- Validación de lógica de negocio en componentes individuales
+El plan de pruebas abarca:
+- API REST completa
+- Integración con blockchain
+- Sistema de pagos
+- Gestión de usuarios
+- Sistema de notificaciones
+- Generación de reportes
 
-#### Pruebas de Integración
-- Verificación de la comunicación entre microservicios
-- Pruebas de integración con blockchain y sistemas externos
+### Estrategia de Pruebas
 
-#### Pruebas de API
-- Validación de todos los endpoints documentados
-- Pruebas de casos de éxito y manejo de errores
+#### 1. Pruebas Unitarias
 
-#### Pruebas de Rendimiento
-- Pruebas de carga para simular múltiples usuarios concurrentes
-- Evaluación de tiempos de respuesta bajo diferentes condiciones de carga
+##### A. Pruebas de Servicio de Usuario
 
-#### Pruebas de Seguridad
-- Pruebas de penetración
-- Validación de encriptación de datos sensibles
-- Verificación de autenticación y autorización
+```java
+@Test
+public void testUsuarioRegistro() {
+    // Arrange
+    UsuarioDTO nuevoUsuario = new UsuarioDTO(
+        "Juan Pérez",
+        "juan.perez@ejemplo.com",
+        "Cl@ve$egura123!"
+    );
 
-### Casos de Prueba Prioritarios
+    // Act
+    ResponseEntity<UsuarioResponse> response = usuarioService.registrarUsuario(nuevoUsuario);
 
-1. Registro y autenticación de usuarios
-2. Envío y procesamiento de solicitudes de validación de conocimientos
-3. Integración con blockchain para registro de validaciones
-4. Procesamiento de pagos y manejo de transacciones
-5. Generación y consulta de reportes de transacciones
+    // Assert
+    assertEquals(HttpStatus.CREATED, response.getStatusCode());
+    assertNotNull(response.getBody().getUsuarioId());
+    assertTrue(response.getBody().getUsuarioId().startsWith("usr_"));
+}
+```
 
-### Entorno de Pruebas
-- Configuración de un entorno de staging que replique la arquitectura propuesta
-- Uso de datos de prueba que simulen escenarios reales
+#### B. Pruebas de Validación de Conocimiento
+
+```java
+@Test
+public void testSolicitudValidacion() {
+    // Arrange
+    ValidacionDTO solicitud = new ValidacionDTO(
+        "usr_12345abcde",
+        "Fundamentos de IA",
+        "Universidad Ejemplo",
+        Arrays.asList("certificado.pdf", "proyecto.zip")
+    );
+
+    // Act
+    ValidacionResponse response = validacionService.crearSolicitud(solicitud);
+
+    // Assert
+    assertNotNull(response.getValidacionId());
+    assertEquals("pendiente", response.getEstado());
+    assertNotNull(response.getFechaSolicitud());
+}
+```
+
+#### 2. Pruebas de Integración
+
+##### A. Integración con Blockchain
+
+```java
+@Test
+public void testRegistroBlockchain() {
+    // Arrange
+    ValidacionCompletaDTO validacion = new ValidacionCompletaDTO(
+        "val_789xyz",
+        "Fundamentos de IA",
+        "completada",
+        LocalDateTime.now()
+    );
+
+    // Act
+    BlockchainResponse response = blockchainService.registrarValidacion(validacion);
+
+    // Assert
+    assertNotNull(response.getTransactionHash());
+    assertTrue(response.isConfirmada());
+    assertNotNull(response.getBloqueNumero());
+}
+```
+
+##### B. Integración con Sistema de Pagos
+
+```java
+@Test
+public void testProcesarPago() {
+    // Arrange
+    PagoDTO pago = new PagoDTO(
+        "usr_12345abcde",
+        new BigDecimal("99.99"),
+        "EUR",
+        "4111111111111111",
+        "12",
+        "2025"
+    );
+
+    // Act
+    PagoResponse response = pagoService.procesarPago(pago);
+
+    // Assert
+    assertEquals("completado", response.getEstado());
+    assertNotNull(response.getTransaccionId());
+    assertEquals(new BigDecimal("99.99"), response.getMonto());
+}
+```
+
+#### 3. Pruebas de API
+
+##### A. Pruebas con Rest Assured
+
+```java
+@Test
+public void testRegistroUsuarioAPI() {
+    given()
+        .contentType(ContentType.JSON)
+        .body(new UsuarioDTO("Juan Pérez", "juan@ejemplo.com", "password123"))
+    .when()
+        .post("/api/v1/usuarios/registro")
+    .then()
+        .statusCode(201)
+        .body("usuarioId", startsWith("usr_"))
+        .body("mensaje", equalTo("Usuario registrado exitosamente"));
+}
+```
+
+#### B. Pruebas de Validación
+
+```java
+@Test
+public void testConsultaValidacion() {
+    given()
+        .header("Authorization", "Bearer " + token)
+        .pathParam("validacionId", "val_789xyz")
+    .when()
+        .get("/api/v1/validaciones/{validacionId}")
+    .then()
+        .statusCode(200)
+        .body("estado", equalTo("en_proceso"))
+        .body("progreso", greaterThanOrEqualTo(0))
+        .body("progreso", lessThanOrEqualTo(100));
+}
+```
+
+#### 4. Pruebas de Rendimiento
+
+##### A. Pruebas de Carga con JMeter
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<jmeterTestPlan version="1.2" properties="5.0">
+  <hashTree>
+    <TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="KnowBlock Load Test">
+      <elementProp name="TestPlan.user_defined_variables" elementType="Arguments">
+        <collectionProp name="Arguments.arguments"/>
+      </elementProp>
+      <stringProp name="TestPlan.comments"></stringProp>
+      <boolProp name="TestPlan.functional_mode">false</boolProp>
+      <boolProp name="TestPlan.serialize_threadgroups">false</boolProp>
+      <stringProp name="TestPlan.user_define_classpath"></stringProp>
+    </TestPlan>
+    <hashTree>
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Users">
+        <elementProp name="ThreadGroup.main_controller" elementType="LoopController">
+          <boolProp name="LoopController.continue_forever">false</boolProp>
+          <intProp name="LoopController.loops">100</intProp>
+        </elementProp>
+        <stringProp name="ThreadGroup.num_threads">1000</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">60</stringProp>
+        <longProp name="ThreadGroup.start_time">1371484660000</longProp>
+        <longProp name="ThreadGroup.end_time">1371484660000</longProp>
+        <boolProp name="ThreadGroup.scheduler">false</boolProp>
+        <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
+        <stringProp name="ThreadGroup.duration"></stringProp>
+        <stringProp name="ThreadGroup.delay"></stringProp>
+      </ThreadGroup>
+    </hashTree>
+  </hashTree>
+</jmeterTestPlan>
+```
+
+#### 5. Pruebas de Seguridad
+
+##### A. Pruebas de Autenticación
+
+```java
+@Test
+public void testAutenticacionToken() {
+    // Arrange
+    LoginDTO credentials = new LoginDTO("usuario@ejemplo.com", "password123");
+
+    // Act
+    TokenResponse response = authService.login(credentials);
+
+    // Assert
+    assertNotNull(response.getToken());
+    assertTrue(jwtService.validateToken(response.getToken()));
+    assertEquals("usr_12345abcde", jwtService.extractUserId(response.getToken()));
+}
+```
+
+##### B. Pruebas de Autorización
+
+```java
+@Test
+public void testAccesoNoAutorizado() {
+    given()
+        .header("Authorization", "Bearer " + tokenInvalido)
+    .when()
+        .get("/api/v1/reportes/transacciones")
+    .then()
+        .statusCode(403)
+        .body("error", equalTo("Acceso denegado"))
+        .body("mensaje", containsString("No tiene permisos"));
+}
+```
+
+### Entorno y Herramientas
+
+#### Configuración del Entorno de Pruebas
+
+```yaml
+# docker-compose.yml para entorno de pruebas
+version: '3.8'
+services:
+  api:
+    image: knowblock/api:test
+    environment:
+      - SPRING_PROFILES_ACTIVE=test
+      - DB_HOST=postgres
+      - REDIS_HOST=redis
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+      - redis
+
+  postgres:
+    image: postgres:13
+    environment:
+      POSTGRES_DB: knowblock_test
+      POSTGRES_USER: test_user
+      POSTGRES_PASSWORD: test_password
+    ports:
+      - "5432:5432"
+
+  redis:
+    image: redis:6
+    ports:
+      - "6379:6379"
+```
 
 ### Criterios de Aceptación
-- Todos los endpoints deben responder correctamente en al menos el 99% de las solicitudes
-- El tiempo de respuesta promedio debe ser inferior a 200ms bajo carga normal
-- Las transacciones en blockchain deben completarse en menos de 5 minutos
-- No deben existir vulnerabilidades de seguridad críticas o de alto riesgo
 
-### Herramientas
-- JUnit y Mockito para pruebas unitarias
-- Postman para pruebas de API
-- JMeter para pruebas de carga y rendimiento
-- OWASP ZAP para pruebas de seguridad
+#### Requisitos Funcionales
+- 100% de los endpoints responden según la especificación
+- Todas las transacciones blockchain son verificables
+- Sistema de pagos procesa correctamente todas las transacciones
+
+#### Requisitos No Funcionales
+- Tiempo de respuesta < 200ms para el 95% de las peticiones
+- Disponibilidad del sistema > 99.9%
+- Zero vulnerabilidades críticas de seguridad
 
 ### Cronograma
-- Duración estimada de las pruebas: 4 semanas
-- Semana 1: Pruebas unitarias y de integración
-- Semana 2: Pruebas de API y funcionales
-- Semana 3: Pruebas de rendimiento y escalabilidad
-- Semana 4: Pruebas de seguridad y correcciones finales
+
+#### Fase 1: Preparación (1 semana)
+- Configuración de entornos
+- Preparación de datos de prueba
+- Configuración de herramientas
+
+#### Fase 2: Ejecución (2 semanas)
+- Pruebas unitarias y de integración
+- Pruebas de API
+- Pruebas de rendimiento
+- Pruebas de seguridad
+
+#### Fase 3: Análisis y Reportes (1 semana)
+- Análisis de resultados
+- Generación de informes
+- Recomendaciones de mejora
 
 ### Riesgos y Mitigaciones
-- Riesgo: Latencia en transacciones blockchain
-  Mitigación: Implementar sistema de cola y notificaciones asíncronas
 
-- Riesgo: Sobrecarga del sistema durante picos de uso
-  Mitigación: Diseñar pruebas de estrés y plan de escalado automático
+#### Riesgos Identificados
+1. Latencia en transacciones blockchain
+2. Sobrecarga del sistema en horas pico
+3. Vulnerabilidades de seguridad
+
+#### Estrategias de Mitigación
+1. Implementación de sistema de cola
+2. Autoescalado de recursos
+3. Auditorías de seguridad regulares
 
 ### Entregables
-- Informe detallado de resultados de pruebas
-- Lista de issues encontrados y recomendaciones
-- Métricas de rendimiento y seguridad
+
+1. Informe de Resultados
+2. Documentación de Issues
+3. Métricas de Rendimiento
+4. Recomendaciones de Mejora
+5. Plan de Acción para Issues Críticos
 
 ## Recomendaciones 
 

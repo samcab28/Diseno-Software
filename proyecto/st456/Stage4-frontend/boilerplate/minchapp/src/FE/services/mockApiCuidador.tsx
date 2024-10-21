@@ -231,6 +231,13 @@ const mockApiCuidador = {
     console.log(`Interés expresado en el cuidador ${idCuidador}`);
     // simular el envio de una notificacion al backend usando amazon sns
   },
+
+  cancelarSolicitud: async (idSolicitud: string): Promise<void> => {
+    // Llamar a la api 
+    await new Promise(resolve => setTimeout(resolve, 500));
+    
+    console.log(`Solicitud cancelada ${idSolicitud}`);
+  },
 };
 
 export default mockApiCuidador;

@@ -40,38 +40,125 @@ Link al README del boilerplate de FE:
 
 ![alt text](./src/FE/assets/Login.png)
 
-### Dashboard del cuidador 
+En esta pantalla, el usuario puede iniciar sesión en la aplicación.
+
+Acciones:
+- Ingresar correo electrónico y contraseña
+- Hacer clic en "Iniciar sesión"
+
+Mensajes de error:
+- "Correo electrónico o contraseña incorrectos" si las credenciales son inválidas
+- "Por favor, complete todos los campos" si algún campo está vacío
+
+
+### 2. Dashboard del cuidador 
 
 ![alt text](./src/FE/assets/DBCuidador.png)
 
-### Solicitudes enviadas
+Esta es la pantalla principal para los cuidadores después de iniciar sesión.
+
+Acciones:
+- Ver perfil personal
+- Acceder a "Buscar oportunidades"
+- Ver "Solicitudes enviadas"
+- Cerrar sesión
+
+
+### 3. Solicitudes enviadas
 
 ![alt text](./src/FE/assets/SolicitudesEnviadas.png)
 
-### Buscar Oportunidades 
+Aquí el cuidador puede ver las solicitudes que ha enviado a los hosts.
+
+Acciones:
+- Cancelar solicitudes pendientes
+
+Mensajes de confirmación:
+- "Solicitud cancelada exitosamente" al cancelar una solicitud
+
+### 4. Buscar Oportunidades 
 
 ![alt text](./src/FE/assets/BuscarOportunidades.png)
 
-### Ver detalles 
+En esta pantalla, los cuidadores pueden buscar oportunidades de trabajo.
+
+Acciones:
+- Ver detalles de una oportunidad
+
+
+### 5. Ver detalles 
 
 ![alt text](./src/FE/assets/VerDetalles.png)
 
-### Like a la publicacion 
+Esta pantalla muestra los detalles completos de una oportunidad de cuidado.
 
-![alt text](./src/FE/assets/LikePublicacion.png)
+Acciones:
+- Leer información detallada
+- Enviar solicitud
 
-### Dashboard del host 
+Mensajes de confirmación:
+- "Liked" al dar like a una publicación
+- "Te ha gustado esta oportunidad. El host será notificado." al darle like
+
+
+### 6. Dashboard del host 
 
 ![alt text](./src/FE/assets/DBHost.png)
 
-### Publicar Cuidado 
+Esta es la pantalla principal para los hosts después de iniciar sesión.
+
+Acciones:
+- Publicar una nueva necesidad de cuidado
+- Ver cuidadores interesados
+- Ver perfil de cuidador
+- Cerrar sesión
+
+
+### 7. Publicar Cuidado 
 
 ![alt text](./src/FE/assets/PublicarCuido.png)
 
-### Cuidadores interesados
+Los hosts pueden publicar una nueva necesidad de cuidado en esta pantalla.
+
+Acciones:
+- Llenar el formulario con los detalles del cuidado requerido
+- Publicar la necesidad de cuidado
+
+Mensajes de error:
+- "Por favor, complete todos los campos obligatorios" si falta información
+
+
+### 8. Cuidadores interesados
 
 ![alt text](./src/FE/assets/CuidadoresInteresados.png)
 
-### Ver perfil 
+Los hosts pueden ver los cuidadores que han mostrado interés en sus publicaciones.
+
+Acciones:
+- Ver perfiles de cuidadores interesados
+- Aceptar o rechazar solicitudes
+- Iniciar chat con cuidadores aceptados
+
+Mensajes de confirmación:
+- "Solicitud aceptada" al aceptar un cuidador
+- "Solicitud rechazada" al rechazar un cuidador
+
+### 9. Ver perfil 
 
 ![alt text](./src/FE/assets/PerfilCuidador.png)
+
+Esta pantalla muestra el perfil detallado de un cuidador.
+
+Acciones:
+- Ver información detallada del cuidador
+- Dar like a al cuidador
+
+### 10. Chat 
+
+![alt text](./src/FE/assets/Chat.png)
+
+Pantalla de chat entre host y cuidador.
+
+Acciones:
+- Enviar mensajes
+- Ver historial de conversación

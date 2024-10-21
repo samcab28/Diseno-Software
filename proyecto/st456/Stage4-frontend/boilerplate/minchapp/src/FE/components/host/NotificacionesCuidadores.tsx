@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { Container, Card, Button, Row, Col, Toast } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useNotifications } from '../../hooks/useNotifications';
 
 const NotificacionesCuidadores: React.FC = () => {
   const { notificaciones, handleAccept, handleReject } = useNotifications();
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
+  const navigate = useNavigate();
 
   const onAccept = async (solicitudId: string) => {
     const message = await handleAccept(solicitudId);
@@ -18,6 +19,10 @@ const NotificacionesCuidadores: React.FC = () => {
     const message = await handleReject(solicitudId);
     setToastMessage(message);
     setShowToast(true);
+  };
+
+  const handleChatRedirect = (cuidadorId: string) => {
+    navigate(`/chat/${cuidadorId}`);
   };
 
   return (
@@ -54,9 +59,12 @@ const NotificacionesCuidadores: React.FC = () => {
                   </>
                 )}
                 {solicitud.estado === 'aceptado' && (
-                  <Link to={`/chat/${cuidador.idUsuario}`}>
-                    <Button variant="primary">Iniciar Chat</Button>
-                  </Link>
+                  <Button 
+                    variant="primary"
+                    onClick={() => handleChatRedirect(cuidador.idUsuario.toString())}
+                  >
+                    Iniciar Chat
+                  </Button>
                 )}
                 {solicitud.estado === 'rechazado' && (
                   <Button variant="outline-danger" disabled>Rechazado</Button>

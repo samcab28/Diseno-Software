@@ -16,12 +16,12 @@ kubectl patch svc design-databases-postgresql -p '{\"spec\": {\"type\": \"NodePo
 
 # INSTALACION DE API
 
-#cd ../charts/backend
+cd ../charts/backend
 
-#helm dependency update
-#cd ..
-#helm upgrade --install design-backend backend
-#sleep 10
+helm dependency update
+cd ..
+helm upgrade --install design-backend backend
+sleep 10
 
 #######################################################################################
 

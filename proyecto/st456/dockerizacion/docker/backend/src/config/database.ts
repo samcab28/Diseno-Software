@@ -1,9 +1,9 @@
 import { PoolConfig } from 'pg';
 
 export const dbConfig: PoolConfig = {
-    host: 'localhost',
-    port: 30200,
+    host: 'design-databases-postgresql',  // nombre del servicio Kubernetes
+    port: 5432,                           // puerto del servicio (interno)
     user: 'postgres',
-    password: 'kap8muPrKp',
+    password: 'JFgEfCkTf0',
     database: 'minchapp'
 };

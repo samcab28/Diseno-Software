@@ -1,36 +1,7 @@
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: react-app
-  labels:
-    app: react-app
-spec:
-  replicas: {{ .Values.config.app.replicas }}
-  selector:
-    matchLabels:
-      app: react-app
-  template:
-    metadata:
-      labels:
-        app: react-app
-    spec:
-      containers:
-        - name: react-app
-          image: "{{ .Values.config.app.image.repository }}:{{ .Values.config.app.image.tag }}"
-          ports:
-            - containerPort: 3000
-          resources:
-            limits:
-              cpu: {{ .Values.config.app.resources.limits.cpu }}
-              memory: {{ .Values.config.app.resources.limits.memory }}
-            requests:
-              cpu: {{ .Values.config.app.resources.requests.cpu }}
-              memory: {{ .Values.config.app.resources.requests.memory }}
----
 apiVersion: v1
 kind: Service
 metadata:
-  name: react-app-service
+  name: react-frontend-service  # Change the service name here
 spec:
   type: {{ .Values.config.app.service.type }}
   ports:

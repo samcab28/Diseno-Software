@@ -27,10 +27,10 @@ kubectl patch svc design-databases-postgresql -p '{\"spec\": {\"type\": \"NodePo
 
 # INSTALACION DE UI
 
-#cd ../charts/ui
-#helm dependency update
-#cd ..
-#helm upgrade --install design-ui ui
+cd ../charts/ui
+helm dependency update
+cd ..
+helm upgrade --install design-frontend ui
 
 #######################################################################################
 

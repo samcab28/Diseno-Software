@@ -5,32 +5,182 @@
    1. [Objetivo General](#objetivo-general)
    2. [Objetivos Específicos](#objetivos-específicos)
 3. [Arquitectura Propuesta](#arquitectura-propuesta)
-   1. [Diseño de Microservicios](#diseño-de-microservicios)
-4. [Requerimientos Tecnológicos](#requerimientos-tecnológicos)
-   1. [Infraestructura](#infraestructura)
-   2. [Tecnologías](#tecnologías)
-5. [Diseño de Endpoints](#diseño-de-endpoints)
-6. [Plan de Pruebas](#plan-de-pruebas)
-7. [Recomendaciones](#recomendaciones)
-8. [Conclusiones](#conclusiones)
+   1. [Microservicios Principales](#microservicios-principales)
+   2. [Infraestructura y Escalabilidad](#infraestructura-y-escalabilidad)
+   3. [Comunicación entre Microservicios](#comunicación-entre-microservicios)
+   4. [Consideraciones de Seguridad](#consideraciones-de-seguridad)
+   5. [Escalabilidad y Flexibilidad](#escalabilidad-y-flexibilidad)
+4. [Documentación API de Knowblock](#documentación-api-de-knowblock)
+5. [Plan de Pruebas](#plan-de-pruebas)
+6. [Recomendaciones](#recomendaciones)
+7. [Conclusiones](#conclusiones)
 
 ## Introducción 
+Esta Prueba de Concepto (PoC) tiene como objetivo evaluar la viabilidad técnica del proyecto KnowBlock, una plataforma innovadora de validación de conocimientos que integra tecnología blockchain, sistemas de bases de datos avanzados y una arquitectura de microservicios. KnowBlock se propone revolucionar la forma en que se verifican y certifican las habilidades y conocimientos adquiridos, garantizando la autenticidad e inmutabilidad de los procesos de validación a través de registros seguros en blockchain, mientras que la implementación de microservicios permitirá un desarrollo modular, escalable y altamente adaptable a las cambiantes necesidades del mercado educativo y profesional.
+
+La PoC se enfoca en simular los principales flujos del sistema, como la validación de conocimientos, la conexión con métodos educativos tradicionales y en línea, y la gestión de pagos, sin la necesidad de implementar código completo en esta etapa inicial. Además, se diseñarán y probarán teóricamente los endpoints que integran los diferentes componentes, permitiendo una evaluación exhaustiva de la arquitectura propuesta.
+
+Sin embargo, es crucial reconocer y abordar los desafíos técnicos inherentes a un proyecto de esta envergadura. Uno de los principales retos es la latencia asociada con las transacciones en blockchain, que podría afectar la experiencia del usuario en procesos que requieren confirmación inmediata. Para mitigar este problema, la PoC explorará la implementación de soluciones de capa 2 y la optimización de los procesos de escritura en la cadena, reservando las transacciones en blockchain para los momentos críticos de la validación.
+
+Otro desafío significativo es la escalabilidad de la infraestructura propuesta. A medida que la plataforma crezca en usuarios y volumen de datos, será crucial mantener un rendimiento óptimo. La PoC evaluará estrategias de escalado horizontal para los microservicios, así como la implementación de bases de datos distribuidas que puedan manejar grandes volúmenes de información sin comprometer la velocidad de acceso.
+
+La interoperabilidad entre diferentes blockchains y sistemas educativos tradicionales representa otro reto importante. La PoC investigará la viabilidad de implementar protocolos de comunicación estandarizados y APIs robustas que permitan una integración fluida con diversas instituciones educativas y plataformas de aprendizaje en línea.
+Además, se abordarán cuestiones de seguridad y privacidad de datos, cruciales en un sistema que maneja información sensible sobre logros educativos y profesionales. La PoC evaluará la implementación de técnicas de encriptación avanzadas, gestión segura de claves y mecanismos de control de acceso granular.
+
+Con esta aproximación integral, se pretende no solo reducir riesgos técnicos, sino también asegurar que la infraestructura propuesta cumpla con los requisitos funcionales y tecnológicos antes de avanzar a etapas más avanzadas del desarrollo. La PoC servirá como un cimiento sólido para la toma de decisiones informadas sobre la viabilidad y el diseño final de KnowBlock, permitiendo ajustes y optimizaciones basados en los resultados obtenidos durante esta fase crucial de evaluación y prueba.
 
 ## Objetivos 
 
 ### Objetivo General 
 
+Validar la viabilidad técnica del sistema KnowBlock para la gestión de conocimientos utilizando blockchain, bases de datos y microservicios, asegurando la modularidad, escalabilidad y seguridad de los procesos.
+
 ### Objetivos Específicos 
+
+1. Verificar la integración teórica de blockchain con los microservicios para garantizar la trazabilidad e inmutabilidad de las validaciones.
+
+    Métrica de éxito: Diseño de un flujo de datos que demuestre cómo una validación de conocimiento se registra en la blockchain en menos de 5 minutos, con un 99.9% de confiabilidad en la inmutabilidad del registro.
+
+2. Diseñar endpoints funcionales que permitan simular flujos clave, como registro de usuarios, validación de conocimientos y gestión de pagos.
+
+    Métrica de éxito: Implementación y documentación de al menos 10 endpoints críticos, con una tasa de éxito del 95% en las pruebas de integración simuladas.
+
+
+3. Evaluar la escalabilidad y eficiencia mediante la definición de la infraestructura con autoscalado horizontal.
+
+    Métrica de éxito: Diseño de una arquitectura capaz de manejar un aumento del 300% en la carga de usuarios en menos de 5 minutos, manteniendo un tiempo de respuesta promedio inferior a 200ms para el 99% de las solicitudes.
+
+4. Simular la comunicación entre servicios utilizando herramientas como Postman, probando diferentes escenarios de respuesta.
+
+    Métrica de éxito: Creación de una colección de Postman con al menos 50 casos de prueba que cubran el 90% de los flujos de comunicación entre servicios, con una tasa de éxito del 98% en las pruebas.
+
+5. Identificar riesgos y limitaciones potenciales antes de iniciar el desarrollo completo, proponiendo recomendaciones para mitigarlos.
+
+    Métrica de éxito: Elaboración de un informe detallado que identifique al menos 10 riesgos críticos, con estrategias de mitigación propuestas para cada uno, y una evaluación cuantitativa del impacto potencial en tiempo y recursos.
 
 ## Arquitectura Propuesta
 
-### Diseño de Microservicios 
+La arquitectura de KnowBlock está construida sobre un modelo de microservicios, diseñado para el desarrollo descentralizado y la escalabilidad. Cada componente tiene una función específica y puede desplegarse de manera independiente. Esta estructura facilita la integración eficiente con bases de datos, blockchain y sistemas de pago.
 
-## Requerimientos Tecnológicos 
+### Microservicios Principales
 
-### Infraestructura
+#### 1. Microservicio de Verificación de Conocimiento (API de Verificación)
 
-### Tecnologías 
+**Propósito:** Central en KnowBlock, este servicio gestiona solicitudes de validación de conocimiento y registra los resultados en la blockchain.
+
+**Funciones Clave:**
+- Procesar solicitudes de validación desde el frontend
+- Registrar validaciones en la blockchain para garantizar la inmutabilidad
+- Comunicar los resultados a administradores y usuarios
+
+**Tecnologías:**
+- Node.js para el marco de trabajo REST API
+- INFURA para la integración con blockchain
+- Postman para la simulación de endpoints
+- HTTPS para la comunicación segura
+
+**Interacciones:**
+- Recibe solicitudes desde el frontend
+- Se comunica con la blockchain (a través de INFURA)
+- Envía respuestas al microservicio de Autenticación de Usuarios
+
+#### 2. Microservicio de Autenticación y Gestión de Usuarios
+
+**Propósito:** Gestiona la creación de usuarios, autenticación y control de roles.
+
+**Funciones Clave:**
+- Autenticación de usuarios mediante Amazon Cognito
+- Control de acceso basado en roles
+- Registro de usuarios y recuperación de credenciales
+
+**Tecnologías:**
+- PostgreSQL para almacenar credenciales y roles
+- MongoDB para almacenar comentarios y estructuras abstractas
+- Amazon Cognito para la gestión de tokens de acceso
+- OpenSSL para la encriptación de contraseñas
+
+**Interacciones:**
+- Se comunica con el frontend para acciones de usuario
+- Interactúa con bases de datos para el almacenamiento y recuperación de datos de usuarios
+- Proporciona estado de autenticación a otros microservicios
+
+#### 3. Microservicio de Validación Educativa y Académica
+
+**Propósito:** Gestiona la lógica para la validación de logros educativos.
+
+**Funciones Clave:**
+- Conecta con plataformas de e-learning (por ejemplo, Moodle, Coursera)
+- Implementa el patrón Bridge para facilitar la integración de nuevos métodos
+- Proporciona interfaces para consultas de resultados
+
+**Tecnologías:**
+- Integración con APIs de plataformas de e-learning
+- Kubernetes para la orquestación de microservicios
+
+**Interacciones:**
+- Se comunica con plataformas educativas externas
+- Envía resultados de validación al microservicio de Verificación de Conocimiento
+
+#### 4. Microservicio de Gestión de Pagos
+
+**Propósito:** Gestiona los procesos de pago para certificaciones o servicios premium.
+
+**Funciones Clave:**
+- Integra múltiples pasarelas de pago (PayPal, Stripe)
+- Registra transacciones exitosas en la base de datos
+- Usa el patrón Bridge para la fácil adición de nuevas opciones de pago
+
+**Tecnologías:**
+- Integraciones con API de Stripe y PayPal
+- TLS/SSL para la seguridad de las transacciones
+- PostgreSQL para el almacenamiento de transacciones
+
+**Interacciones:**
+- Se comunica con pasarelas de pago externas
+- Interactúa con la base de datos para registrar transacciones
+- Notifica al microservicio de Notificaciones sobre pagos exitosos
+
+#### 5. Microservicio de Notificaciones y Mensajería
+
+**Propósito:** Gestiona alertas y notificaciones para usuarios y administradores.
+
+**Funciones Clave:**
+- Envía notificaciones vía email, SMS o push
+- Facilita la mensajería interna entre usuarios y administradores
+
+**Tecnologías:**
+- Amazon SNS para la entrega de notificaciones
+- Talk.io para el chat interno en tiempo real
+
+**Interacciones:**
+- Recibe activadores de notificaciones desde otros microservicios
+- Se comunica directamente con usuarios a través de varios canales
+
+### Infraestructura y Escalabilidad
+
+- **Horizontal Pod Autoscaler (HPA):** Utiliza Kubernetes para el escalado automático de pods basado en la demanda.
+- **Almacenamiento Multimedia:** Usa servicios de almacenamiento en la nube (Amazon S3 o Google Cloud Storage) para la gestión de archivos de usuarios.
+- **Monitoreo:** Emplea Cloud Monitoring para el seguimiento de métricas críticas como uso de CPU, memoria y latencia.
+
+### Comunicación entre Microservicios
+
+- APIs RESTful se utilizan para la comunicación sincrónica entre microservicios.
+- Colas de mensajes (por ejemplo, RabbitMQ o Apache Kafka) podrían implementarse para la comunicación asincrónica, aunque no se menciona explícitamente en la descripción original.
+
+### Consideraciones de Seguridad
+
+- Toda la comunicación entre microservicios está encriptada utilizando HTTPS.
+- La autenticación de usuarios está centralizada y gestionada por el microservicio de Autenticación.
+- Datos sensibles, como la información de pago, se gestionan de forma segura con cifrado estándar de la industria.
+
+### Escalabilidad y Flexibilidad
+
+- La arquitectura de microservicios permite el escalado independiente de cada componente.
+- Nuevas plataformas educativas o métodos de pago pueden integrarse sin afectar al sistema completo.
+- La orquestación con Kubernetes permite una asignación eficiente de recursos y gestión de servicios.
+
+Esta arquitectura proporciona a KnowBlock una base robusta, escalable y flexible para gestionar la verificación de conocimientos, interacciones de usuarios y servicios asociados.
+
 
 # Documentación API de Knowblock
 
@@ -957,8 +1107,6 @@ Authorization: Bearer <token>
   ]
 }
 ```
-
-
 #### Notas Adicionales
 - Implementar paginación para manejar grandes volúmenes de datos de manera eficiente.
 - Considerar la implementación de caché para reportes frecuentemente solicitados.

@@ -4,6 +4,6 @@ export const dbConfig: PoolConfig = {
     host: 'localhost',
     port: 30200,
     user: 'postgres',
-    password: 'JFgEfCkTf0',
+    password: 'kap8muPrKp',
     database: 'minchapp'
 };

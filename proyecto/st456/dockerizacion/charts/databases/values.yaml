@@ -1,0 +1,19 @@
+postgresql:
+  enabled: true
+  service:
+    type: NodePort
+    nodePorts:
+      postgresql: 30200
+  primary:
+    persistence:
+      enabled: true
+      size: 4Gi
+  readReplicas:
+    replicaCount: 1
+    persistence:
+      enabled: true
+      size: 4Gi
+
+
+
+

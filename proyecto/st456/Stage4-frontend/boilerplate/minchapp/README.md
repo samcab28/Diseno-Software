@@ -169,4 +169,4 @@ Acciones:
 
 ## Boilerplate
 
-Link al README del boilerplate de FE: 
+Link al README del boilerplate de FE: https://github.com/samcab28/Diseno-Software/blob/master/proyecto/st456/Stage4-frontend/boilerplate/minchapp/src/FE/README.md

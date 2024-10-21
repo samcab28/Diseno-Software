@@ -12,10 +12,13 @@ import SolicitudesEnviadas from './FE/components/cuidadores/SolicitudesEnviadas'
 import PublishCareNeed from './FE/components/host/PublishCareNeed';
 import NotificacionesCuidadores from './FE/components/host/NotificacionesCuidadores';
 import PerfilCuidador from './FE/components/profile/PerfilCuidador';
+import Footer from './FE/components/common/Footer';
+import { Header } from './FE/components/common/Header';
 
 const App: React.FC = () => {
   return (
     <AuthProvider>
+      <Header />
       <Router>
         <Routes>
           <Route path="/login" element={<Login />} />
@@ -38,6 +41,7 @@ const App: React.FC = () => {
           <Route path="*" element={<Navigate to="/login" replace />} />
         </Routes>
       </Router>
+      <Footer />
     </AuthProvider>
   );
 };

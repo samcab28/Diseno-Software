@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Card, Button, ListGroup, Badge } from 'react-bootstrap';
+import { FaHeart } from 'react-icons/fa';
 import { useParams } from 'react-router-dom';
 import { Usuario, ServicioAdicional, Review } from '../../types/index';
 import mockApiCuidador from '../../services/mockApiCuidador';
@@ -37,7 +38,7 @@ const PerfilCuidador: React.FC = () => {
         await mockApiCuidador.expresarInteres(id);
         setInteresExpresado(true);
       } catch (error) {
-        console.error('Error al expresar interés:', error);
+        console.error('Error al dar like:', error);
       }
     }
   };
@@ -59,9 +60,16 @@ const PerfilCuidador: React.FC = () => {
                 Experiencia: {cuidador.experiencia}
               </Card.Text>
               {!interesExpresado ? (
-                <Button variant="primary" onClick={handleExpresarInteres}>Expresar Interés</Button>
+                <Button 
+                variant="primary" 
+                onClick={handleExpresarInteres} 
+                style={{ backgroundColor: '#e63946', borderColor: '#e63946' }} 
+              >
+                <FaHeart style={{ marginRight: '8px' }} /> 
+                Like
+              </Button>
               ) : (
-                <Button variant="success" disabled>Interés Expresado</Button>
+                <Button variant="success" disabled>Liked</Button>
               )}
             </Card.Body>
           </Card>

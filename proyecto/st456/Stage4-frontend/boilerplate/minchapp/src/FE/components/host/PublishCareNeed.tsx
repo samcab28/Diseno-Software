@@ -68,7 +68,7 @@ const PublishCareNeed: React.FC = () => {
 
   return (
     <Container className="mt-4">
-      <h1 className="mb-4">Publicar Nueva Necesidad de Cuidado</h1>
+      <h1 className="mb-4">Publicar Cuidado</h1>
       <Card>
         <Card.Body>
           <Form onSubmit={handleSubmit}>

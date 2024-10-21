@@ -9,8 +9,6 @@ const Header: React.FC = () => {
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="ml-auto">
-            <Nav.Link href="/profile">Perfil</Nav.Link>
-            <Nav.Link href="/requests">Solicitudes</Nav.Link>
             <NavDropdown title="Más" id="basic-nav-dropdown">
               <NavDropdown.Item href="/settings">Configuraciones</NavDropdown.Item>
               <NavDropdown.Item href="/help">Ayuda</NavDropdown.Item>

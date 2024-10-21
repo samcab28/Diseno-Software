@@ -69,6 +69,10 @@ const Login: React.FC = () => {
             <Button variant="primary" type="submit" className="w-100">
               Iniciar Sesión
             </Button>
+
+
+            <div className="mt-3" title='Espacio de relleno'></div>  
+            <div className="mt-3"></div>
           </Form>
         </Col>
       </Row>

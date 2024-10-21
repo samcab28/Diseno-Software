@@ -64,7 +64,7 @@ const UserProfile: React.FC<UserProfileProps> = () => {
   }, [id]);
 
   const handleExpresarInteres = () => {
-    // Aquí normalmente enviarías una solicitud al backend para expresar interés
+    // Aquí normalmente enviarías una solicitud al backend para dar like
     console.log(`Interés expresado en el usuario ${id}`);
     setInteresExpresado(true);
   };
@@ -92,7 +92,7 @@ const UserProfile: React.FC<UserProfileProps> = () => {
                 )}
               </Card.Text>
               {user.tipoUsuario.descripcion === 'cuidador' && !interesExpresado && (
-                <Button variant="primary" onClick={handleExpresarInteres}>Expresar Interés</Button>
+                <Button variant="primary" onClick={handleExpresarInteres}>Like</Button>
               )}
               {interesExpresado && (
                 <Button variant="success" disabled>Interés Expresado</Button>

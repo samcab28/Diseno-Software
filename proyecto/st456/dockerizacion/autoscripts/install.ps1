@@ -11,7 +11,7 @@ sleep 10
 
 #seteo de nodeport forzado, en caso de no funcionar
 kubectl patch svc design-databases-postgresql -p '{\"spec\": {\"type\": \"NodePort\", \"ports\": [{\"port\": 5432, \"nodePort\": 30200}]}}'
-
+kubectl patch svc design-databases-mongodb -p '{\"spec\": {\"type\": \"NodePort\", \"ports\": [{\"port\": 27017, \"nodePort\": 30500}]}}'
 #######################################################################################
 
 # INSTALACION DE API

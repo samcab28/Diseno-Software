@@ -14,6 +14,22 @@ postgresql:
       enabled: true
       size: 4Gi
 
+mongodb:
+  enabled: true
+  service:
+    type: NodePort
+    nodePorts:
+      postgresql: 30500
+  primary:
+    persistence:
+      enabled: true
+      size: 4Gi
+  readReplicas:
+    replicaCount: 1
+    persistence:
+      enabled: true
+      size: 4Gi
+
 
 
 

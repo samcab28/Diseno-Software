@@ -1,19 +1,42 @@
 # Índice
 
 1. [Introducción](#introducción)
-2. [Objetivos](#objetivos)
+2. [Estimación de Esfuerzo y Duración](#estimación-de-esfuerzo-y-duración)
+   1. [Fases del Proyecto](#fases-del-proyecto)
+   2. [Recursos Humanos](#recursos-humanos)
+   3. [Esfuerzo Total Estimado](#esfuerzo-total-estimado)
+   4. [Duración Total Estimada](#duración-total-estimada)
+   5. [Consideraciones](#consideraciones)
+3. [Objetivos](#objetivos)
    1. [Objetivo General](#objetivo-general)
    2. [Objetivos Específicos](#objetivos-específicos)
-3. [Arquitectura Propuesta](#arquitectura-propuesta)
+4. [Arquitectura Propuesta](#arquitectura-propuesta)
    1. [Microservicios Principales](#microservicios-principales)
    2. [Infraestructura y Escalabilidad](#infraestructura-y-escalabilidad)
    3. [Comunicación entre Microservicios](#comunicación-entre-microservicios)
    4. [Consideraciones de Seguridad](#consideraciones-de-seguridad)
    5. [Escalabilidad y Flexibilidad](#escalabilidad-y-flexibilidad)
-4. [Documentación API de Knowblock](#documentación-api-de-knowblock)
-5. [Plan de Pruebas](#plan-de-pruebas)
-6. [Recomendaciones](#recomendaciones)
-7. [Conclusiones](#conclusiones)
+5. [Documentación API de Knowblock](#documentación-api-de-knowblock)
+6. [Ejemplos de Código](#ejemplos-de-código)
+    1. [Conexión a Bases de Datos](#conexión-a-bases-de-datos)
+    2. [Conexiones a servicios de Amazon AWS](#conexiones-a-servicios-de-amazon-aws)
+    3. [Kubernetes](#kubernetes)
+    4. [Otros Ejemplos Relevantes](#otros-ejemplos-relevantes)
+7. [Plan de Pruebas](#plan-de-pruebas)
+    1. [Objetivos del Plan de Pruebas ](#objetivos-del-plan-de-pruebas)
+    2. [Alcance del Plan de Pruebas ](#alcance-del-plan-de-pruebas)
+    3. [Estrategia de Pruebas del Plan de Pruebas ](#estrategia-de-pruebas-del-plan-de-pruebas)  
+        1. [Pruebas Unitarias](#pruebas-unitarias)
+        2. [Pruebas de Integración](#pruebas-de-integración)
+        3. [Pruebas de API](#pruebas-de-api)
+        4. [Pruebas de Rendimiento](#pruebas-de-rendimiento)
+        5. [Pruebas de Seguridad](#pruebas-de-seguridad)
+    4. [Criterios de Aceptación del Plan de Pruebas ](#criterios-de-aceptación-del-plan-de-pruebas)
+    5. [Cronograma del Plan de Pruebas ](#cronograma-del-plan-de-pruebas)
+    6. [Riesgos y Mitigaciones del Plan de Pruebas ](#riesgos-y-mitigaciones-del-plan-de-pruebas)
+    7. [Entregables del Plan de Pruebas ](#entregables-del-plan-de-pruebas)
+8. [Recomendaciones](#recomendaciones)
+9. [Conclusiones](#conclusiones)
 
 ## Introducción 
 Esta Prueba de Concepto (PoC) tiene como objetivo evaluar la viabilidad técnica del proyecto KnowBlock, una plataforma innovadora de validación de conocimientos que integra tecnología blockchain, sistemas de bases de datos avanzados y una arquitectura de microservicios. KnowBlock se propone revolucionar la forma en que se verifican y certifican las habilidades y conocimientos adquiridos, garantizando la autenticidad e inmutabilidad de los procesos de validación a través de registros seguros en blockchain, mientras que la implementación de microservicios permitirá un desarrollo modular, escalable y altamente adaptable a las cambiantes necesidades del mercado educativo y profesional.
@@ -31,38 +54,79 @@ Con esta aproximación integral, se pretende no solo reducir riesgos técnicos, 
 
 ## Estimación de Esfuerzo y Duración
 
+Esta sección detalla las fases, recursos humanos, esfuerzo total y duración estimada del proyecto, proporcionando una hoja de ruta clara para su ejecución.
+
 ### Fases del Proyecto
 
-1. Análisis y Diseño: 2 semanas
-2. Desarrollo de Microservicios: 8 semanas
-3. Integración con Blockchain: 3 semanas
-4. Desarrollo de Frontend: 6 semanas
-5. Pruebas y Depuración: 4 semanas
-6. Despliegue y Configuración: 2 semanas
+El proyecto se divide en varias fases, cada una con tiempos estimados en función de la complejidad de las tareas a realizar:
+
+1. **Análisis y Diseño** (2 semanas):
+  - Definición de requerimientos funcionales y no funcionales.
+  - Diseño de arquitectura del sistema, incluyendo la estructura de microservicios y selección de tecnologías.
+  - Diagramas de flujo y modelo de datos.
+
+2. **Desarrollo de Microservicios** (8 semanas):
+  - Implementación de los servicios backend, cada uno enfocado en una funcionalidad específica.
+  - Uso de arquitecturas basadas en eventos para garantizar comunicación eficiente entre servicios.
+  - Creación de APIs REST y servicios de integración con bases de datos.
+
+3. **Integración con Blockchain** (3 semanas):
+  - Implementación de módulos para registrar y verificar transacciones en la cadena de bloques.
+  - Pruebas de integración con plataformas blockchain (como Ethereum o Hyperledger).
+  - Manejo de confirmaciones de bloques y tratamiento de errores en las transacciones.
+
+4. **Desarrollo de Frontend** (6 semanas):
+  - Creación de interfaces de usuario intuitivas para estudiantes, docentes y administradores.
+  - Integración con el backend mediante APIs.
+  - Pruebas de usabilidad y diseño adaptativo para dispositivos móviles.
+
+5. **Pruebas y Depuración** (4 semanas):
+  - Ejecución de pruebas unitarias, de integración y de extremo a extremo.
+  - Validación del sistema en condiciones de carga y estrés.
+  - Corrección de errores encontrados y refinamiento del rendimiento.
+
+6. **Despliegue y Configuración** (2 semanas):
+  - Configuración del entorno de producción, incluyendo orquestación de contenedores y balanceo de carga.
+  - Despliegue de los servicios en la infraestructura elegida (cloud o servidores on-premise).
+  - Monitoreo inicial para asegurar la estabilidad del sistema.
 
 ### Recursos Humanos
 
-- 2 Arquitectos de Software
-- 4 Desarrolladores Backend
-- 2 Desarrolladores Frontend
-- 2 Ingenieros DevOps
-- 1 Especialista en Blockchain
-- 2 QA Testers
+Para cumplir con los plazos establecidos, se ha planificado un equipo multidisciplinario que incluye:
+
+- 2 Arquitectos de Software: Definen la arquitectura del sistema y supervisan la coherencia técnica durante todo el proyecto.
+
+- 4 Desarrolladores Backend: Encargados de la implementación de microservicios y lógica de negocio.
+
+- 2 Desarrolladores Frontend: Responsables del desarrollo de las interfaces de usuario para diferentes plataformas.
+
+- 2 Ingenieros DevOps: Gestionan la infraestructura y los procesos de integración continua (CI/CD).
+
+- 1 Especialista en Blockchain: Asiste en la integración y optimización de las transacciones en blockchain.
+
+- 2 QA Testers: Realizan pruebas exhaustivas para asegurar la calidad del producto antes de su lanzamiento.
 
 ### Esfuerzo Total Estimado
 
-25 semanas * 11 personas * 40 horas/semana = 11,000 horas-persona
+El cálculo del esfuerzo total combina la duración del proyecto con la carga de trabajo asignada a cada miembro del equipo. El resultado se mide en horas-persona:
+
+25 semanas × 11 personas × 40 horas/semana = 11,000 horas-persona
+
+Este esfuerzo incluye tanto las tareas de desarrollo como las actividades de planificación, revisión y gestión del proyecto.
 
 ### Duración Total Estimada
 
 25 semanas (aproximadamente 6 meses)
 
+La duración total tiene en cuenta la ejecución paralela de algunas fases, especialmente el desarrollo del frontend y backend. Esta estructura en paralelo permite optimizar los tiempos y reducir el riesgo de retrasos.
+
 ### Consideraciones
 
-- Esta estimación asume un desarrollo en paralelo de diferentes componentes.
-- Se incluye un margen para imprevistos y refinamiento del producto.
-- La duración puede variar dependiendo de la complejidad final de la integración con sistemas educativos y blockchain.
+- **Desarrollo en paralelo**: Las tareas del frontend y backend se llevarán a cabo simultáneamente para optimizar tiempos.
+- **Margen para imprevistos**: Se ha considerado un margen adicional para gestionar cambios de alcance, refinamiento del producto y corrección de errores críticos.
+- **Complejidad de la integración**: La duración podría variar en función de las dificultades encontradas al conectar el sistema con plataformas educativas o blockchain.
 
+Estas estimaciones sirven como una guía para asegurar una entrega dentro del tiempo previsto, aunque se mantendrá una revisión constante del cronograma para ajustar plazos si es necesario.
 ## Objetivos 
 
 ### Objetivo General
@@ -94,6 +158,10 @@ Desarrollar y validar una plataforma innovadora de gestión y certificación de 
 ## Arquitectura Propuesta
 
 La arquitectura de KnowBlock está construida sobre un modelo de microservicios, diseñado para el desarrollo descentralizado y la escalabilidad. Cada componente tiene una función específica y puede desplegarse de manera independiente. Esta estructura facilita la integración eficiente con bases de datos, blockchain y sistemas de pago.
+
+Primeramente antes de iniciar con la explicacion de la arquitectura se anexa la imagen de la arquitectura del sistema:
+
+![Imagen de arquitectura](./KnowBlockDiagram.png)
 
 ### Microservicios Principales
 
@@ -1150,7 +1218,11 @@ Authorization: Bearer <token>
 
 ## Ejemplos de Código
 
+A continuación, se presenta una serie de ejemplos de código que ayudarán en el futuro al desarrollo del sistema. Este código se proporciona con la intención de apoyar al programador en el desarrollo, además de fomentar buenas prácticas y establecer una base sólida. 
+
 ### Conexión a Bases de Datos
+
+A continuación, se muestran ejemplos de código para la conexión a la base de datos. Tal como se enfatiza en el diagrama, las bases de datos que se utilizarán son PostgreSQL y MongoDB. 
 
 #### Conexión a PostgreSQL
 ```typescript
@@ -1192,62 +1264,9 @@ db.once('open', function() {
   console.log('Connected to MongoDB');
 });
 ```
+### Conexiones a servicios de Amazon AWS
 
-### Conexión a Blockchain con Infura
-```typescript
-// Conexión a Blockchain con Infura
-const Web3 = require('web3');
-
-const web3 = new Web3(new Web3.providers.HttpProvider('https://mainnet.infura.io/v3/YOUR-PROJECT-ID'));
-
-async function getBlockchainData() {
-  const latestBlock = await web3.eth.getBlock('latest');
-  console.log('Latest block:', latestBlock.number);
-}
-
-```
-### Otros Ejemplos Relevantes
-
-#### Configuración de Amazon API Gateway
-```typescript
-// Configuración de Amazon API Gateway
-const AWS = require('aws-sdk');
-const apigateway = new AWS.APIGateway();
-
-const params = {
-  restApiId: 'YOUR_API_ID',
-  stageName: 'prod',
-  patchOperations: [
-    {
-      op: 'replace',
-      path: '/throttling/rateLimit',
-      value: '1000'
-    },
-    {
-      op: 'replace',
-      path: '/throttling/burstLimit',
-      value: '500'
-    }
-  ]
-};
-
-apigateway.updateStage(params, (err, data) => {
-  if (err) console.log(err, err.stack);
-  else     console.log(data);
-});
-```
-#### Manejo de errores en
-```typescript
-// Ejemplo de Manejo de Errores en Express
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).json({
-    message: 'An unexpected error occurred',
-    error: process.env.NODE_ENV === 'production' ? {} : err
-  });
-});
-```
-
+Se presentan ejemplos de conexiones a los diferentes servicios de AWS que se utilizan durante el desarrollo de la aplicación.
 
 #### Integración con Amazon Cognito para autenticación:
 ```typescript
@@ -1297,6 +1316,65 @@ async function sendNotification(message, topicArn) {
   }
 }
 ```
+
+#### Configuración de Amazon API Gateway
+```typescript
+// Configuración de Amazon API Gateway
+const AWS = require('aws-sdk');
+const apigateway = new AWS.APIGateway();
+
+const params = {
+  restApiId: 'YOUR_API_ID',
+  stageName: 'prod',
+  patchOperations: [
+    {
+      op: 'replace',
+      path: '/throttling/rateLimit',
+      value: '1000'
+    },
+    {
+      op: 'replace',
+      path: '/throttling/burstLimit',
+      value: '500'
+    }
+  ]
+};
+
+apigateway.updateStage(params, (err, data) => {
+  if (err) console.log(err, err.stack);
+  else     console.log(data);
+});
+```
+
+#### Almacenamiento de archivos en Amazon S3
+```typescript
+// Almacenamiento de archivos en Amazon S3
+const AWS = require('aws-sdk');
+const s3 = new AWS.S3();
+
+async function uploadFile(file, bucketName, key) {
+  const params = {
+    Bucket: bucketName,
+    Key: key,
+    Body: file.buffer,
+    ContentType: file.mimetype
+  };
+
+  try {
+    const data = await s3.upload(params).promise();
+    console.log(`File uploaded successfully at ${data.Location}`);
+    return data.Location;
+  } catch (error) {
+    console.error('Error uploading file:', error);
+    throw error;
+  }
+}
+```
+
+### Kubernetes
+
+Se muestran ejemplos de código de Kubernetes para el desarrollo, ya sea desde un Pod o un CronJob que se ejecutará periódicamente.
+
 #### Configuración de un pod en Kubernetes:
 ```yaml
 # Configuración de un pod en Kubernetes:
@@ -1324,30 +1402,59 @@ spec:
     - name: QUEUE_HOST
       value: rabbitmq-service
 ```
-#### Almacenamiento de archivos en Amazon S3
+
+#### Configuración de un job de Kubernetes para tareas programadas
+
+```yaml
+# Configuración de un job de Kubernetes para tareas programadas
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: daily-report-generator
+spec:
+  schedule: "0 1 * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: report-generator
+            image: knowblock/report-generator:v1
+            args:
+            - /scripts/generate-daily-report.sh
+          restartPolicy: OnFailure
+```
+
+### Otros Ejemplos Relevantes
+
+A continuación, se presentan una serie de ejemplos de código que se pueden utilizar en distintos módulos de la aplicación.
+
+#### Conexión a Blockchain con Infura
+
 ```typescript
-// Almacenamiento de archivos en Amazon S3
-const AWS = require('aws-sdk');
-const s3 = new AWS.S3();
+// Conexión a Blockchain con Infura
+const Web3 = require('web3');
 
-async function uploadFile(file, bucketName, key) {
-  const params = {
-    Bucket: bucketName,
-    Key: key,
-    Body: file.buffer,
-    ContentType: file.mimetype
-  };
+const web3 = new Web3(new Web3.providers.HttpProvider('https://mainnet.infura.io/v3/YOUR-PROJECT-ID'));
 
-  try {
-    const data = await s3.upload(params).promise();
-    console.log(`File uploaded successfully at ${data.Location}`);
-    return data.Location;
-  } catch (error) {
-    console.error('Error uploading file:', error);
-    throw error;
-  }
+async function getBlockchainData() {
+  const latestBlock = await web3.eth.getBlock('latest');
+  console.log('Latest block:', latestBlock.number);
 }
 ```
+
+#### Manejo de errores en Express
+```typescript
+// Ejemplo de Manejo de Errores en Express
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({
+    message: 'An unexpected error occurred',
+    error: process.env.NODE_ENV === 'production' ? {} : err
+  });
+});
+```
+
 #### Implementación de un endpoint en Express para la validación de conocimientos
 ```typescript
 const express = require('express');
@@ -1375,26 +1482,6 @@ router.post('/validate-knowledge', async (req, res) => {
 });
 
 module.exports = router;
-```
-#### Configuración de un job de Kubernetes para tareas programadas
-```yaml
-# Configuración de un job de Kubernetes para tareas programadas
-apiVersion: batch/v1beta1
-kind: CronJob
-metadata:
-  name: daily-report-generator
-spec:
-  schedule: "0 1 * * *"
-  jobTemplate:
-    spec:
-      template:
-        spec:
-          containers:
-          - name: report-generator
-            image: knowblock/report-generator:v1
-            args:
-            - /scripts/generate-daily-report.sh
-          restartPolicy: OnFailure
 ```
 #### Integración con PayPal para procesamiento de pagos alternativos:
 ```typescript
@@ -1429,37 +1516,42 @@ async function createOrder(amount, currency) {
 module.exports = { createOrder };
 ```
 
-
-
-
-
 ## Plan de Pruebas 
 
-Este documento detalla el plan de pruebas para la plataforma KnowBlock, un sistema de validación de conocimientos basado en blockchain. El plan cubre todos los aspectos críticos del sistema, desde pruebas unitarias hasta pruebas de integración y seguridad.
+El plan de pruebas para la plataforma KnowBlock, un sistema de validación de conocimientos basado en blockchain. El plan cubre todos los aspectos críticos del sistema, desde pruebas unitarias hasta pruebas de integración y seguridad.
 
-### Objetivos
+### Objetivos del Plan de Pruebas 
 
-- Validar la funcionalidad completa de la API REST
-- Verificar la integridad de las transacciones en blockchain
-- Asegurar la protección de datos sensibles
-- Validar el rendimiento bajo diferentes escenarios de carga
-- Garantizar la usabilidad y experiencia del usuario
+El plan de pruebas tiene los siguientes propósitos:
 
-### Alcance
+- **Validar la funcionalidad completa de la API REST**: Comprobar que todos los endpoints respondan correctamente, devolviendo los resultados esperados ante solicitudes válidas e inválidas.
+- **Verificar la integridad de las transacciones en blockchain**: Asegurar que cada operación realizada en la cadena de bloques sea registrada correctamente y mantenga su integridad.
+- **Asegurar la protección de datos sensibles**: Validar que la información confidencial (como contraseñas o datos personales) esté protegida mediante cifrado y cumpla con normativas de privacidad.
+- **Evaluar el rendimiento bajo diferentes escenarios de carga**: Probar la plataforma bajo distintas condiciones de tráfico y uso para evitar cuellos de botella o caídas del sistema.
+- **Garantizar la usabilidad y experiencia del usuario**: Comprobar que la interfaz sea intuitiva, responda rápidamente y facilite la navegación para los usuarios finales.
 
-El plan de pruebas abarca:
-- API REST completa
-- Integración con blockchain
-- Sistema de pagos
-- Gestión de usuarios
-- Sistema de notificaciones
-- Generación de reportes
+### Alcance del Plan de Pruebas 
 
-### Estrategia de Pruebas
+El plan de pruebas cubre los siguientes módulos críticos de la aplicación:
 
-#### 1. Pruebas Unitarias
+- **API REST completa**: Validación de todos los endpoints y funcionalidades de la API.
+Integración con blockchain: Comprobación del registro y consulta de transacciones en la cadena de bloques.
+- **Sistema de pagos**: Pruebas de integración con proveedores de pago para garantizar la correcta gestión de transacciones financieras.
+- **Gestión de usuarios**: Verificación de las funcionalidades de registro, autenticación, actualización de perfil y recuperación de contraseña.
+- **Sistema de notificaciones**: Validación del envío de notificaciones por correo electrónico o mensajes push.
+- **Generación de reportes**: Comprobación de la creación de informes sobre transacciones, validaciones y usuarios, asegurando su precisión y disponibilidad.
+
+### Estrategia de Pruebas del Plan de Pruebas 
+
+La estrategia de pruebas se enfoca en asegurar la estabilidad del sistema mediante diferentes niveles de validación, utilizando una combinación de pruebas automatizadas y manuales.
+
+#### Pruebas Unitarias
+
+Las pruebas unitarias comprueban que los componentes individuales del sistema funcionen correctamente. Se realizan de forma aislada para detectar posibles fallos en módulos específicos. A continuación, se muestran dos ejemplos de pruebas unitarias:
 
 ##### A. Pruebas de Servicio de Usuario
+
+Este ejemplo de prueba unitaria valida el registro de un nuevo usuario:
 
 ```java
 @Test
@@ -1481,8 +1573,11 @@ public void testUsuarioRegistro() {
 }
 ```
 
+Esta prueba garantiza que el sistema cree correctamente un usuario y genere un identificador válido, verificando tanto la respuesta del servicio como los datos generados.
+
 #### B. Pruebas de Validación de Conocimiento
 
+Este ejemplo valida la creación de una solicitud de validación de conocimientos:
 ```java
 @Test
 public void testSolicitudValidacion() {
@@ -1503,10 +1598,19 @@ public void testSolicitudValidacion() {
     assertNotNull(response.getFechaSolicitud());
 }
 ```
+Esta prueba comprueba que una solicitud de validación se cree exitosamente, almacenando los datos relevantes y estableciendo un estado inicial de "pendiente".
 
-#### 2. Pruebas de Integración
+#### Pruebas de Integración
+
+Las pruebas de integración aseguran que distintos módulos del sistema trabajen correctamente en conjunto. En sistemas complejos como KnowBlock, donde interactúan tecnologías avanzadas como blockchain y sistemas de pago, estas pruebas son esenciales para garantizar que la interacción entre los servicios sea fluida y sin errores.
 
 ##### A. Integración con Blockchain
+
+Este test verifica que una validación completa se registre adecuadamente en la cadena de bloques (blockchain). Blockchain, al ser una tecnología que garantiza la trazabilidad y seguridad de los datos mediante transacciones inmutables, es fundamental en este proyecto. Por ello, esta prueba evalúa que las validaciones se confirmen correctamente y queden reflejadas en un bloque válido de la cadena. Se comprueban los siguientes aspectos:
+
+1. El hash de transacción (TransactionHash) no es nulo: Esto confirma que la transacción se realizó.
+2. La transacción ha sido confirmada: Asegura que no hay errores en el proceso de registro.
+3. El número de bloque existe: Verifica que la transacción se almacenó en un bloque válido.
 
 ```java
 @Test
@@ -1531,6 +1635,12 @@ public void testRegistroBlockchain() {
 
 ##### B. Integración con Sistema de Pagos
 
+Este test se enfoca en validar que el sistema procese pagos de manera correcta y sin errores. Las pruebas garantizan que cada pago sea consistente y seguro. La prueba valida los siguientes aspectos críticos:
+
+1. Estado de la transacción: Confirma que el pago fue completado.
+2. Identificación de la transacción: Cada pago debe tener un ID único para seguimiento.
+3. Monto exacto: Verifica que no haya alteraciones en el valor pagado.
+
 ```java
 @Test
 public void testProcesarPago() {
@@ -1554,9 +1664,13 @@ public void testProcesarPago() {
 }
 ```
 
-#### 3. Pruebas de API
+#### Pruebas de API
+
+Las pruebas de API son fundamentales para asegurar que los servicios expuestos a través de HTTP funcionen según lo esperado y sigan las especificaciones. Las pruebas se implementan con Rest Assured, una librería que facilita la verificación de respuestas HTTP.
 
 ##### A. Pruebas con Rest Assured
+
+Esta prueba valida el flujo de registro de usuario mediante la API. Se verifica que la respuesta tenga el estado correcto (201) y que los datos devueltos incluyan un ID de usuario y un mensaje de éxito.
 
 ```java
 @Test
@@ -1575,6 +1689,8 @@ public void testRegistroUsuarioAPI() {
 
 #### B. Pruebas de Validación
 
+Esta prueba verifica que se pueda consultar el estado de una validación existente. La respuesta debe indicar el estado y el progreso del proceso, asegurando que se encuentra dentro de los límites esperados (entre 0 y 100%).
+
 ```java
 @Test
 public void testConsultaValidacion() {
@@ -1591,9 +1707,13 @@ public void testConsultaValidacion() {
 }
 ```
 
-#### 4. Pruebas de Rendimiento
+#### Pruebas de Rendimiento
+
+Para evaluar el rendimiento del sistema, se utilizan pruebas de carga con JMeter. Estas pruebas miden la capacidad del sistema para manejar una gran cantidad de solicitudes simultáneas.
 
 ##### A. Pruebas de Carga con JMeter
+
+Este archivo de configuración simula 1000 usuarios concurrentes, con 100 iteraciones cada uno, para verificar cómo responde el sistema bajo carga. La prueba también mide el tiempo de respuesta y asegura que el sistema no colapse.
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -1628,9 +1748,12 @@ public void testConsultaValidacion() {
 </jmeterTestPlan>
 ```
 
-#### 5. Pruebas de Seguridad
+#### Pruebas de Seguridad
+
+Estas pruebas garantizan que el sistema sea seguro frente a amenazas de autenticación y autorización.
 
 ##### A. Pruebas de Autenticación
+Esta prueba valida que el sistema emita un token de autenticación válido y que este se pueda usar para identificar al usuario.
 
 ```java
 @Test
@@ -1650,6 +1773,7 @@ public void testAutenticacionToken() {
 
 ##### B. Pruebas de Autorización
 
+Esta prueba asegura que los usuarios sin permisos reciban una respuesta adecuada (código 403).
 ```java
 @Test
 public void testAccesoNoAutorizado() {
@@ -1664,90 +1788,65 @@ public void testAccesoNoAutorizado() {
 }
 ```
 
-### Entorno y Herramientas
+### Criterios de Aceptación del Plan de Pruebas 
 
-#### Configuración del Entorno de Pruebas
-
-```yaml
-# docker-compose.yml para entorno de pruebas
-version: '3.8'
-services:
-  api:
-    image: knowblock/api:test
-    environment:
-      - SPRING_PROFILES_ACTIVE=test
-      - DB_HOST=postgres
-      - REDIS_HOST=redis
-    ports:
-      - "8080:8080"
-    depends_on:
-      - postgres
-      - redis
-
-  postgres:
-    image: postgres:13
-    environment:
-      POSTGRES_DB: knowblock_test
-      POSTGRES_USER: test_user
-      POSTGRES_PASSWORD: test_password
-    ports:
-      - "5432:5432"
-
-  redis:
-    image: redis:6
-    ports:
-      - "6379:6379"
-```
-
-### Criterios de Aceptación
+Los criterios de aceptación aseguran que el sistema cumpla con los objetivos tanto funcionales como no funcionales. Esto garantiza la calidad del software desde el punto de vista del negocio y los usuarios.
 
 #### Requisitos Funcionales
-- 100% de los endpoints responden según la especificación
-- Todas las transacciones blockchain son verificables
-- Sistema de pagos procesa correctamente todas las transacciones
+- 100% de los endpoints deben responder de acuerdo con la especificación establecida.
+- Verificación de transacciones blockchain: Todas las transacciones deben ser trazables y verificables en la cadena de bloques.
+- Procesamiento correcto de pagos: El sistema de pagos debe manejar todas las transacciones sin errores.
 
 #### Requisitos No Funcionales
-- Tiempo de respuesta < 200ms para el 95% de las peticiones
-- Disponibilidad del sistema > 99.9%
-- Zero vulnerabilidades críticas de seguridad
+- Tiempo de respuesta: El sistema debe responder en menos de 200 ms para el 95% de las solicitudes.
+- Disponibilidad: La disponibilidad del sistema debe ser superior al 99.9% para evitar tiempos de inactividad significativos.
+- Seguridad: No deben existir vulnerabilidades críticas, garantizando la integridad y confidencialidad de los datos.
 
-### Cronograma
+### Cronograma del Plan de Pruebas 
+
+El cronograma se divide en tres fases que cubren desde la preparación inicial hasta el análisis de los resultados, asegurando una ejecución ordenada del proceso de pruebas.
 
 #### Fase 1: Preparación (1 semana)
-- Configuración de entornos
-- Preparación de datos de prueba
-- Configuración de herramientas
+- Configuración del entorno de pruebas utilizando Docker Compose.
+- Preparación de datos de prueba para simular escenarios reales.
+- Instalación y configuración de las herramientas necesarias (por ejemplo, JMeter y Rest Assured).
 
 #### Fase 2: Ejecución (2 semanas)
-- Pruebas unitarias y de integración
-- Pruebas de API
-- Pruebas de rendimiento
-- Pruebas de seguridad
+- Pruebas Unitarias y de Integración: Aseguran que los módulos individuales y sus interacciones funcionen correctamente.
+- Pruebas de API: Verificación de la funcionalidad de los endpoints expuestos.
+- Pruebas de Rendimiento: Evaluación del comportamiento del sistema bajo carga.
+- Pruebas de Seguridad: Identificación de vulnerabilidades potenciales en los procesos de autenticación y autorización.
 
 #### Fase 3: Análisis y Reportes (1 semana)
-- Análisis de resultados
-- Generación de informes
-- Recomendaciones de mejora
+- Análisis detallado de los resultados obtenidos en cada tipo de prueba.
+- Generación de informes completos sobre el rendimiento y los problemas encontrados.
+- Propuestas de mejora para optimizar el sistema y solucionar los errores detectados.
 
-### Riesgos y Mitigaciones
+### Riesgos y Mitigaciones del Plan de Pruebas 
+
+Es fundamental identificar los posibles riesgos que podrían afectar al sistema y plantear estrategias de mitigación para prevenir o minimizar su impacto.
 
 #### Riesgos Identificados
-1. Latencia en transacciones blockchain
-2. Sobrecarga del sistema en horas pico
-3. Vulnerabilidades de seguridad
+1. Latencia en transacciones blockchain: Las transacciones podrían tardar más de lo esperado debido a la sobrecarga de la red.
+2. Sobrecarga del sistema en horas pico: Un alto número de usuarios simultáneos podría afectar el rendimiento.
+3. Vulnerabilidades de seguridad: La falta de controles adecuados podría exponer datos sensibles.
 
 #### Estrategias de Mitigación
-1. Implementación de sistema de cola
-2. Autoescalado de recursos
-3. Auditorías de seguridad regulares
+1. Implementación de sistema de cola: Controla la cantidad de transacciones procesadas simultáneamente, evitando sobrecargas.
+2. Autoescalado de recursos: Permite que el sistema incremente automáticamente la capacidad durante los picos de demanda.
+3. Auditorías de seguridad regulares: Revisiones periódicas del sistema para detectar y corregir vulnerabilidades a tiempo.
 
-### Entregables
+### Entregables del Plan de Pruebas 
 
-1. Informe de Resultados
-2. Documentación de Issues
-3. Métricas de Rendimiento
-4. Recomendaciones de Mejora
-5. Plan de Acción para Issues Críticos
+Al finalizar el proceso de pruebas, se generarán una serie de documentos y métricas que ayudarán a evaluar la calidad del sistema y definir los próximos pasos.
+
+1. Informe de Resultados: Contendrá un resumen de los resultados de las pruebas realizadas.
+2. Documentación de Issues: Registro detallado de los errores encontrados durante las pruebas.
+3. Métricas de Rendimiento: Indicadores clave que mostrarán el desempeño del sistema bajo diversas condiciones.
+3. Recomendaciones de Mejora: Propuestas para optimizar el rendimiento y la seguridad del sistema.
+4. Plan de Acción para Issues Críticos: Estrategias específicas para solucionar los problemas más graves antes de la implementación en producción.
+
+Este enfoque integral asegura que KnowBlock no solo funcione según lo esperado, sino que también sea rápido, seguro y escalable. La combinación de pruebas funcionales, de rendimiento y de seguridad garantiza que el sistema estará preparado para operar de manera eficiente en cualquier escenario.
 
 ## Recomendaciones 
 

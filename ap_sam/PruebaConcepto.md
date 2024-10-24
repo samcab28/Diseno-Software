@@ -17,6 +17,24 @@
    4. [Consideraciones de Seguridad](#consideraciones-de-seguridad)
    5. [Escalabilidad y Flexibilidad](#escalabilidad-y-flexibilidad)
 5. [Documentación API de Knowblock](#documentación-api-de-knowblock)
+   1. [URL base](#url-base)
+       1. [Explicación Detallada de URL](#explicación-detallada-de-url)
+       2. [Ambientes Disponibles](#ambientes-disponibles)
+       3. [Consideraciones de Uso](#consideraciones-de-uso)
+   2. [Autenticación](#autenticación)
+       1. [Token JWT](#token-jwt)
+       2. [Características de Seguridad](#características-de-seguridad)
+       3. [Obtención del Token](#obtención-del-token)
+       4. [Manejo de Errores de Autenticación](#manejo-de-errores-de-autenticación)
+       5. [Mejores Prácticas](#mejores-prácticas)
+       6. [Monitoreo y Depuración](#monitoreo-y-depuración)
+       7. [Ejemplo de Implementación](#ejemplo-de-implementación)
+    3. [Endpoints con enfasis en BlockChain](#endpoints-con-enfasis-en-blockchain)
+       1. [Introducción para No Especialistas en Blockchain](#introducción-para-no-especialistas-en-blockchain)
+       2. [Documentación Técnica de la API con enfasis de blockchain](#documentación-técnica-de-la-api-con-enfasis-de-blockchain)
+       3. [Guía de Implementación](#guía-de-implementación)
+       4. [Preguntas Frecuentes (FAQ)](#preguntas-frecuentes-faq)
+    4. [Endpoints de funcionamiento comun](#endpoints-de-funcionamiento-comun)
 6. [Ejemplos de Código](#ejemplos-de-código)
     1. [Conexión a Bases de Datos](#conexión-a-bases-de-datos)
     2. [Conexiones a servicios de Amazon AWS](#conexiones-a-servicios-de-amazon-aws)
@@ -285,21 +303,602 @@ Esta arquitectura proporciona a KnowBlock una base robusta, escalable y flexible
 
 # Documentación API de Knowblock
 
+# Configuración Base y Autenticación de la API
+
 ## URL Base
 
 ```
 https://api.knowblock.com/v1
 ```
 
-## Autenticación
+### Explicación Detallada de URL
 
-Todas las solicitudes a la API requieren un token JWT válido en el encabezado de Autorización:
+La URL base es el punto de entrada fundamental para todas las interacciones con nuestra API. Su estructura está diseñada para maximizar la escalabilidad y mantenibilidad del sistema.
+
+#### Componentes de la URL
+
+1. **Protocolo (https://)**: 
+   - Uso obligatorio de HTTPS para garantizar la seguridad de las comunicaciones
+   - No se aceptan conexiones HTTP sin cifrar
+   - Certificados SSL/TLS actualizados regularmente
+
+2. **Subdominio (api)**: 
+   - Separación clara entre la API y otros servicios
+   - Permite configuración independiente de DNS
+   - Facilita el balanceo de carga y escalado
+
+3. **Dominio Principal (knowblock.com)**:
+   - Dominio verificado y seguro
+   - Configurado con registros SPF y DMARC
+   - Monitorizado 24/7 para disponibilidad
+
+4. **Versión (v1)**:
+   - Versionado explícito para garantizar compatibilidad
+   - Permite actualizaciones sin romper integraciones existentes
+   - Facilita la migración gradual a nuevas versiones
+
+### Ambientes Disponibles
 
 ```
+# Producción
+https://api.knowblock.com/v1
+
+# Staging (Pruebas)
+https://api-staging.knowblock.com/v1
+
+# Desarrollo
+https://api-dev.knowblock.com/v1
+
+# Sandbox (Pruebas de integración)
+https://api-sandbox.knowblock.com/v1
+```
+
+### Consideraciones de Uso
+
+1. **Rate Limiting**:
+   - 1000 requests por hora por IP
+   - 10,000 requests por hora por cuenta
+   - Headers de respuesta incluyen límites restantes
+
+2. **Disponibilidad**:
+   - SLA garantizado de 99.9%
+   - Monitoreo continuo de latencia
+   - Sistema de alertas automático
+
+3. **Respuesta a Fallos**:
+   - Failover automático entre regiones
+   - Cache distribuido
+   - Sistema de retry con backoff exponencial
+
+## Autenticación
+
+### Token JWT
+
+```http
 Authorization: Bearer <token>
 ```
 
-## Endpoints
+#### Estructura del Token
+
+```javascript
+// Header
+{
+  "alg": "RS256",
+  "typ": "JWT",
+  "kid": "20240324-1"
+}
+
+// Payload
+{
+  "iss": "knowblock.com",
+  "sub": "user_123456",
+  "aud": "api.knowblock.com",
+  "iat": 1516239022,
+  "exp": 1516242622,
+  "roles": ["user", "validator"],
+  "permissions": ["read:validations", "create:validations"]
+}
+```
+
+### Obtención del Token
+
+1. **Endpoint de Autenticación**:
+```http
+POST https://auth.knowblock.com/v1/token
+Content-Type: application/json
+
+{
+  "client_id": "<your_client_id>",
+  "client_secret": "<your_client_secret>",
+  "grant_type": "client_credentials"
+}
+```
+
+2. **Respuesta**:
+```json
+{
+  "access_token": "eyJhbGciOiJIUzI1NiIs...",
+  "token_type": "Bearer",
+  "expires_in": 3600,
+  "refresh_token": "eyJhbGciOiJIUzI1NiIs...",
+  "scope": "read write validate"
+}
+```
+
+### Características de Seguridad
+
+1. **Expiración y Renovación**:
+   - Tokens válidos por 1 hora
+   - Refresh tokens válidos por 30 días
+   - Sistema de renovación automática
+
+2. **Roles y Permisos**:
+   - Basado en RBAC (Role-Based Access Control)
+   - Granularidad a nivel de endpoint
+   - Auditoría de accesos
+
+3. **Seguridad Adicional**:
+   - Firma RSA de 2048 bits
+   - Rotación automática de claves
+   - Revocación inmediata disponible
+
+### Manejo de Errores de Autenticación
+
+#### 1. Token Inválido
+```json
+{
+  "error": "invalid_token",
+  "error_description": "El token proporcionado no es válido",
+  "error_code": "AUTH001",
+  "timestamp": "2024-03-24T12:00:00Z",
+  "documentation_url": "https://docs.knowblock.com/errors/AUTH001"
+}
+```
+
+#### 2. Token Expirado
+```json
+{
+  "error": "expired_token",
+  "error_description": "El token ha expirado",
+  "error_code": "AUTH002",
+  "timestamp": "2024-03-24T12:00:00Z",
+  "documentation_url": "https://docs.knowblock.com/errors/AUTH002"
+}
+```
+
+#### 3. Permisos Insuficientes
+```json
+{
+  "error": "insufficient_scope",
+  "error_description": "El token no tiene los permisos necesarios",
+  "error_code": "AUTH003",
+  "required_scope": ["validate:write"],
+  "provided_scope": ["validate:read"],
+  "timestamp": "2024-03-24T12:00:00Z",
+  "documentation_url": "https://docs.knowblock.com/errors/AUTH003"
+}
+```
+
+### Mejores Prácticas
+
+1. **Almacenamiento Seguro**:
+   - Nunca almacenar tokens en localStorage
+   - Usar httpOnly cookies
+   - Implementar secure flag en cookies
+
+2. **Manejo de Tokens**:
+   - Renovar antes de la expiración
+   - Implementar retry con backoff
+   - Manejar renovación en background
+
+3. **Seguridad**:
+   - Usar HTTPS siempre
+   - Implementar CORS apropiadamente
+   - Validar origen de requests
+
+### Ejemplo de Implementación
+
+```javascript
+// Ejemplo de cliente API
+class KnowBlockAPI {
+  constructor(clientId, clientSecret) {
+    this.clientId = clientId;
+    this.clientSecret = clientSecret;
+    this.baseUrl = 'https://api.knowblock.com/v1';
+    this.token = null;
+  }
+
+  async getToken() {
+    if (this.token && !this.isTokenExpired()) {
+      return this.token;
+    }
+
+    const response = await fetch('https://auth.knowblock.com/v1/token', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        client_id: this.clientId,
+        client_secret: this.clientSecret,
+        grant_type: 'client_credentials'
+      })
+    });
+
+    const data = await response.json();
+    this.token = data.access_token;
+    return this.token;
+  }
+
+  async makeRequest(endpoint, options = {}) {
+    const token = await this.getToken();
+    
+    const response = await fetch(`${this.baseUrl}${endpoint}`, {
+      ...options,
+      headers: {
+        ...options.headers,
+        'Authorization': `Bearer ${token}`
+      }
+    });
+
+    if (response.status === 401) {
+      // Token expirado - renovar y reintentar
+      this.token = null;
+      return this.makeRequest(endpoint, options);
+    }
+
+    return response;
+  }
+}
+```
+
+### Monitoreo y Depuración
+
+1. **Logs de Autenticación**:
+   - Registro de todos los intentos de autenticación
+   - Tracking de uso de tokens
+   - Alertas de comportamiento sospechoso
+
+2. **Métricas**:
+   - Tasa de éxito/fallo de autenticación
+   - Tiempo de respuesta
+   - Uso por endpoint
+
+3. **Debugging**:
+   - Headers de respuesta informativos
+   - Códigos de error específicos
+   - Documentación detallada de errores
+
+## Endpoints con enfasis en BlockChain
+
+### Introducción para No Especialistas en Blockchain
+
+#### ¿Qué hace este sistema?
+Este sistema permite validar y certificar conocimientos (como títulos, certificados o cursos) de una manera que:
+- Es imposible de falsificar
+- Queda registrada permanentemente
+- Puede ser verificada por cualquiera
+- Es respaldada por instituciones y expertos
+
+#### ¿Cómo funciona?
+1. El usuario envía su certificado o evidencia de conocimiento
+2. El sistema guarda una copia segura en una red descentralizada (IPFS)
+3. Expertos e instituciones verifican la validez
+4. Se registra la validación en blockchain (similar a un libro de registros público e inmutable)
+5. Se genera un certificado digital que prueba la validación
+
+#### Términos Importantes
+- **Blockchain**: Base de datos distribuida donde se registran las validaciones de manera permanente
+- **IPFS**: Sistema de almacenamiento distribuido para los documentos
+- **Smart Contract**: Programa que automatiza el proceso de validación
+- **Infura**: Servicio que nos permite conectarnos a la red blockchain
+- **Hash**: "Huella digital" única de un documento o archivo
+
+### Documentación Técnica de la API con enfasis de blockchain
+
+#### 1. Endpoint Principal: Enviar Solicitud de Validación
+
+##### POST `/api/v2/knowledge/validate`
+
+Este endpoint inicia el proceso de validación de un conocimiento o certificación.
+
+##### ¿Qué hace este endpoint?
+1. Recibe los documentos y evidencias
+2. Los sube a IPFS para almacenamiento seguro
+3. Inicia el proceso de validación en blockchain
+4. Retorna un ID de seguimiento
+
+##### Headers Requeridos
+```
+Content-Type: application/json
+Authorization: Bearer <token>
+X-API-Key: <infura-api-key>
+```
+
+##### Estructura del Request Body
+```json
+{
+  "usuarioId": "usr_12345abcde",  // ID único del usuario en el sistema
+  
+  "conocimiento": {
+    "titulo": "Fundamentos de Inteligencia Artificial",  // Nombre del curso o certificación
+    "descripcion": "Curso completo sobre los principios básicos de IA",
+    "institucion": "Universidad Tecnológica de Ejemplo",
+    "fechaFinalizacion": "2024-02-15",  // Formato YYYY-MM-DD
+    "tipoCredencial": "certificado",  // Tipo: certificado, título, curso, etc.
+    
+    "metadatosAdicionales": {
+      "duracionHoras": 120,
+      "modalidad": "virtual",
+      "instructorPrincipal": "Dr. Juan Pérez"
+    }
+  },
+  
+  "evidencias": [
+    {
+      "tipo": "certificado",
+      "archivo": "<base64_encoded_file>",  // Documento codificado en base64
+      "hash": "0x...",  // Huella digital única del archivo
+      "metadatos": {
+        "formato": "pdf",
+        "tamano": "2048576"  // Tamaño en bytes
+      }
+    },
+    {
+      "tipo": "proyecto",
+      "url": "https://github.com/usuario/proyecto-ia-final",
+      "commitHash": "abc123..."  // Identificador único del código
+    }
+  ],
+  
+  "validadores": {
+    "instituciones": ["0x123..."],  // Direcciones blockchain de instituciones validadoras
+    "expertos": ["0x456..."]  // Direcciones blockchain de expertos validadores
+  }
+}
+```
+
+##### Respuesta Exitosa (200 OK)
+```json
+{
+  "validacionId": "val_789xyz",  // ID único de la validación
+  "estado": "pendiente",
+  
+  "transaccionBlockchain": {
+    "txHash": "0x...",  // ID de la transacción en blockchain
+    "contractAddress": "0x...",  // Dirección del contrato inteligente
+    "network": "ethereum_mainnet",
+    "blockNumber": 12345678  // Número del bloque donde se registró
+  },
+  
+  "evidenciasIPFS": [
+    {
+      "tipo": "certificado",
+      "ipfsHash": "Qm...",  // ID único en IPFS
+      "timestamp": "2024-03-18T15:30:00Z"
+    }
+  ],
+  
+  "estimacionFinalizacion": "2024-03-25T15:30:00Z",
+  "pasosSiguientes": [
+    "Confirmación de transacción en blockchain",
+    "Validación por smart contract",
+    "Verificación institucional",
+    "Consenso de expertos"
+  ],
+  
+  "urlSeguimiento": "https://knowblock.com/validaciones/val_789xyz"
+}
+```
+
+#### 2. Endpoint de Procesamiento Blockchain (Uso Interno)
+
+##### POST `/api/v2/knowledge/validate/blockchain`
+
+Este endpoint es para uso interno del sistema y maneja la interacción con la blockchain.
+
+##### ¿Qué hace este endpoint?
+1. Procesa la validación en la blockchain
+2. Interactúa con el smart contract
+3. Registra las firmas de los validadores
+4. Emite el certificado digital final
+
+##### Headers Requeridos
+```
+Content-Type: application/json
+Authorization: Bearer <internal-service-token>
+X-Infura-API-Key: <infura-api-key>
+```
+
+##### Estructura del Request Body
+```json
+{
+  "validacionId": "val_789xyz",
+  "evidenciasIPFS": ["Qm..."],  // Referencias a documentos en IPFS
+  
+  "validadores": {
+    "instituciones": ["0x123..."],  // Quiénes validarán el conocimiento
+    "expertos": ["0x456..."]
+  },
+  
+  "smartContractParams": {
+    "conocimientoHash": "0x...",  // Huella digital del conocimiento
+    "timestampValidacion": "2024-03-18T15:30:00Z",
+    "nivelConfianza": 95  // Porcentaje de confianza en la validación
+  }
+}
+```
+
+##### Respuesta Exitosa (200 OK)
+```json
+{
+  "validacionId": "val_789xyz",
+  
+  "blockchainResult": {
+    "txHash": "0x...",  // ID de la transacción
+    "blockNumber": 12345678,
+    "gasUsed": "21000",  // Costo de la transacción
+    "status": "confirmed",
+    
+    "smartContractEvents": [
+      {
+        "event": "KnowledgeValidated",
+        "params": {
+          "validacionId": "val_789xyz",
+          "timestamp": "2024-03-18T15:30:00Z",
+          "validadoresParticipantes": ["0x123...", "0x456..."],
+          "resultado": "aprobado"
+        }
+      }
+    ]
+  },
+  
+  "ipfsDetails": {
+    "evidenciasHash": "Qm...",
+    "metadata": {
+      "timestamp": "2024-03-18T15:30:00Z",
+      "network": "ipfs_main"
+    }
+  }
+}
+```
+
+### Manejo de Errores
+
+#### Error 400: Datos Inválidos
+```json
+{
+  "error": "Validación fallida",
+  "detalles": {
+    "codigo": "VAL_400",
+    "mensaje": "Datos de validación incompletos o inválidos",
+    "errores": [
+      "Hash de evidencia inválido",
+      "Dirección de validador no válida en la red"
+    ]
+  },
+  "blockchain": {
+    "network": "ethereum_mainnet",
+    "blockHeight": 12345678,
+    "gasPrice": "50 gwei"
+  }
+}
+```
+
+#### Error 401: No Autorizado
+```json
+{
+  "error": "No autorizado",
+  "detalles": {
+    "codigo": "AUTH_401",
+    "mensaje": "Token de autorización inválido o expirado",
+    "accionesRecomendadas": [
+      "Renovar token de acceso",
+      "Verificar permisos de blockchain"
+    ]
+  }
+}
+```
+
+#### Error 503: Servicio No Disponible
+```json
+{
+  "error": "Servicio no disponible",
+  "detalles": {
+    "codigo": "BLOCKCHAIN_503",
+    "mensaje": "Error de conexión con la red blockchain",
+    "estado": {
+      "infura": "error",
+      "red": "congestionada",
+      "gasPrice": "alto"
+    }
+  }
+}
+```
+
+### Guía de Implementación
+
+#### Preparación del Sistema
+1. **Configuración de Infura**:
+   - Crear cuenta en Infura (https://infura.io)
+   - Obtener API Key y API Secret
+   - Configurar el proyecto para la red correcta (mainnet/testnet)
+
+2. **Configuración de IPFS**:
+   - Establecer conexión con el nodo IPFS
+   - Configurar límites de tamaño de archivo
+   - Establecer política de retención
+
+3. **Smart Contract**:
+   - Desplegar contrato de validación en la red
+   - Configurar direcciones de validadores
+   - Establecer parámetros de consenso
+
+#### Seguridad y Mejores Prácticas
+1. **Validación de Documentos**:
+   - Verificar integridad de archivos
+   - Validar formatos permitidos
+   - Comprobar tamaños máximos
+
+2. **Protección de Datos**:
+   - Encriptar datos sensibles
+   - Implementar control de acceso
+   - Registrar todas las operaciones
+
+3. **Optimización**:
+   - Usar caché para consultas frecuentes
+   - Implementar rate limiting
+   - Monitorear uso de recursos
+
+#### Monitoreo y Mantenimiento
+1. **Alertas**:
+   - Configurar alertas de error
+   - Monitorear tiempo de respuesta
+   - Vigilar costos de gas
+
+2. **Backups**:
+   - Respaldar datos críticos
+   - Mantener copias de seguridad de claves
+   - Documentar procedimientos de recuperación
+
+3. **Actualizaciones**:
+   - Plan de actualización de contratos
+   - Procedimientos de migración
+   - Pruebas de regresión
+
+### Preguntas Frecuentes (FAQ)
+
+#### Generales
+1. **¿Cuánto tiempo toma el proceso de validación?**
+   - Típicamente 24-48 horas, dependiendo de la disponibilidad de validadores
+
+2. **¿Qué sucede si un documento es rechazado?**
+   - Se notifica al usuario con motivos detallados
+   - Se permite reenvío con correcciones
+
+3. **¿Cómo se garantiza la privacidad?**
+   - Encriptación de documentos
+   - Control de acceso granular
+   - Anonimización de datos sensibles
+
+#### Técnicas
+1. **¿Qué redes blockchain soportan?**
+   - Ethereum Mainnet
+   - Ethereum Goerli (testnet)
+   - Polygon (próximamente)
+
+2. **¿Cómo manejan la escalabilidad?**
+   - Procesamiento por lotes
+   - Optimización de gas
+   - Caché distribuido
+
+3. **¿Qué pasa si hay un error en la blockchain?**
+   - Sistema de reintentos automáticos
+   - Fallback a red secundaria
+   - Notificación automática a soporte
+T
+
+## Endpoints de funcionamiento comun
 
 ### 1. Registro de Usuario
 

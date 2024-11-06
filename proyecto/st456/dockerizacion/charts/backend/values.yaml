@@ -4,7 +4,7 @@ config:
     name: backenc-design
     # Configuración de la imagen Docker
     image:
-      repository: pamreth/backend3
+      repository: samcab28/backend-design
       tag: latest
     # Cantidad de réplicas 
     replicas: 1

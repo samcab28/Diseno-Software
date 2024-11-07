@@ -1,5 +1,6 @@
 // RepositoryFactory.ts
 import { PostgreSQLRepository } from './postgreSQLRepository';
+import { MongoDBRepository } from './mongoDBRepository';
 import { IRepository } from './iDataRepository';
 import { PoolConfig } from 'pg';
 
@@ -22,6 +23,10 @@ export class RepositoryFactory {
                 case 'PostgreSQL':
                     if (!config) throw new Error('Configuration is required for PostgreSQL repository');
                     this.repositories[name] = PostgreSQLRepository.getInstance(config);
+                    break;
+                case 'MongoDB':
+                    if (!config || !config.uri) throw new Error('MongoDB URI is required');
+                    this.repositories[name] = MongoDBRepository.getInstance(config.uri);
                     break;
                 default:
                     throw new Error(`Repository '${name}' not found`);

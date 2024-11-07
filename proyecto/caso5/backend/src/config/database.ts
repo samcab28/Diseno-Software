@@ -7,3 +7,11 @@ export const dbConfig: PoolConfig = {
     password: 'trGSuqleh9',
     database: 'datos'
 };
+
+export const mongoConfig = {
+    uri: 'mongodb://localhost:27017/datos', 
+    options: {
+        useNewUrlParser: true,
+        useUnifiedTopology: true
+    }
+};

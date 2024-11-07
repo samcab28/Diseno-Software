@@ -5,13 +5,18 @@ import { OpenAPIRegistry, OpenApiGeneratorV3 } from "@asteasolutions/zod-to-open
 import { healthCheckRegistry } from "@/api/healthCheck/healthCheckRouter";
 import { userHealthCheckRegistry } from "@/api/user/userHealth";
 import { databaseHealthCheckRegistry } from "@/api/data/databaseHealtCheck";
+import { infoCasaHealthRegistry } from "@/api/infoCasa/infoCasaHealth";
+import { postHealthRegistry } from "@/api/post/postHealth";
 
 export function generateOpenAPIDocument() {
   const registry = new OpenAPIRegistry([
     healthCheckRegistry,
     userHealthCheckRegistry,
-    databaseHealthCheckRegistry
+    databaseHealthCheckRegistry,
+    infoCasaHealthRegistry,
+    postHealthRegistry
   ]);
+  
   const generator = new OpenApiGeneratorV3(registry.definitions);
 
   return generator.generateDocument({

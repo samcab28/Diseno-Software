@@ -7,20 +7,10 @@ import { z } from "zod";
 import { createApiResponse } from "@/api-docs/openAPIResponseBuilders";
 import { ServiceResponse } from "@/common/models/serviceResponse";
 import { handleServiceResponse } from "@/common/utils/httpHandlers";
-import { PostgreSQLRepository } from "../data/repositories/postgreSQLRepository";
-import { dbConfig } from "../../config/database";
-import { DataManager } from "../../api/data/services/dataManager";
-import { UserService } from "../backendManager/services/userService";
-import { UserController } from "../backendManager/controllers/userController";
+import { userController } from "../../index";  // Importamos la instancia existente
 
 export const userHealthCheckRegistry = new OpenAPIRegistry();
 export const userHealthCheckRouter: Router = express.Router();
-
-// Recreate the exact same setup as in userRouter.ts
-const postgresRepository = PostgreSQLRepository.getInstance(dbConfig);
-const dataManager = new DataManager(postgresRepository);
-const userService = new UserService(dataManager);
-const userController = new UserController(userService);
 
 userHealthCheckRegistry.registerPath({
   method: "get",
@@ -36,7 +26,6 @@ userHealthCheckRegistry.registerPath({
 userHealthCheckRouter.get("/", async (req: Request, res: Response) => {
     console.log("User health check route accessed");
     
-    // Create a custom response object that mimics Express.Response
     const customRes = {
         status: (code: number) => ({
             json: (data: any) => {
@@ -47,11 +36,10 @@ userHealthCheckRouter.get("/", async (req: Request, res: Response) => {
                 return handleServiceResponse(serviceResponse, res);
             }
         }),
-        // Add other methods if necessary
     };
 
     try {
-        // Call the controller method directly, just like in the main route
+        // Usamos userController directamente sin crear una nueva instancia
         await userController.getUsers(req, customRes as any);
     } catch (error) {
         console.error('User health check failed:', error);

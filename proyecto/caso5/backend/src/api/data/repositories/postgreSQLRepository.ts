@@ -1,5 +1,6 @@
+// PostgreSQLRepository.ts
 import { Pool, PoolConfig, QueryResult } from 'pg';
-import { IRepository } from '../services/dataManager';
+import { IRepository } from './iDataRepository';
 
 export class PostgreSQLRepository implements IRepository {
     private static instance: PostgreSQLRepository;
@@ -18,61 +19,27 @@ export class PostgreSQLRepository implements IRepository {
     }
 
     async connect(): Promise<void> {
-        if (this.isConnected) {
-            console.log('Already connected to PostgreSQL database');
-            return;
-        }
-
-        try {
-            const client = await this.pool.connect();
-            client.release();
-            this.isConnected = true;
-            console.log('Connected to PostgreSQL database');
-        } catch (error) {
-            console.error('Error connecting to the database:', error);
-            throw error;
-        }
+        if (this.isConnected) return;
+        const client = await this.pool.connect();
+        client.release();
+        this.isConnected = true;
     }
 
     async disconnect(): Promise<void> {
-        if (!this.isConnected) {
-            console.log('Already disconnected from PostgreSQL database');
-            return;
-        }
-
-        try {
+        if (this.isConnected) {
             await this.pool.end();
             this.isConnected = false;
-            console.log('Disconnected from PostgreSQL database');
-        } catch (error) {
-            console.error('Error disconnecting from the database:', error);
-            throw error;
         }
     }
 
-    async query(query: string, params?: any[]): Promise<any> {
-        if (!this.isConnected) {
-            await this.connect();
-        }
-        try {
-            const result = await this.pool.query(query, params);
-            return result.rows;
-        } catch (error) {
-            console.error('Error executing query:', error);
-            throw error;
-        }
+    async query(query: string, params?: any[]): Promise<any[]> {
+        if (!this.isConnected) await this.connect();
+        const result = await this.pool.query(query, params);
+        return result.rows;
     }
 
     async execute(command: string, params?: any[]): Promise<QueryResult> {
-        if (!this.isConnected) {
-            await this.connect();
-        }
-        try {
-            const result = await this.pool.query(command, params);
-            return result;
-        } catch (error) {
-            console.error('Error executing command:', error);
-            throw error;
-        }
+        if (!this.isConnected) await this.connect();
+        return await this.pool.query(command, params);
     }
 }

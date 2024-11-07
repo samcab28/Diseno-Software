@@ -1,34 +1,35 @@
-// dataManager.ts
-export interface IRepository {
-    connect(): Promise<void>;
-    disconnect(): Promise<void>;
-    query(query: string, params?: any[]): Promise<any>;
-    execute(command: string, params?: any[]): Promise<any>;
-}
+// DataManager.ts
+import { IRepository } from './../repositories/iDataRepository';
+import { RepositoryFactory } from './../repositories/repositoryFactory';
 
 export class DataManager {
-    private repository: IRepository;
+    private repositories: { [key: string]: IRepository } = {};
 
-    constructor(repository: IRepository) {
-        this.repository = repository;
+    public registerRepository(name: string, config: any): void {
+        this.repositories[name] = RepositoryFactory.getInstance().getRepository(name, config);
     }
 
     public async connect(): Promise<void> {
-        await this.repository.connect();
+        for (const repository of Object.values(this.repositories)) {
+            await repository.connect();
+        }
     }
 
     public async disconnect(): Promise<void> {
-        await this.repository.disconnect();
+        for (const repository of Object.values(this.repositories)) {
+            await repository.disconnect();
+        }
     }
 
-    public async performOperation(operation: string, data: string, params?: any[]): Promise<any> {
-        switch (operation) {
-            case 'query':
-                return await this.repository.query(data, params);
-            case 'execute':
-                return await this.repository.execute(data, params);
-            default:
-                throw new Error('Unknown operation');
-        }
+    public async query(repositoryName: string, query: string, params?: any[]): Promise<any> {
+        const repository = this.repositories[repositoryName];
+        if (!repository) throw new Error(`Repository '${repositoryName}' not found`);
+        return await repository.query(query, params);
+    }
+
+    public async execute(repositoryName: string, command: string, params?: any[]): Promise<any> {
+        const repository = this.repositories[repositoryName];
+        if (!repository) throw new Error(`Repository '${repositoryName}' not found`);
+        return await repository.execute(command, params);
     }
 }

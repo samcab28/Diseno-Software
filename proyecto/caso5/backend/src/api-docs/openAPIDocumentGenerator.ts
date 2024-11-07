@@ -3,7 +3,7 @@
 import { OpenAPIRegistry, OpenApiGeneratorV3 } from "@asteasolutions/zod-to-openapi";
 
 import { healthCheckRegistry } from "@/api/healthCheck/healthCheckRouter";
-import { userHealthCheckRegistry } from "@/api/backendManager/backendHealtCheck";
+import { userHealthCheckRegistry } from "@/api/user/userHealth";
 import { databaseHealthCheckRegistry } from "@/api/data/databaseHealtCheck";
 
 export function generateOpenAPIDocument() {

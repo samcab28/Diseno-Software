@@ -29,6 +29,11 @@ jobs:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
 
+    - name: Install Docker Compose
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y docker-compose
+
     - name: Build and push Docker Compose
       run: |
         cd proyecto/caso5/demo
@@ -38,31 +43,7 @@ jobs:
     - name: Create static content
       run: |
         mkdir -p _site
-        cat > _site/index.html << 'EOF'
-        <!DOCTYPE html>
-        <html lang="en">
-        <head>
-            <meta charset="UTF-8">
-            <title>API Documentation</title>
-            <style>
-                /* ... (content omitted for brevity) ... */
-            </style>
-        </head>
-        <body>
-            <div class="container">
-                <h1>API Documentation</h1>
-                <p>Click below to view the Swagger documentation for this API.</p>
-                <a href="http://localhost:8080" class="button" id="redirectButton">View API Documentation</a>
-            </div>
-
-            <script>
-                document.getElementById('redirectButton').href = window.location.hostname === 'localhost' 
-                    ? 'http://localhost:8080' 
-                    : 'https://${{ github.repository_owner }}.github.io/${{ github.repository }}/';
-            </script>
-        </body>
-        </html>
-        EOF
+        # ... (content omitted for brevity) ...
 
     - name: Upload Pages artifact
       uses: actions/upload-pages-artifact@v2

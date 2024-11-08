@@ -7,6 +7,8 @@ import { openAPIRouter } from "@/api-docs/openAPIRouter";
 import { healthCheckRouter } from "@/api/healthCheck/healthCheckRouter";
 import { databaseHealthCheckRouter } from "@/api/data/databaseHealtCheck";
 import { userRouter } from "@/api/user/userRouter";
+import { infoCasaRouter } from "@/api/infoCasa/infoCasaRouter";
+import { postRouter } from "@/api/post/postRouter";
 import errorHandler from "@/common/middleware/errorHandler";
 import rateLimiter from "@/common/middleware/rateLimiter";
 import requestLogger from "@/common/middleware/requestLogger";
@@ -32,7 +34,8 @@ app.use(requestLogger);
 app.use("/health-check", healthCheckRouter);
 app.use("/users", userRouter);
 app.use("/database-health", databaseHealthCheckRouter);
-
+app.use("/info-casas", infoCasaRouter);
+app.use("/posts", postRouter);
 
 // Swagger UI
 app.use(openAPIRouter);

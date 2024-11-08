@@ -2,19 +2,28 @@
 import { env } from "@/common/utils/envConfig";
 import { app, logger } from "@/server";
 import { DataManager } from "./api/data/services/dataManager";
-import { dbConfig } from "./config/database";
+import { dbConfig, mongoConfig } from "./config/database";
 import { UserService } from "./api/user/userService";
 import { UserController } from "./api/user/userController";
+import { InfoCasaService } from "./api/infoCasa/infoCasaService";
+import { InfoCasaController } from "./api/infoCasa/infoCasaController";
+import { PostService } from "./api/post/postService";
+import { PostController } from "./api/post/postController";
 
 // Inicialización del DataManager
 export const dataManager = new DataManager();
 dataManager.registerRepository("PostgreSQL", dbConfig);
+dataManager.registerRepository("MongoDB", mongoConfig);
 
 // Inicialización de servicios
 export const userService = new UserService(dataManager);
+export const infoCasaService = new InfoCasaService(dataManager);
+export const postService = new PostService(dataManager);
 
 // Inicialización de controladores
 export const userController = new UserController(userService);
+export const infoCasaController = new InfoCasaController(infoCasaService);
+export const postController = new PostController(postService);
 
 // Inicialización del servidor
 const server = app.listen(env.PORT, () => {

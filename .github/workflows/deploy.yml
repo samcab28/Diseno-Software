@@ -48,5 +48,5 @@ jobs:
       - name: Deploy with Docker Compose
         run: |
           cd proyecto/caso5/demo
-          docker compose pull
-          docker compose up -d
+          docker compose -f docker-compose.prod.yml pull
+          docker compose -f docker-compose.prod.yml up -d

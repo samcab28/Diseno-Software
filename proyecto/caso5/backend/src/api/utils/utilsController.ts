@@ -1,14 +1,31 @@
 import { Request, Response } from "express";
-import {getUserLocation} from "./location/getLocation"
+import axios from 'axios';
 
 export class UtilsController {
-
-    public async setLocation(req: Request, res: Response): Promise<void> {
+    public async getLocation(req: Request, res: Response): Promise<void> {
         try {
-            const { longitude, latitude } = req.body;
-            res.status(200).json({ status: "success", data: { longitude, latitude } });
+            // Obtener IP del cliente (en este caso, estática para la prueba)
+            const ip = req.ip || req.socket.remoteAddress;
+            console.log("IP del cliente:", ip);
+
+            // Definir la URL de la API con la clave de acceso y la IP
+            const url = `https://apiip.net/api/check?ip=67.250.186.196&accessKey=cbdc3143-6a0a-44ae-93ec-c596e9147b12`;
+
+            // Realizar la solicitud con axios
+            const response = await axios.get(url);
+
+            // Extraer datos de ubicación
+            const location = {
+                latitude: response.data.lat,
+                longitude: response.data.lon
+            };
+
+            res.status(200).json({
+                status: "success",
+                data: location
+            });
         } catch (error) {
-            console.error("Error in setLocation controller:", error);
+            console.error('Error in getLocation controller:', error);
             this.handleError(res, error);
         }
     }

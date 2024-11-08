@@ -9,9 +9,10 @@ export const dbConfig: PoolConfig = {
 };
 
 export const mongoConfig = {
-    uri: 'mongodb://localhost:27017/datos', 
+    uri: process.env.MONGODB_URI || 'mongodb+srv://MinchappUser:4J7ElmUdrtlyQPKA@clusterminchapp.hqy9u.mongodb.net/?retryWrites=true&w=majority&appName=ClusterMinchapp',
     options: {
-        useNewUrlParser: true,
-        useUnifiedTopology: true
+        // Removemos las opciones deprecadas
+        retryWrites: true,
+        w: 'majority'
     }
 };

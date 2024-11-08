@@ -1,12 +1,13 @@
-# .github/workflows/environment.yml
-name: production
-on:
-  deployment:
-    environments: [production]
+# Archivo: .github/workflows/environment.yml
 
-env:
-  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  
-concurrency:
-  group: production
-  cancel-in-progress: false
+name: "Production Environment"
+on: 
+  push:
+    branches: [ "deployment" ]
+
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup environment
+        run: echo "Setting up production environment"

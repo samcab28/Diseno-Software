@@ -17,8 +17,8 @@ import { PostService } from "./api/post/postService";
 import { PostController } from "./api/post/postController";
 import mongoose from 'mongoose';
 
-//utils
-import { UtilsController } from "./api/utils/utilsController"
+//location
+import { LocationController } from "./api/location/locationController"
 
 // Inicialización del DataManager
 export const dataManager = new DataManager();
@@ -34,7 +34,7 @@ export const postService = new PostService(dataManager);
 export const userController = new UserController(userService);
 export const infoCasaController = new InfoCasaController(infoCasaService);
 export const postController = new PostController(postService);
-export const utilsControler = new UtilsController()
+export const locationControler = new LocationController()
 
 // Inicialización del servidor
 const server = app.listen(env.PORT, () => {

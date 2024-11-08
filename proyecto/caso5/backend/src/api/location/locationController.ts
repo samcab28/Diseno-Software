@@ -1,28 +1,23 @@
 import { Request, Response } from "express";
-import axios from 'axios';
+import getPublicIP  from "./functions/getIP";
 
-export class UtilsController {
+export class LocationController {
     public async getLocation(req: Request, res: Response): Promise<void> {
         try {
-            // Obtener IP del cliente (en este caso, estática para la prueba)
-            const ip = req.ip || req.socket.remoteAddress;
-            console.log("IP del cliente:", ip);
+            // Get the client IP (static for testing purposes)
+            const ip = await getPublicIP();
 
-            // Definir la URL de la API con la clave de acceso y la IP
-            const url = `https://apiip.net/api/check?ip=67.250.186.196&accessKey=cbdc3143-6a0a-44ae-93ec-c596e9147b12`;
+            // Define the API URL with the access key and IP
+            const url = `https://apiip.net/api/check?ip=${ip}&accessKey=cbdc3143-6a0a-44ae-93ec-c596e9147b12`;
 
-            // Realizar la solicitud con axios
-            const response = await axios.get(url);
+            // Make the request with fetch
+            const response = await fetch(url);
+            const data = await response.json();
 
-            // Extraer datos de ubicación
-            const location = {
-                latitude: response.data.lat,
-                longitude: response.data.lon
-            };
-
+            // Return the data from the API response
             res.status(200).json({
                 status: "success",
-                data: location
+                data: data 
             });
         } catch (error) {
             console.error('Error in getLocation controller:', error);

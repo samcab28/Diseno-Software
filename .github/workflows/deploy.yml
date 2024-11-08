@@ -29,14 +29,11 @@ jobs:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
 
-    - name: Build and push Docker images
-      uses: docker/build-push-action@v4
-      with:
-        context: .
-        file: ./proyecto/caso5/demo/docker-compose.yml
-        push: true
-        tags: |
-          ghcr.io/${{ github.repository_owner }}/demo:latest
+    - name: Build and push Docker Compose
+      run: |
+        cd proyecto/caso5/demo
+        docker-compose -f docker-compose.yml build
+        docker-compose -f docker-compose.yml push
 
     - name: Create static content
       run: |

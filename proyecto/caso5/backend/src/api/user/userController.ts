@@ -24,6 +24,64 @@ export class UserController {
         }
     }
 
+    public async addFavorite(req: Request, res: Response): Promise<void> {
+        try {
+            const { userID, cuidadorID } = req.body;  // Extraemos de req.body
+    
+            if (isNaN(userID)) {
+                res.status(400).json({ status: "error", message: "Invalid user ID" });
+                return;
+            }
+
+            if (isNaN(cuidadorID)) {
+                res.status(400).json({ status: "error", message: "Invalid cuidador ID" });
+                return;
+            }
+    
+            const newFavorite = await this.userService.addFavorite(userID, cuidadorID);
+            res.status(200).json({ status: "success", data: newFavorite });
+        } catch (error) {
+            console.error('Error in addFavorite controller:', error);
+            this.handleError(res, error);
+        }
+    }
+    
+
+    public async getFavoritesByUserID(req: Request, res: Response): Promise<void> {
+        try {
+            const userID = parseInt(req.params.userID, 10);
+            if (isNaN(userID)) {
+                res.status(400).json({ status: "error", message: "Invalid user ID" });
+                return;
+            }
+    
+            const favorites = await this.userService.getFavoritesByUserID(userID);
+            res.status(200).json({ status: "success", data: favorites });
+        } catch (error) {
+            console.error('Error in getFavoritesByUserID controller:', error);
+            this.handleError(res, error);
+        }
+    }
+
+    public async deleteFavorite(req: Request, res: Response): Promise<void> {
+        try {
+            const userID = parseInt(req.params.userID, 10);
+            const cuidadorID = parseInt(req.params.cuidadorID, 10);
+            
+            if (isNaN(userID) || isNaN(cuidadorID)) {
+                res.status(400).json({ status: "error", message: "Invalid user or cuidador ID" });
+                return;
+            }
+    
+            await this.userService.deleteFavorite(userID, cuidadorID);
+            res.status(200).json({ status: "success", message: "Favorite marked as deleted" });
+        } catch (error) {
+            console.error('Error in deleteFavorite controller:', error);
+            this.handleError(res, error);
+        }
+    }
+    
+
     private handleError(res: Response, error: any): void {
         let message = 'Internal server error';
         let status = 500;

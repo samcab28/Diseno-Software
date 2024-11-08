@@ -42,4 +42,58 @@ export class UserService {
             throw new Error('Could not create user');
         }
     }
+
+    public async addFavorite(userID: number, cuidadorID: number): Promise<any> {
+        try {
+            // Inserta los datos en la tabla Favoritos
+            const result = await this.dataManager.execute(
+                'PostgreSQL',
+                `INSERT INTO Favoritos (idUsuario, idCuidador) VALUES ($1, $2) RETURNING *`,
+                [userID, cuidadorID]
+            );
+    
+            return result.rows[0]; // Devuelve la fila insertada
+        } catch (error) {
+            console.error('Error adding favorite:', error);
+            throw new Error('Could not add favorite');
+        }
+    }
+
+    public async getFavoritesByUserID(userID: number): Promise<any[]> {
+        try {
+            // Ejecuta la consulta para obtener los favoritos por idUsuario
+            const result = await this.dataManager.execute(
+                'PostgreSQL',
+                `SELECT * FROM Favoritos WHERE idUsuario = $1 AND deleted = FALSE`,
+                [userID]
+            );
+    
+            return result.rows; // Devuelve las filas encontradas
+        } catch (error) {
+            console.error('Error fetching favorites by userID:', error);
+            throw new Error('Could not fetch favorites');
+        }
+    }
+
+    public async deleteFavorite(userID: number, cuidadorID: number): Promise<void> {
+        try {
+            // Actualiza el registro para marcarlo como eliminado
+            const result = await this.dataManager.execute(
+                'PostgreSQL',
+                `UPDATE Favoritos SET deleted = TRUE WHERE idUsuario = $1 AND idCuidador = $2`,
+                [userID, cuidadorID]
+            );
+    
+            if (result.rowCount === 0) {
+                throw new Error('Favorite not found or already deleted');
+            }
+    
+            console.log('Favorite marked as deleted successfully');
+        } catch (error) {
+            console.error('Error deleting favorite:', error);
+            throw new Error('Could not delete favorite');
+        }
+    }
+    
+    
 }

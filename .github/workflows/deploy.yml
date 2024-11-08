@@ -54,7 +54,7 @@ jobs:
       - name: Create static content
         run: |
           mkdir -p _site
-          touch _site/.nojekyll  # Evita que GitHub Pages use Jekyll
+          touch _site/.nojekyll  # Desactiva Jekyll
           cat > _site/index.html << 'EOF'
           <!DOCTYPE html>
           <html lang="en">
@@ -118,7 +118,7 @@ jobs:
           </html>
           EOF
 
-      # Limpiar el directorio para asegurar que `node_modules` no se suba como artefacto
+      # Limpieza del directorio para asegurar que `node_modules` no se suba como artefacto
       - name: Clean up unnecessary files
         run: rm -rf _site/node_modules
 

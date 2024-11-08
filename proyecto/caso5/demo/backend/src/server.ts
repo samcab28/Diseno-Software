@@ -28,6 +28,7 @@ app.set("trust proxy", true);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors({ origin: env.CORS_ORIGIN, credentials: true }));
+app.use(cors({ origin: 'https://samcab28.github.io', credentials: true }));
 app.use(helmet());
 app.use(rateLimiter);
 

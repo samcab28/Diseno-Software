@@ -3,12 +3,21 @@ import { env } from "@/common/utils/envConfig";
 import { app, logger } from "@/server";
 import { DataManager } from "./api/data/services/dataManager";
 import { dbConfig, mongoConfig } from "./config/database";
+
+// usuarios
 import { UserService } from "./api/user/userService";
 import { UserController } from "./api/user/userController";
+
+// infocasa
 import { InfoCasaService } from "./api/infoCasa/infoCasaService";
 import { InfoCasaController } from "./api/infoCasa/infoCasaController";
+
+// solicitudes de cuido
 import { PostService } from "./api/post/postService";
 import { PostController } from "./api/post/postController";
+
+//utils
+import { UtilsController } from "./api/utils/utilsController"
 
 // Inicialización del DataManager
 export const dataManager = new DataManager();
@@ -24,6 +33,7 @@ export const postService = new PostService(dataManager);
 export const userController = new UserController(userService);
 export const infoCasaController = new InfoCasaController(infoCasaService);
 export const postController = new PostController(postService);
+export const utilsControler = new UtilsController()
 
 // Inicialización del servidor
 const server = app.listen(env.PORT, () => {

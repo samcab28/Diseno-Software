@@ -1,0 +1,31 @@
+config:
+  app:
+    enabled: true 
+    name: backenc-design
+    # Configuración de la imagen Docker
+    image:
+      repository: samcab28/backend-design
+      tag: latest
+    # Cantidad de réplicas 
+    replicas: 1
+    # Configuración del servicio
+    service:
+      type: NodePort
+      port: 8080
+      nodePort: 30400
+    # Configuración de recursos (puedes ajustar esto según las necesidades)
+    resources:
+      limits:
+        cpu: "500m"
+        memory: "512Mi"
+      requests:
+        cpu: "200m"
+        memory: "256Mi"
+    # Configuración de tolerancias, afinidades, y otras opciones de despliegue
+    tolerations: []
+    affinity: {}
+    metrics:
+      enabled: true
+      serviceMonitor:
+        enabled: true
+        namespace: "monitoring"

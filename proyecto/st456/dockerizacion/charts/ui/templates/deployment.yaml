@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: react-frontend-service  # Change the service name here
+spec:
+  type: {{ .Values.config.app.service.type }}
+  ports:
+    - port: {{ .Values.config.app.service.port }}
+      targetPort: 3000
+      nodePort: {{ .Values.config.app.service.nodePort }}
+  selector:
+    app: react-app

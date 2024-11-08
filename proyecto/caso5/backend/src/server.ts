@@ -11,7 +11,7 @@ import { databaseHealthCheckRouter } from "@/api/data/databaseHealtCheck";
 import { userRouter } from "@/api/user/userRouter";
 import { infoCasaRouter } from "@/api/infoCasa/infoCasaRouter";
 import { postRouter } from "@/api/post/postRouter";
-import { utilsRouter } from "./api/utils/utilsRouter";
+import { locationRouter } from "./api/location/locationRouter";
 
 import errorHandler from "@/common/middleware/errorHandler";
 import rateLimiter from "@/common/middleware/rateLimiter";
@@ -40,7 +40,7 @@ app.use("/users", userRouter);
 app.use("/database-health", databaseHealthCheckRouter);
 app.use("/info-casas", infoCasaRouter);
 app.use("/posts", postRouter);
-app.use("/utils", utilsRouter);
+app.use("/location", locationRouter);
 
 // Swagger UI
 app.use(openAPIRouter);

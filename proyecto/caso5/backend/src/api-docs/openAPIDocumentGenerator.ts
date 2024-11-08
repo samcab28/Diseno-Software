@@ -7,6 +7,7 @@ import { userHealthCheckRegistry } from "@/api/user/userHealth";
 import { databaseHealthCheckRegistry } from "@/api/data/databaseHealtCheck";
 import { infoCasaHealthRegistry } from "@/api/infoCasa/infoCasaHealth";
 import { postHealthRegistry } from "@/api/post/postHealth";
+import { locationHealthCheckRegistry } from "@/api/location/locationHealth";
 
 export function generateOpenAPIDocument() {
   const registry = new OpenAPIRegistry([
@@ -14,7 +15,8 @@ export function generateOpenAPIDocument() {
     userHealthCheckRegistry,
     databaseHealthCheckRegistry,
     infoCasaHealthRegistry,
-    postHealthRegistry
+    postHealthRegistry,
+    locationHealthCheckRegistry
   ]);
   
   const generator = new OpenApiGeneratorV3(registry.definitions);

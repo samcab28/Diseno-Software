@@ -2,7 +2,7 @@ name: "Deploy Backend Redirect to GitHub Pages"
 on: 
   push:
     branches: [ "deployment" ]
-    paths: [ "proyecto/caso5/demo/**" ]
+    #paths: [ "proyecto/caso5/demo/**" ]
 
 jobs:
   build:

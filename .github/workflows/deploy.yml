@@ -1,6 +1,4 @@
-# Archivo: .github/workflows/deploy.yml
-
-name: "Docker Compose Deployment"
+name: "Deploy to GitHub Pages"
 
 on:
   push:
@@ -8,11 +6,26 @@ on:
     paths: [ "proyecto/caso5/demo/**" ]
 
 jobs:
-  docker:
+  build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+      pages: write
+      id-token: write
+    
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
+      # Configurar Pages
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+
+      # Generar la URL automáticamente
+      - name: Set environment URL
+        run: |
+          echo "ENVIRONMENT_URL=https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}" >> $GITHUB_ENV
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -30,6 +43,8 @@ jobs:
           context: ./proyecto/caso5/demo/database
           push: true
           tags: ghcr.io/${{ github.repository_owner }}/demo-db:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
 
       - name: Build and push backend
         uses: docker/build-push-action@v5
@@ -38,15 +53,41 @@ jobs:
           file: ./proyecto/caso5/demo/backend/Dockerfile.dev
           push: true
           tags: ghcr.io/${{ github.repository_owner }}/demo-backend:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
 
-      - name: Update compose file
+      # Crear un archivo index.html básico para GitHub Pages
+      - name: Create static content
         run: |
-          cd proyecto/caso5/demo
-          sed -i 's|build:|image: ghcr.io/${{ github.repository_owner }}/demo-db:latest|g' docker-compose.yml
-          sed -i 's|dockerfile: Dockerfile.dev|image: ghcr.io/${{ github.repository_owner }}/demo-backend:latest|g' docker-compose.yml
+          mkdir -p _site
+          echo '<!DOCTYPE html>
+          <html>
+          <head>
+            <title>Demo Application</title>
+          </head>
+          <body>
+            <h1>Demo Application</h1>
+            <p>Backend URL: ${{ env.ENVIRONMENT_URL }}:8080</p>
+          </body>
+          </html>' > _site/index.html
 
-      - name: Deploy with Docker Compose
-        run: |
-          cd proyecto/caso5/demo
-          docker compose -f docker-compose.prod.yml pull
-          docker compose -f docker-compose.prod.yml up -d
+      # Subir el contenido estático como un artefacto
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

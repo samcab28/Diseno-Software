@@ -1,11 +1,9 @@
-# docker-compose.yml
 version: '3.8'
 
 services:
+
   db:
-    build: 
-      context: ./database
-      dockerfile: Dockerfile
+    image: ghcr.io/${{ env.GITHUB_REPOSITORY_OWNER }}/demo:latest
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=eG4clXnlGm
@@ -15,7 +13,6 @@ services:
       - "30900:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
-      - ./database/init-scripts:/docker-entrypoint-initdb.d:ro
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres -d datos"]
       interval: 10s
@@ -25,22 +22,14 @@ services:
       - app-network
 
   backend:
-    build:
-      context: ./backend
-      dockerfile: Dockerfile.dev
-    volumes:
-      - ./backend:/usr/src/app
-      - /usr/src/app/node_modules
-      - backend_deps:/usr/src/app/node_modules
+    image: ghcr.io/${{ env.GITHUB_REPOSITORY_OWNER }}/demo:latest
     ports:
       - "8080:8080"
     environment:
-      - NODE_ENV=development
+      - NODE_ENV=production
       - PORT=8080
       - HOST=0.0.0.0
-      - CORS_ORIGIN=http://localhost:*
-      - COMMON_RATE_LIMIT_WINDOW_MS=1000
-      - COMMON_RATE_LIMIT_MAX_REQUESTS=20
+      - CORS_ORIGIN=https://${{ env.GITHUB_REPOSITORY_OWNER }}.github.io/${{ env.GITHUB_REPOSITORY }}
       - DB_HOST=db
       - DB_PORT=5432
       - DB_USER=postgres
@@ -55,11 +44,7 @@ services:
 volumes:
   postgres_data:
     driver: local
-  backend_deps:
-    driver: local
 
 networks:
   app-network:
     driver: bridge
-
-#comentario de prueba

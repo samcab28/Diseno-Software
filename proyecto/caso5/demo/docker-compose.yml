@@ -1,0 +1,63 @@
+# docker-compose.yml
+version: '3.8'
+
+services:
+  db:
+    build: 
+      context: ./database
+      dockerfile: Dockerfile
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=eG4clXnlGm
+      - POSTGRES_DB=datos
+      - POSTGRES_INITDB_ARGS="--encoding=UTF8"
+    ports:
+      - "30900:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./database/init-scripts:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d datos"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - app-network
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.dev
+    volumes:
+      - ./backend:/usr/src/app
+      - /usr/src/app/node_modules
+      - backend_deps:/usr/src/app/node_modules
+    ports:
+      - "8080:8080"
+    environment:
+      - NODE_ENV=development
+      - PORT=8080
+      - HOST=0.0.0.0
+      - CORS_ORIGIN=http://localhost:*
+      - COMMON_RATE_LIMIT_WINDOW_MS=1000
+      - COMMON_RATE_LIMIT_MAX_REQUESTS=20
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_USER=postgres
+      - DB_PASSWORD=eG4clXnlGm
+      - DB_NAME=datos
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - app-network
+
+volumes:
+  postgres_data:
+    driver: local
+  backend_deps:
+    driver: local
+
+networks:
+  app-network:
+    driver: bridge

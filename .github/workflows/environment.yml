@@ -1,0 +1,12 @@
+# .github/workflows/environment.yml
+name: production
+on:
+  deployment:
+    environments: [production]
+
+env:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  
+concurrency:
+  group: production
+  cancel-in-progress: false

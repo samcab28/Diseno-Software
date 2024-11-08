@@ -20,6 +20,10 @@ import mongoose from 'mongoose';
 //location
 import { LocationController } from "./api/location/locationController"
 
+// review
+import { ReviewService } from "./api/review/reviewService";
+import { ReviewController } from "./api/review/reviewController";
+
 // Inicialización del DataManager
 export const dataManager = new DataManager();
 dataManager.registerRepository("PostgreSQL", dbConfig);
@@ -35,6 +39,7 @@ export const userController = new UserController(userService);
 export const infoCasaController = new InfoCasaController(infoCasaService);
 export const postController = new PostController(postService);
 export const locationControler = new LocationController()
+export const reviewController = new ReviewController(new ReviewService(dataManager));
 
 // Inicialización del servidor
 const server = app.listen(env.PORT, () => {

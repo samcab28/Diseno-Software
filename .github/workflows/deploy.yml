@@ -1,6 +1,5 @@
 name: "Deploy Backend Redirect to GitHub Pages"
-
-on:
+on: 
   push:
     branches: [ "deployment" ]
     paths: [ "proyecto/caso5/demo/**" ]
@@ -138,4 +137,3 @@ jobs:
         id: deployment
         uses: actions/deploy-pages@v4
 
-        

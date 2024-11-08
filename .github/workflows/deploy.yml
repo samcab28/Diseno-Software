@@ -111,7 +111,7 @@ jobs:
                   // Puedes agregar lógica aquí para manejar diferentes URLs según el ambiente
                   document.getElementById('redirectButton').href = window.location.hostname === 'localhost' 
                       ? 'http://localhost:8080' 
-                      : 'http://your-production-backend-url:8080';
+                      : 'http://localhost:8080';
               </script>
           </body>
           </html>

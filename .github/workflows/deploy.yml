@@ -54,6 +54,7 @@ jobs:
       - name: Create static content
         run: |
           mkdir -p _site
+          touch _site/.nojekyll  # Evita que GitHub Pages use Jekyll
           cat > _site/index.html << 'EOF'
           <!DOCTYPE html>
           <html lang="en">
@@ -109,7 +110,6 @@ jobs:
               </div>
 
               <script>
-                  // Puedes agregar lógica aquí para manejar diferentes URLs según el ambiente
                   document.getElementById('redirectButton').href = window.location.hostname === 'localhost' 
                       ? 'http://localhost:8080' 
                       : 'http://your-production-backend-url:8080';
@@ -117,6 +117,10 @@ jobs:
           </body>
           </html>
           EOF
+
+      # Limpiar el directorio para asegurar que `node_modules` no se suba como artefacto
+      - name: Clean up unnecessary files
+        run: rm -rf _site/node_modules
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3

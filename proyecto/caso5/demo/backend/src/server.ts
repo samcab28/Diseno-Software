@@ -15,6 +15,7 @@ import { locationRouter } from "@/api/location/locationRouter";
 import { locationHealthRouter } from "@/api/location/locationHealth";
 import { reviewRouter } from "@/api/review/reviewRouter";
 
+
 import errorHandler from "@/common/middleware/errorHandler";
 import rateLimiter from "@/common/middleware/rateLimiter";
 import requestLogger from "@/common/middleware/requestLogger";
@@ -45,6 +46,8 @@ app.use("/posts", postRouter);
 app.use("/location", locationRouter);
 app.use("/location/health", locationHealthRouter);
 app.use("/reviews", reviewRouter);
+app.use("/ia", airouter);
+
 
 // Swagger UI
 app.use(openAPIRouter);

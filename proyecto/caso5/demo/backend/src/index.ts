@@ -30,6 +30,9 @@ import { ReviewService } from "./api/review/reviewService";
 import { ReviewController } from "./api/review/reviewController";
 import { env } from './common/utils/envConfig';
 
+//AI
+import { AIController } from "./api/artificial_intelligence/aiController";
+
 // Inicialización del DataManager
 export const dataManager = new DataManager();
 dataManager.registerRepository("PostgreSQL", dbConfig);
@@ -47,6 +50,8 @@ export const infoCasaController = new InfoCasaController(infoCasaService);
 export const postController = new PostController(postService);
 export const locationControler = new LocationController(locationService);
 export const reviewController = new ReviewController(new ReviewService(dataManager));
+export const locationControler = new LocationController();
+export const aiController = new AIController();
 
 // Inicialización del servidor
 const server = app.listen(env.PORT, () => {

@@ -1,7 +1,11 @@
+// src/api/location/locationController.ts
 import { Request, Response } from "express";
-import getPublicIP  from "./functions/getIP";
+import { LocationService } from "./locationService";
+import getPublicIP from "./functions/getIP";
 
 export class LocationController {
+    constructor(private readonly locationService: LocationService) {}
+
     public async getLocation(req: Request, res: Response): Promise<void> {
         try {
             // Get the client IP (static for testing purposes)
@@ -22,6 +26,44 @@ export class LocationController {
         } catch (error) {
             console.error('Error in getLocation controller:', error);
             this.handleError(res, error);
+        }
+    }
+
+    public async findNearbyLocations(req: Request, res: Response): Promise<void> {
+        try {
+            const { latitude, longitude, maxDistance } = req.query;
+
+            // Validar los parámetros
+            if (!latitude || !longitude) {
+                res.status(400).json({
+                    status: "error",
+                    message: "Latitude and longitude are required"
+                });
+                return;
+            }
+
+            const userLocation = {
+                latitude: parseFloat(latitude as string),
+                longitude: parseFloat(longitude as string)
+            };
+
+            const maxDistanceNum = maxDistance ? parseFloat(maxDistance as string) : 10;
+
+            const nearbyLocations = await this.locationService.findNearbyLocations(
+                userLocation,
+                maxDistanceNum
+            );
+
+            res.status(200).json({
+                status: "success",
+                data: nearbyLocations
+            });
+        } catch (error) {
+            console.error('Error in findNearbyLocations controller:', error);
+            res.status(500).json({
+                status: "error",
+                message: error instanceof Error ? error.message : 'Internal server error'
+            });
         }
     }
 

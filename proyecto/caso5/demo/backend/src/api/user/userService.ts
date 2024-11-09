@@ -115,6 +115,28 @@ export class UserService {
             throw new Error('Could not delete favorite');
         }
     }
+
+    public async searchAdditionalServices(keywords: string[]): Promise<User[]> {
+        const placeholders = keywords.map((_, i) => `$${i + 1}`).join(' OR descripcion ILIKE ');
+        const query = `
+            SELECT u.*
+            FROM Usuarios u
+            JOIN ServiciosAdicionales sa ON u.idUsuario = sa.idUsuario
+            WHERE sa.deleted = FALSE AND (
+                sa.descripcion ILIKE ${placeholders}
+            )
+            GROUP BY u.idUsuario
+            ORDER BY COUNT(sa.idServicio) DESC;
+        `;
+    
+        try {
+            const result = await this.dataManager.execute('PostgreSQL', query, keywords.map(k => `%${k}%`));
+            return result.rows.map((row: any) => new User(row));
+        } catch (error) {
+            console.error('Error searching additional services:', error);
+            throw new Error('Could not search additional services');
+        }
+    }
     
 
     public async searchAdditionalServices(keywords: string[]): Promise<User[]> {

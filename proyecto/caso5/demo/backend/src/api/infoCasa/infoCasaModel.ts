@@ -15,4 +15,4 @@ const InfoCasaSchema = new Schema<IInfoCasa>({
   caracteristicas: { type: [Schema.Types.Mixed], required: false }
 });
 
-export const InfoCasaModel = mongoose.model<IInfoCasa>('InfoCasa', InfoCasaSchema);
+export const InfoCasaModel = mongoose.model<IInfoCasa>('InfoCasa', InfoCasaSchema, 'InfoCasa');

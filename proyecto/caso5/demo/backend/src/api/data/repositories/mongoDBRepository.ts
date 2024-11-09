@@ -42,7 +42,18 @@ export class MongoDBRepository implements IRepository {
         try {
             const [modelName, ...queryParams] = params || [];
             const model = mongoose.model(modelName);
-            return await model.find(JSON.parse(query)).exec();
+            const queryObj = JSON.parse(query);
+            
+            // Primero, veamos todos los documentos de la colección
+            const allDocs = await model.find({}).exec();
+            console.log('Todos los documentos en la colección:', allDocs);
+            
+            // Luego hacemos la consulta específica
+            console.log('Buscando con query:', queryObj);
+            const results = await model.find(queryObj).exec();
+            console.log('Resultados de la búsqueda:', results);
+            
+            return results;
         } catch (error) {
             console.error('Error executing MongoDB query:', error);
             throw error;

@@ -9,7 +9,7 @@ export const dbConfig: PoolConfig = {
 };
 
 export const mongoConfig = {
-    uri: process.env.MONGODB_URI || 'mongodb+srv://MinchappUser:4J7ElmUdrtlyQPKA@clusterminchapp.hqy9u.mongodb.net/?retryWrites=true&w=majority&appName=ClusterMinchapp',
+    uri: process.env.MONGODB_URI || 'mongodb+srv://MinchappUser:4J7ElmUdrtlyQPKA@clusterminchapp.hqy9u.mongodb.net/datos?retryWrites=true&w=majority&appName=ClusterMinchapp',
     options: {
         retryWrites: true,
         w: 'majority'

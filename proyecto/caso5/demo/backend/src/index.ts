@@ -1,8 +1,13 @@
 // index.ts
-import { env } from "@/common/utils/envConfig";
+import mongoose from 'mongoose';
 import { app, logger } from "@/server";
 import { DataManager } from "./api/data/services/dataManager";
 import { dbConfig, mongoConfig } from "./config/database";
+
+// Importar los modelos
+import "./api/infoCasa/infoCasaModel";
+import "./api/post/postModel";
+import "./api/review/reviewModel";
 
 // usuarios
 import { UserService } from "./api/user/userService";
@@ -15,10 +20,15 @@ import { InfoCasaController } from "./api/infoCasa/infoCasaController";
 // solicitudes de cuido
 import { PostService } from "./api/post/postService";
 import { PostController } from "./api/post/postController";
-import mongoose from 'mongoose';
 
 //location
 import { LocationController } from "./api/location/locationController"
+import { LocationService } from "./api/location/locationService";
+
+// review
+import { ReviewService } from "./api/review/reviewService";
+import { ReviewController } from "./api/review/reviewController";
+import { env } from './common/utils/envConfig';
 
 //AI
 import { AIController } from "./api/artificial_intelligence/aiController";
@@ -32,11 +42,14 @@ dataManager.registerRepository("MongoDB", mongoConfig);
 export const userService = new UserService(dataManager);
 export const infoCasaService = new InfoCasaService(dataManager);
 export const postService = new PostService(dataManager);
+export const locationService = new LocationService(dataManager);
 
 // Inicialización de controladores
 export const userController = new UserController(userService);
 export const infoCasaController = new InfoCasaController(infoCasaService);
 export const postController = new PostController(postService);
+export const locationControler = new LocationController(locationService);
+export const reviewController = new ReviewController(new ReviewService(dataManager));
 export const locationControler = new LocationController();
 export const aiController = new AIController();
 
@@ -85,3 +98,6 @@ process.on('SIGINT', async () => {
 
 process.on("SIGINT", onCloseSignal);
 process.on("SIGTERM", onCloseSignal);
+
+
+// http://localhost:8080/location/nearby?latitude=9.9271&longitude=-84.1366&maxDistance=5

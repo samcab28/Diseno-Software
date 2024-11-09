@@ -20,6 +20,9 @@ import mongoose from 'mongoose';
 //location
 import { LocationController } from "./api/location/locationController"
 
+//AI
+import { AIController } from "./api/artificial_intelligence/aiController";
+
 // Inicialización del DataManager
 export const dataManager = new DataManager();
 dataManager.registerRepository("PostgreSQL", dbConfig);
@@ -34,7 +37,8 @@ export const postService = new PostService(dataManager);
 export const userController = new UserController(userService);
 export const infoCasaController = new InfoCasaController(infoCasaService);
 export const postController = new PostController(postService);
-export const locationControler = new LocationController()
+export const locationControler = new LocationController();
+export const aiController = new AIController();
 
 // Inicialización del servidor
 const server = app.listen(env.PORT, () => {

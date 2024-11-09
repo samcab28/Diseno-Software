@@ -80,6 +80,22 @@ export class UserController {
             this.handleError(res, error);
         }
     }
+
+    public async searchAdditionalServices(req: Request, res: Response): Promise<void> {
+        try {
+            const { keywords } = req.body;
+            if (!Array.isArray(keywords) || keywords.length === 0) {
+                res.status(400).json({ status: "error", message: "Keywords must be provided and must be an array" });
+                return;
+            }
+    
+            const results = await this.userService.searchAdditionalServices(keywords);
+            res.status(200).json({ status: "success", data: results });
+        } catch (error) {
+            console.error('Error in searchAdditionalServices controller:', error);
+            this.handleError(res, error);
+        }
+    }
     
 
     private handleError(res: Response, error: any): void {

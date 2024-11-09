@@ -50,7 +50,6 @@ export const infoCasaController = new InfoCasaController(infoCasaService);
 export const postController = new PostController(postService);
 export const locationControler = new LocationController(locationService);
 export const reviewController = new ReviewController(new ReviewService(dataManager));
-export const locationControler = new LocationController();
 export const aiController = new AIController();
 
 // Inicialización del servidor
@@ -100,4 +99,3 @@ process.on("SIGINT", onCloseSignal);
 process.on("SIGTERM", onCloseSignal);
 
 
-// http://localhost:8080/location/nearby?latitude=9.9271&longitude=-84.1366&maxDistance=5

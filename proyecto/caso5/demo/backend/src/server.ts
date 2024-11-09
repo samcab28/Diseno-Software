@@ -14,7 +14,7 @@ import { postRouter } from "@/api/post/postRouter";
 import { locationRouter } from "@/api/location/locationRouter";
 import { locationHealthRouter } from "@/api/location/locationHealth";
 import { reviewRouter } from "@/api/review/reviewRouter";
-
+import { airouter } from "./api/artificial_intelligence/aiRouter";
 
 import errorHandler from "@/common/middleware/errorHandler";
 import rateLimiter from "@/common/middleware/rateLimiter";
